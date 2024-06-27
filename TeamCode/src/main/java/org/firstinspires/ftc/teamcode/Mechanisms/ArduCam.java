@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.Mechanisms;
 
-import org.firstinspires.ftc.teamcode.AutoMethods;
+import org.firstinspires.ftc.teamcode.Autos.AutoMethods;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;

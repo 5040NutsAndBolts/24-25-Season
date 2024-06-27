@@ -17,21 +17,9 @@ import org.firstinspires.ftc.teamcode.Mechanisms.Lift;
 
 @Disabled
 public class RobotOpMode extends OpMode {
-
-    protected HangMotor hangMotor;
-    protected Drivetrain dt;
-    protected Intake intake;
-    protected Lift lift;
-    protected Deposit depo;
-    protected Dronelauncher dl;
+    protected Drivetrain drivetrain;
     public RobotOpMode(HardwareMap hardwareMap) {
-        //initing all the various hardware pieces
-        hangMotor = new HangMotor(hardwareMap);
-        dt = new Drivetrain(hardwareMap);
-        intake = new Intake(hardwareMap);
-        lift = new Lift(hardwareMap);
-        depo = new Deposit(hardwareMap);
-        dl = new Dronelauncher(hardwareMap);
+        drivetrain = new Drivetrain(hardwareMap);
     }
 
     //DO NOT TOUCH THESE TWO METHODS THEY ARE EMPTY BECAUSE WE WILL NEVER RUN THIS CLASS
