@@ -28,13 +28,6 @@ public class Drivetrain {
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
     }
-
-    /**
-     * <p>Cancels out the angle of the mecanum wheels and also moves us forward</p>
-     * @param forward forward position
-     * @param sideways sideways position
-     * @param rotation angle of rotation
-     */
     public void robotODrive(double forward, double sideways, double rotation)
     {
         //Multiplied by speed variable, only changes when in slowmode
@@ -65,19 +58,11 @@ public class Drivetrain {
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
-
-    /**
-     * <p>halves our top speed for precision movements</p>
-     */
     public void toggleSlowMode() {
         if(getSlowMode())
             speed=1;
         else speed=.5;
     }
-
-    /**
-     * @return returns whether or not the speed is in slow mode or not
-     */
     public boolean getSlowMode() {
         return speed == 1;
     }

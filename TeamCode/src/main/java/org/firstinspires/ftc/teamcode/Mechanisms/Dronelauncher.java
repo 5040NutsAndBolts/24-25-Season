@@ -10,10 +10,6 @@ public class Dronelauncher {
         //Drone Launcher Config
         droneLaunch = hardwareMap.get(Servo.class, "Drone Launcher");
     }
-
-    /**
-     * <p>Pulls the servo back to launch the rubber band, thus the plane, forward.</p>
-     */
     public void launch() {
         droneLaunch.setPosition(.5);
     }

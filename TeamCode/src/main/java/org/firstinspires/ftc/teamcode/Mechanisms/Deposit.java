@@ -11,28 +11,15 @@ public class Deposit {
         right = hardwareMap.get(Servo.class, "Right Deposit");
         left = hardwareMap.get(Servo.class, "Left Deposit");
     }
-
-    /**
-     * <p>Drop right servo</p>
-     */
     public void rightDrop(){
         right.setPosition(.5);
     }
-    /**
-     * <p>Reset right servo</p>
-     */
     public void rightZeroPosition() {
         right.setPosition(0);
     }
-    /**
-     * <p>Drop left servo</p>
-     */
     public void leftDrop(){
         left.setPosition(.5);
     }
-    /**
-     * <p>Reset left servo</p>
-     */
     public void leftZeroPosition(){
         left.setPosition(0);
     }

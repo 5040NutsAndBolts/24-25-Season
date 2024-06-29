@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.Mechanisms;
-
-import org.firstinspires.ftc.teamcode.AutoMethods;
+import org.firstinspires.ftc.teamcode.Autos.AutoMethods;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -9,10 +8,8 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
-
 import java.util.ArrayList;
 import java.util.List;
-
 public class ArduCam extends OpenCvPipeline {
     private double score;
     private double height = 0, width = 0;

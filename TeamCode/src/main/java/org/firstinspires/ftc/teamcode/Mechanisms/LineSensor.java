@@ -12,17 +12,9 @@ public class LineSensor {
         lineSensor = hardwareMap.get(ColorSensor.class, "Line Sensor");
         lineSensor.enableLed(false);
     }
-
-    /**
-     * @return returns blue value seen
-     */
     public int getBlueValue() {
         return lineSensor.blue();
     }
-
-    /**
-     * @return returns red value seen
-     */
     public int getRedValue() {
         return lineSensor.red();
     }

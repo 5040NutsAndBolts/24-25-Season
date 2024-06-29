@@ -21,7 +21,7 @@ import java.util.List;
 
 public class Odometry  {
     //Odometry Helper Class Variables
-    private double x = 0;
+    public double x = 0;
     public double y = 0;
     public double theta = 0;
     private static LinearOpMode currentOpMode;
