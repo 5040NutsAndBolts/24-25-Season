@@ -19,10 +19,10 @@ public class Drivetrain {
     public Drivetrain(HardwareMap hardwareMap)
     {
         //Drive Motor Initialization
-        frontLeft = hardwareMap.get(DcMotorEx.class, "Front Left");
-        frontRight = hardwareMap.get(DcMotorEx.class, "Front Right");
-        backLeft = hardwareMap.get(DcMotorEx.class, "Back Left");
-        backRight = hardwareMap.get(DcMotorEx.class, "Back Right");
+        frontLeft = hardwareMap.get(DcMotorEx.class, "fl");
+        frontRight = hardwareMap.get(DcMotorEx.class, "fr");
+        backLeft = hardwareMap.get(DcMotorEx.class, "bl");
+        backRight = hardwareMap.get(DcMotorEx.class, "br");
 
         //Needed for how the motors are mounted
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);

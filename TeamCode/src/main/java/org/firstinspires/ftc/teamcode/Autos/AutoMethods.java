@@ -17,7 +17,7 @@ public class AutoMethods extends RobotOpMode {
     protected ArduCam cam;
     protected LineSensor ls;
     public AutoMethods(HardwareMap hardwareMap) {
-        super(hardwareMap);
+        //super(hardwareMap);
         ls = new LineSensor(hardwareMap);
         cam = new ArduCam();
     }

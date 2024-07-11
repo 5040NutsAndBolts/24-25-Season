@@ -1,17 +1,15 @@
 package org.firstinspires.ftc.teamcode.TeleOps;
-import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.RobotOpMode;
-public class oneDrive extends RobotOpMode{
-    oneDrive robot;
-    public oneDrive(HardwareMap hardwareMap) {
-        super(hardwareMap);
-    }
+@TeleOp(name = "outreach", group = "Teleop")
+public class oneDrive extends RobotOpMode {
+    public static boolean initFunc = false;
     @Override
     public void init() {
-        robot = new oneDrive(hardwareMap);
+        super.init();
     }
     @Override
     public void loop() {
-        robot.drivetrain.robotODrive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+        dt.robotODrive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
     }
 }

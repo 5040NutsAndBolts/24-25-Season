@@ -14,17 +14,18 @@ import org.firstinspires.ftc.teamcode.Mechanisms.Dronelauncher;
 import org.firstinspires.ftc.teamcode.Mechanisms.HangMotor;
 import org.firstinspires.ftc.teamcode.Mechanisms.Intake;
 import org.firstinspires.ftc.teamcode.Mechanisms.Lift;
+import org.firstinspires.ftc.teamcode.TeleOps.oneDrive;
 
 @Disabled
 public class RobotOpMode extends OpMode {
-    protected Drivetrain drivetrain;
-    public RobotOpMode(HardwareMap hardwareMap) {
-        drivetrain = new Drivetrain(hardwareMap);
+    protected Drivetrain dt;
+
+    @Override
+    public void init() {
+        oneDrive.initFunc = true;
+        dt = new Drivetrain(hardwareMap);
     }
 
-    //DO NOT TOUCH THESE TWO METHODS THEY ARE EMPTY BECAUSE WE WILL NEVER RUN THIS CLASS
-    @Override
-    public void init() {}
     @Override
     public void loop() {}
 }
