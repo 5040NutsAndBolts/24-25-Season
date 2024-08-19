@@ -12,14 +12,12 @@ import org.openftc.easyopencv.*;
 
 @Disabled
 public class AutoMethods extends RobotOpMode {
-    private int boundLeft;
-    private int boundRight;
+    private int boundLeft, boundRight;
 
     public enum AllianceColor {red, blue}
     public enum SpikeMarkPosition {left,right,centre}
     protected Odometry odo = new Odometry(hardwareMap);
     protected ArduCam cam;
-    protected OpenCvWebcam openCV = initializeOpenCv();
     protected Telemetry dash = FtcDashboard.getInstance().getTelemetry();
     protected SpikeMarkPosition spikemark;
     protected LineSensor ls;
@@ -87,7 +85,7 @@ public class AutoMethods extends RobotOpMode {
         else
             return 1;
     }
-    protected void updateAutoTelemetry() {
+    protected void updateOdoTelemetry() {
         telemetry.addData("x", odo.x);
         telemetry.addData("y", odo.y);
         telemetry.addData("theta", odo.theta);
@@ -95,14 +93,15 @@ public class AutoMethods extends RobotOpMode {
         dash.addData("x", odo.x);
         dash.addData("y", odo.y);
         dash.addData("theta", odo.theta);
+        displayCameraTelemetry();
         telemetry.update();
         dash.update();
     }
-    protected void moveTo(double x, double y, double theta) {
-        while (odo.x != x && odo.y != y)
-            dt.robotODrive(calculateSpeedArc(y - odo.y), calculateSpeedArc(x - odo.x), 0);
+    protected void moveTo(double X, double Y, double T) {
+        while (odo.x != X && odo.y != Y)
+            dt.robotODrive(calculateSpeedArc(Y - odo.y), calculateSpeedArc(X - odo.x), calculateSpeedArc(T - odo.theta));
         odo.updatePosition();
-        updateAutoTelemetry();
+        updateOdoTelemetry();
     }
     protected void raiseLift(int desiredHeight){
         double  p = .01,

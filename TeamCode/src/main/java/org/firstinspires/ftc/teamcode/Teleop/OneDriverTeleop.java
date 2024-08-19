@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Teleop;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.RobotOpMode;
+@TeleOp(name = "One Driver", group = "Teleop")
 public class OneDriverTeleop extends RobotOpMode {
     @Override
     public void loop() {
