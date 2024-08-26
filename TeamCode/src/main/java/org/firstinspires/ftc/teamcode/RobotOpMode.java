@@ -1,27 +1,21 @@
 package org.firstinspires.ftc.teamcode;
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Mechanisms.*;
 
 @Disabled
 public class RobotOpMode extends OpMode {
-    protected HangMotor hangMotor;
+    protected Telemetry dash = FtcDashboard.getInstance().getTelemetry();
+
     protected Drivetrain dt;
-    protected Intake intake;
-    protected Lift lift;
-    protected Deposit deposit;
-    protected Dronelauncher dl;
+
     @Override
     public void init() {
-        hangMotor = new HangMotor(hardwareMap);
         dt = new Drivetrain(hardwareMap);
-        intake = new Intake(hardwareMap);
-        lift = new Lift(hardwareMap);
-        deposit = new Deposit(hardwareMap);
-        dl = new Dronelauncher(hardwareMap);
     }
-
-
-    //leave empty :3
+    //Leave empty
     @Override public void loop() {}
 }

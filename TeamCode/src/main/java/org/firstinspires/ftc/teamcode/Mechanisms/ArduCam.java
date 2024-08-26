@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode.Mechanisms;
-import org.firstinspires.ftc.teamcode.Autos.AutoMethods;
+import org.firstinspires.ftc.teamcode.Autos.AutoOpMode;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -14,24 +14,17 @@ public class ArduCam extends OpenCvPipeline {
     private double score;
     private double height = 0, width = 0;
     private Point screenPosition = new Point(0,0);
-    private AutoMethods.AllianceColor allianceColor;
+    private final AutoOpMode.AllianceColor ALLIANCECOLOR;
     private final Mat
                   rawImage,       // Raw image output from the camera
                   workingMat,     // The image currently being worked on and being modified
                   selectionMask,
                   hierarchy;
-
-    /**
-     * @param a set by autos, basically to swap between the colors
-     */
-    public void setCameraColor(AutoMethods.AllianceColor a){
-        allianceColor = a;
-    }
-
     /**
      * <p>Sets up all the variables to keep code clean</p> skibidi
      */
-    public ArduCam() {
+    public ArduCam(AutoOpMode.AllianceColor allianceColor) {
+        ALLIANCECOLOR = allianceColor;
         rawImage = new Mat();
         workingMat = new Mat();
         selectionMask = new Mat();
@@ -76,10 +69,11 @@ public class ArduCam extends OpenCvPipeline {
            the hue value is scaled by .5, the saturation and value are scaled by 2.55
            only difference between red and blue finder, this just tells the camera to check what color
            to look for as indicated by the parameters within the constructor method */
-        if (allianceColor == AutoMethods.AllianceColor.red)
+        if (ALLIANCECOLOR == AutoOpMode.AllianceColor.red)
             Core.inRange(workingMat,new Scalar(0,60,60),new Scalar(15,255,255),workingMat);
-        else if(allianceColor == AutoMethods.AllianceColor.blue)
+        else if(ALLIANCECOLOR == AutoOpMode.AllianceColor.blue)
             Core.inRange(workingMat,new Scalar(90,60,60),new Scalar(120,255,255),workingMat);
+
 
         // Creates a list for all contoured objects the camera will find
         List<MatOfPoint> contoursList = new ArrayList<>();

@@ -2,16 +2,10 @@ package org.firstinspires.ftc.teamcode.HelperClasses;
 
 import androidx.annotation.NonNull;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.Mechanisms.Drivetrain;
-import org.firstinspires.ftc.teamcode.Mechanisms.LineSensor;
-import com.acmerobotics.*;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.localization.ThreeTrackingWheelLocalizer;
 
@@ -19,49 +13,33 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Odometry  {
-    //Odometry Helper Class Variables
-    public double x = 0;
-    public double y = 0;
-    public double theta = 0;
-    private static LinearOpMode currentOpMode;
+public class Odometry {
+    public double x,y,theta;
+    public DcMotorEx leftOdom, rightOdom, centerOdom;
+    public double leftOdomTraveled, rightOdomTraveled, centerOdomTraveled;
+    public int leftEncoderPos, rightEncoderPos, centerEncoderPos;
+    public static final double ODOM_TICKS_PER_IN = 1, TRACKWIDTH = 1;
 
-    private final DcMotorEx leftOdom, rightOdom, centerOdom;
-
-    // Real world distance traveled by the wheels
-    private double leftOdomTraveled, rightOdomTraveled, centerOdomTraveled;
-
-    // Odometry encoder positions
-    public int leftEncoderPos;
-    public int centerEncoderPos;
-    public int rightEncoderPos;
-
-    //used in our odo but not RoadRunner classes
-    private static final double ODOM_TICKS_PER_IN = 335.4658854;
-    private static final double TRACK_WIDTH = 15.57716028;
-
-    public Odometry (HardwareMap hardwareMap) {
-        super();
-        //Odom
-        leftOdom = hardwareMap.get(DcMotorEx.class, "Front Right");
-        rightOdom = hardwareMap.get(DcMotorEx.class, "Back Right");
-        centerOdom = hardwareMap.get(DcMotorEx.class, "Front Left");
+    public Odometry(HardwareMap hardwareMap){
+        leftOdom = hardwareMap.get(DcMotorEx.class, "Left Odom");
+        rightOdom = hardwareMap.get(DcMotorEx.class, "Right Odom");
+        centerOdom = hardwareMap.get(DcMotorEx.class, "Center Odom");
     }
-
 
     //constructs localizer object using one parameter of a list of three wheel positions
     public ThreeTrackingWheelLocalizer odom = new ThreeTrackingWheelLocalizer
             (
                     new ArrayList<>(Arrays.asList(
                             new Pose2d(6.294091345, 0, Math.PI / 2), //center wheel
-                            new Pose2d(0, TRACK_WIDTH/2, 0), //right wheel
-                            new Pose2d(0, -TRACK_WIDTH/2, 0))) //left wheel
+                            new Pose2d(0, TRACKWIDTH/2, 0), //right wheel
+                            new Pose2d(0, -TRACKWIDTH/2, 0))) //left wheel
             )
     {
         //overrides getWheelPositions method
         @NonNull
         @Override
-        public List<Double> getWheelPositions() {
+        public List<Double> getWheelPositions()
+        {
             ArrayList<Double> wheelPositions = new ArrayList<>(3);
             wheelPositions.add(centerOdomTraveled);
             wheelPositions.add(leftOdomTraveled);
@@ -104,7 +82,7 @@ public class Odometry  {
     {
         try
         {
-            int total=centerOdom.getCurrentPosition();
+            int total=-centerOdom.getCurrentPosition();
             int oldPos = centerEncoderPos;
             centerEncoderPos=total;
             return oldPos - total;
@@ -115,7 +93,7 @@ public class Odometry  {
         }
     }
 
-    public void updatePosition()
+    public void updatePositionRoadRunner()
     {
         /*try
         {
@@ -128,8 +106,8 @@ public class Odometry  {
 
         // Change in the distance (centimeters) since the last update for each odometer
         double deltaLeftDist = -(getDeltaLeftTicks()/ ODOM_TICKS_PER_IN );
-        double deltaRightDist = -(getDeltaRightTicks()/ ODOM_TICKS_PER_IN );
-        double deltaCenterDist = getDeltaCenterTicks()/ ODOM_TICKS_PER_IN;
+        double deltaRightDist = -(getDeltaRightTicks()/ ODOM_TICKS_PER_IN);
+        double deltaCenterDist = (getDeltaCenterTicks()/ ODOM_TICKS_PER_IN);
 
         //adjusts for physical diffrences in pods
         if(deltaLeftDist < 0)
@@ -168,4 +146,5 @@ public class Odometry  {
         centerOdom.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         centerOdom.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
+
 }

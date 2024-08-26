@@ -1,36 +1,30 @@
 package org.firstinspires.ftc.teamcode.Autos;
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.HelperClasses.Odometry;
-import org.firstinspires.ftc.teamcode.HelperClasses.PID;
 import org.firstinspires.ftc.teamcode.Mechanisms.ArduCam;
-import org.firstinspires.ftc.teamcode.Mechanisms.LineSensor;
 import org.firstinspires.ftc.teamcode.RobotOpMode;
-import org.openftc.easyopencv.*;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvWebcam;
 
 @Disabled
-public class AutoMethods extends RobotOpMode {
-    private int boundLeft, boundRight;
-
+public class AutoOpMode extends RobotOpMode {
     public enum AllianceColor {red, blue}
-    public enum SpikeMarkPosition {left,right,centre}
     protected Odometry odo = new Odometry(hardwareMap);
     protected ArduCam cam;
-    protected Telemetry dash = FtcDashboard.getInstance().getTelemetry();
-    protected SpikeMarkPosition spikemark;
-    protected LineSensor ls;
-    protected AllianceColor allianceColor;
-    @Override
-    public void init() {
-        super.init();
-        ls = new LineSensor(hardwareMap);
-    }
-    protected OpenCvWebcam initializeOpenCv() {
-        if(allianceColor == null)
-            throw new NullPointerException("Uninitialized Alliance Color"); //makes sure code doesn't break if someone forgets to initialize the alliance color
 
+
+    //leave empty
+    @Override
+    public void init() {super.init();}
+    @Override
+    public void loop(){super.loop();}
+
+
+
+    protected void initializeOpenCv() {
         //camera setup
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         OpenCvWebcam webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam"), cameraMonitorViewId);
@@ -40,44 +34,25 @@ public class AutoMethods extends RobotOpMode {
             @Override
             public void onOpened() {
                 //set this to dimensions of camera
-                webcam.startStreaming(1280, 720, OpenCvCameraRotation.UPRIGHT);}
+                webcam.startStreaming(1920, 1080, OpenCvCameraRotation.UPRIGHT);}
             @Override public void onError(int errorCode) {}});
 
         webcam.setPipeline(cam);
-        return webcam;
-    }
-
-    protected SpikeMarkPosition findSMPos (int boundLeft, int boundRight) {
-        if(cam.getScreenPosition().x > boundLeft)
-            return SpikeMarkPosition.right;
-        else if (cam.getScreenPosition().x < boundRight)
-            return SpikeMarkPosition.left;
-        else
-            return SpikeMarkPosition.centre;
     }
 
     protected void displayCameraTelemetry() {
-        telemetry.addData("Auto: ", spikemark);
         telemetry.addData("X Pos: ", cam.getScreenPosition().x);
-        telemetry.addData("Y Pos: ", cam.getScreenPosition().x);
+        telemetry.addData("Y Pos: ", cam.getScreenPosition().y);
         telemetry.addData("Score: ", cam.getScore());
         telemetry.addData("Width: ", cam.getWidth());
         telemetry.addData("Height: ", cam.getHeight());
         telemetry.update();
-        dash.addData("spike mark: ", spikemark);
         dash.addData("X Position: ", cam.getScreenPosition().x);
         dash.addData("Y Position: ", cam.getScreenPosition().y);
         dash.addData("Score: ", cam.getScore());
         dash.addData("Width: ", cam.getWidth());
         dash.addData("Height: ", cam.getHeight());
         dash.update();
-    }
-    protected boolean lineSeen() {
-        if(allianceColor == AllianceColor.blue)
-            return ls.getBlueValue() > 175;
-        else if (allianceColor == AllianceColor.red)
-            return ls.getRedValue() > 175;
-        else throw new NullPointerException("Uninitialized Alliance Color");
     }
     protected double calculateSpeedArc(double dist) {
         if (dist < 10 && dist > -10)
@@ -100,21 +75,7 @@ public class AutoMethods extends RobotOpMode {
     protected void moveTo(double X, double Y, double T) {
         while (odo.x != X && odo.y != Y)
             dt.robotODrive(calculateSpeedArc(Y - odo.y), calculateSpeedArc(X - odo.x), calculateSpeedArc(T - odo.theta));
-        odo.updatePosition();
+        odo.updatePositionRoadRunner();
         updateOdoTelemetry();
-    }
-    protected void raiseLift(int desiredHeight){
-        double  p = .01,
-                i = 0,
-                d = 0;
-        PID pidController = new PID(desiredHeight - lift.getSlidePosition(), p, i, d); //resets data values
-        while(desiredHeight != lift.getSlidePosition() || desiredHeight != lift.getSlidePosition()){
-            pidController.update(desiredHeight-lift.getSlidePosition());
-            lift.goUp(pidController.getPID());
-        }
-    }
-    protected void dropPixels() {
-        deposit.rightDrop();
-        deposit.leftDrop();
     }
 }

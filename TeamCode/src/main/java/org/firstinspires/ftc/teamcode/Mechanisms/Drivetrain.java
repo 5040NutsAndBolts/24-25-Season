@@ -1,16 +1,8 @@
 package org.firstinspires.ftc.teamcode.Mechanisms;
-
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-
 public class Drivetrain {
     //Drive Motors Declaration
     private static DcMotorEx frontLeft,frontRight,backLeft,backRight;
@@ -52,18 +44,15 @@ public class Drivetrain {
         backRight.setPower(forward + rotation - sideways);
     }
 
+    /**
+     * <p>battery/motor saver</p>
+     */
     public void neutral() {
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
-    public void toggleSlowMode() {
-        if(getSlowMode())
-            speed=1;
-        else speed=.5;
-    }
-    public boolean getSlowMode() {
-        return speed == 1;
-    }
+    public void toggleSlowMode() {speed = isSlow() ? .5 : 1;}
+    public boolean isSlow() {return speed != 1;}
 }

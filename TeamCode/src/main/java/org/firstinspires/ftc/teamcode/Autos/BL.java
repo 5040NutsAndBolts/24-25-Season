@@ -3,19 +3,15 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Mechanisms.ArduCam;
 @Autonomous (name = "BL", group = "Autonomous")
-public class BL extends AutoMethods {
+public class BL extends AutoOpMode {
     @Override
     public void init() {
         super.init();
-        allianceColor = AllianceColor.blue;
-        cam = new ArduCam();
-        spikemark = findSMPos(0,0);
+        cam = new ArduCam(AllianceColor.blue);
+        initializeOpenCv();
     }
     @Override
     public void loop() {
-        moveTo(10,10,2);
-        moveTo(0,0,10);
-
         //this ends the opmode after everything is done to save battery :)
         terminateOpModeNow();
     }
