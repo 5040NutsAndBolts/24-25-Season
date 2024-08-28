@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.Autos;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-
 import org.firstinspires.ftc.teamcode.Mechanisms.ArduCam;
 @Autonomous (name = "BL", group = "Autonomous")
 public class BL extends AutoOpMode {

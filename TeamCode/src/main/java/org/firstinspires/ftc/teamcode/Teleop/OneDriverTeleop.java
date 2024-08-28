@@ -3,11 +3,28 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.RobotOpMode;
 @TeleOp(name = "One Driver", group = "Teleop")
 public class OneDriverTeleop extends RobotOpMode {
+    private boolean bPressed,yPressed,rawDrive;
     @Override
     public void loop() {
-        dt.robotODrive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
-        if(gamepad1.b)
+        if(gamepad1.b) { //slowmode toggle
             dt.toggleSlowMode();
+            gamepad1.rumble(200);
+            bPressed = true;
+        }else if(!bPressed) bPressed = false;
+        if(gamepad1.y) { //raw drive toggle
+            gamepad1.rumble(200);
+            yPressed = true;
+            rawDrive = true;
+        }else if(!yPressed) yPressed = false;
+
+        if(rawDrive)
+            dt.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+        else dt.drive(gamepad1.left_stick_y * gamepad1.left_stick_y * gamepad1.left_stick_y,
+                      gamepad1.left_stick_x * gamepad1.left_stick_x * gamepad1.left_stick_x,
+                      gamepad1.right_stick_x * gamepad1.right_stick_x * gamepad1.right_stick_x);
+
+
         telemetry.addLine("Slow:  "+dt.isSlow());
+        telemetry.addLine("Accelerated Input: " + !rawDrive);
     }
 }

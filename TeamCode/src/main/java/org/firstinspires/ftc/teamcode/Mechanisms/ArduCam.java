@@ -21,7 +21,7 @@ public class ArduCam extends OpenCvPipeline {
                   selectionMask,
                   hierarchy;
     /**
-     * <p>Sets up all the variables to keep code clean</p> skibidi
+     * <p>Sets up all the variables to keep code clean</p>
      */
     public ArduCam(AutoOpMode.AllianceColor allianceColor) {
         ALLIANCECOLOR = allianceColor;

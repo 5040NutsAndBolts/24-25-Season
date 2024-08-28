@@ -4,13 +4,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 public class Drivetrain {
-    //Drive Motors Declaration
     private static DcMotorEx frontLeft,frontRight,backLeft,backRight;
     private double speed = 1;
 
-    public Drivetrain(HardwareMap hardwareMap)
-    {
-        //Drive Motor Initialization
+    public Drivetrain(HardwareMap hardwareMap) {
+        //Drive Motor Initializatio
         frontLeft = hardwareMap.get(DcMotorEx.class, "Front Left");
         frontRight = hardwareMap.get(DcMotorEx.class, "Front Right");
         backLeft = hardwareMap.get(DcMotorEx.class, "Back Left");
@@ -20,8 +18,7 @@ public class Drivetrain {
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
     }
-    public void robotODrive(double forward, double sideways, double rotation)
-    {
+    public void drive(double forward, double sideways, double rotation) {
         //Multiplied by speed variable, only changes when in slowmode
         forward *= speed;
         sideways *= speed;
