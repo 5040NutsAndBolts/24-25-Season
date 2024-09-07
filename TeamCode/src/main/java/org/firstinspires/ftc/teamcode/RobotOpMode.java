@@ -10,11 +10,11 @@ import org.firstinspires.ftc.teamcode.Mechanisms.*;
 public class RobotOpMode extends OpMode {
     protected Telemetry dash = FtcDashboard.getInstance().getTelemetry();
 
-    protected Drivetrain dt;
+    protected Drivetrain drivetrain;
 
     @Override
     public void init() {
-        dt = new Drivetrain(hardwareMap);
+        drivetrain = new Drivetrain(hardwareMap);
     }
     //Leave empty
     @Override public void loop() {}

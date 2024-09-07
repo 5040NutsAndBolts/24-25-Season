@@ -4,11 +4,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 public class Drivetrain {
-    private static DcMotorEx frontLeft,frontRight,backLeft,backRight;
+    private static DcMotorEx frontLeft, frontRight, backLeft, backRight;
     private double speed = 1;
 
     public Drivetrain(HardwareMap hardwareMap) {
-        //Drive Motor Initializatio
         frontLeft = hardwareMap.get(DcMotorEx.class, "Front Left");
         frontRight = hardwareMap.get(DcMotorEx.class, "Front Right");
         backLeft = hardwareMap.get(DcMotorEx.class, "Back Left");
@@ -18,14 +17,16 @@ public class Drivetrain {
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
     }
+
     public void drive(double forward, double sideways, double rotation) {
-        //Multiplied by speed variable, only changes when in slowmode
+        //Multiplied by speed variable, only changes when in slow mode
         forward *= speed;
         sideways *= speed;
         rotation *= speed;
 
-        //adds all the inputs together to get the number to scale it by
+        // Adds all the inputs together to get the number to scale it by
         double scale = Math.abs(rotation) + Math.abs(forward) + Math.abs(sideways);
+
 
         //Scales the inputs between 0-1 for the setPower() method
         if (scale > 1) {
@@ -42,14 +43,32 @@ public class Drivetrain {
     }
 
     /**
-     * <p>battery/motor saver</p>
+     * @return current velocities as an array, for odo
+     */
+    public double[] getMotorVelocities() {
+        return new double[]{
+                frontLeft.getVelocity(),
+                frontRight.getVelocity(),
+                backLeft.getVelocity(),
+                backRight.getVelocity()
+        };
+    }
+
+    /**
+     * Battery/motor saver
      */
     public void neutral() {
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+           backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
-    public void toggleSlowMode() {speed = isSlow() ? .5 : 1;}
-    public boolean isSlow() {return speed != 1;}
+
+    public void toggleSlowMode() {
+        speed = isSlow() ? 0.5 : 1;
+    }
+
+    public boolean isSlow() {
+        return speed != 1;
+    }
 }

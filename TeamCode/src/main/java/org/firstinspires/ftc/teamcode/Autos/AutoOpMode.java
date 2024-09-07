@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.Autos;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.Mechanisms.OdoTrain;
 import org.firstinspires.ftc.teamcode.Mechanisms.ArduCam;
+import org.firstinspires.ftc.teamcode.Mechanisms.Odometry;
 import org.firstinspires.ftc.teamcode.RobotOpMode;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -12,7 +12,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 @Disabled
 public class AutoOpMode extends RobotOpMode {
     public enum AllianceColor {red, blue}
-    protected OdoTrain odo = new OdoTrain(hardwareMap);
+    protected Odometry odo = new Odometry(hardwareMap);
     protected ArduCam cam;
 
     protected void initializeOpenCv() {
@@ -30,18 +30,18 @@ public class AutoOpMode extends RobotOpMode {
     }
 
     protected double rampSpeed(double dist) {
-        //when the bot starts to slow down (in inches)
-        byte stoppingDist = 8;
+        //when the bot starts to slow down (in mm)
+        short stoppingDist = 200;
 
         return dist < stoppingDist && dist > -stoppingDist ?
                 .5 * Math.cos((dist * Math.PI)/16) + .5
                 : 1;
     }
 
-    protected void moveTo(double X, double Y, double T) {
-        while (odo.x != X && odo.y != Y)
-            odo.drive(rampSpeed(Y - odo.y),//forward
-                    rampSpeed(X - odo.x),//sideways
-                    rampSpeed(T - odo.theta));//turn
+    protected void moveTo(double desX, double desY, double desT) {
+        while (odo.x != desX && odo.y != desY)
+            odo.drive(rampSpeed(desY - odo.y),//forward
+                     rampSpeed(desX - odo.x),//sideways
+                     rampSpeed(desT - odo.theta));//turn
     }
 }
