@@ -3,7 +3,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.RobotOpMode;
 @TeleOp(name = "outreach", group = "Teleop")
 public class oneDrive extends RobotOpMode {
-    public static boolean initFunc = false;
+    private boolean b;
     @Override
     public void init() {
         super.init();
@@ -11,5 +11,12 @@ public class oneDrive extends RobotOpMode {
     @Override
     public void loop() {
         dt.robotODrive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+
+        if (gamepad1.b && !b) {
+            dl.launch();
+            b = true;
+        }
+        else if (!b)
+            b = false;
     }
 }
