@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.Autos;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-@Autonomous (name = "Blue Left", group = "Autonomous")
-public class BL extends AutoOpMode {
+@Autonomous (name = "Red Left", group = "Autonomous")
+public class RL extends AutoOpMode {
     @Override
     public void init() {
         super.init();
