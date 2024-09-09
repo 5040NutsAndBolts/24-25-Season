@@ -43,18 +43,6 @@ public class Drivetrain {
     }
 
     /**
-     * @return current velocities as an array, for odo
-     */
-    public double[] getMotorVelocities() {
-        return new double[]{
-                frontLeft.getVelocity(),
-                frontRight.getVelocity(),
-                backLeft.getVelocity(),
-                backRight.getVelocity()
-        };
-    }
-
-    /**
      * Battery/motor saver
      */
     public void neutral() {
