@@ -1,7 +1,8 @@
 package org.firstinspires.ftc.teamcode.Mechanisms;
-import com.qualcomm.robotcore.hardware.HardwareMap;
+import androidx.annotation.NonNull;
 
-import org.firstinspires.ftc.teamcode.Utils.ControlHub;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Odometry extends Drivetrain {
 
@@ -11,8 +12,7 @@ public class Odometry extends Drivetrain {
     private static final double CENTER_WHEEL_OFFSET = 50.0; // Offset of the center wheel from the robot's center of rotation (mm)
 
     // Odometry wheels
-    public final ControlHub controlHub;
-    public final ControlHub expansionHub;
+    private final DcMotorEx leftOdo,centerOdo,rightOdo;
 
     // Robot's position and orientation
     public double x, y, theta; // x and y in mm, theta in radians
@@ -20,8 +20,9 @@ public class Odometry extends Drivetrain {
     public Odometry(HardwareMap hardwareMap) {
         super(hardwareMap);
 
-        controlHub = new ControlHub(hardwareMap, "Control Hub");
-        expansionHub = new ControlHub(hardwareMap, "Expansion Hub");
+        leftOdo = hardwareMap.get(DcMotorEx.class, "Left Odo");
+        centerOdo = hardwareMap.get(DcMotorEx.class, "Center Odo");
+        rightOdo = hardwareMap.get(DcMotorEx.class, "Right Odo");
 
         // Initial position and orientation
         x = 0;
@@ -35,13 +36,11 @@ public class Odometry extends Drivetrain {
      */
     public void update() {
         // Get data from the encoders (both on expansion and control hub
-        controlHub.refreshBulkData();
-        expansionHub.refreshBulkData();
 
         // Get current encoder positions from the odometry pods
-        int leftTicks = controlHub.getEncoderTicks(0); //Motor 0 on the Control Hub
-        int rightTicks = controlHub.getEncoderTicks(3); //Motor 3 on the Control Hub
-        int centerTicks = expansionHub.getEncoderTicks(0); //Motor 3 on the Expansion Hub
+        int leftTicks = leftOdo.getCurrentPosition();
+        int rightTicks = rightOdo.getCurrentPosition();
+        int centerTicks = centerOdo.getCurrentPosition();
 
         // Convert encoder ticks to distance traveled (in mm)
         double leftDistMM = ticksToMM(leftTicks);
@@ -97,5 +96,11 @@ public class Odometry extends Drivetrain {
     public void drive(double forward, double sideways, double rotation) {
         super.drive(forward, sideways, rotation);
         update();
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "[X: "+x+",\n Y: "+y+",\n Theta: "+theta+"]\n[Left: "+leftOdo.getCurrentPosition()+",\n Center: "+centerOdo.getCurrentPosition()+",\n Right: "+rightOdo.getCurrentPosition()+"]";
     }
 }

@@ -14,8 +14,6 @@ public class OdometryTestOpMode extends OpMode {
     @Override
     public void loop() {
         odo.update();
-        telemetry.addLine("X: " + odo.x);
-        telemetry.addLine("Y: " + odo.y);
-        telemetry.addLine("Theta: " + odo.theta);
+        telemetry.addLine(odo.toString());
     }
 }
