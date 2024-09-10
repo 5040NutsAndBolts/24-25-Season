@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode.Mechanisms;
-
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
+
+import org.firstinspires.ftc.teamcode.Utils.ControlHub;
 
 public class Odometry extends Drivetrain {
 
@@ -12,30 +11,22 @@ public class Odometry extends Drivetrain {
     private static final double CENTER_WHEEL_OFFSET = 50.0; // Offset of the center wheel from the robot's center of rotation (mm)
 
     // Odometry wheels
-    private final DcMotorEx leftOdoWheel;
-    private final DcMotorEx rightOdoWheel;
-    private final DcMotorEx centerOdoWheel;
+    public final ControlHub controlHub;
+    public final ControlHub expansionHub;
 
     // Robot's position and orientation
-    private double xPos, yPos, thetaRad; // x and y in mm, theta in radians
+    public double x, y, theta; // x and y in mm, theta in radians
 
     public Odometry(HardwareMap hardwareMap) {
         super(hardwareMap);
 
-        // Initialize odometry wheels
-        leftOdoWheel = hardwareMap.get(DcMotorEx.class, "Left Odo Pod");
-        rightOdoWheel = hardwareMap.get(DcMotorEx.class, "Right Odo Pod");
-        centerOdoWheel = hardwareMap.get(DcMotorEx.class, "Center Odo Pod");
+        controlHub = new ControlHub(hardwareMap, "Control Hub");
+        expansionHub = new ControlHub(hardwareMap, "Expansion Hub");
 
-        // Set zero power behavior
-        leftOdoWheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rightOdoWheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        centerOdoWheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-
-        // Initialize position and orientation
-        xPos = 0.0;
-        yPos = 0.0;
-        thetaRad = 0.0; // In radians
+        // Initial position and orientation
+        x = 0;
+        y = 0;
+        theta = 0;
     }
 
     /**
@@ -43,10 +34,14 @@ public class Odometry extends Drivetrain {
      * This method calculates the robot's new position and orientation (x, y, theta).
      */
     public void update() {
-        // Get current encoder values for each wheel
-        double leftTicks = leftOdoWheel.getCurrentPosition();
-        double rightTicks = rightOdoWheel.getCurrentPosition();
-        double centerTicks = centerOdoWheel.getCurrentPosition();
+        // Get data from the encoders (both on expansion and control hub
+        controlHub.refreshBulkData();
+        expansionHub.refreshBulkData();
+
+        // Get current encoder positions from the odometry pods
+        int leftTicks = controlHub.getEncoderTicks(0); //Motor 0 on the Control Hub
+        int rightTicks = controlHub.getEncoderTicks(3); //Motor 3 on the Control Hub
+        int centerTicks = expansionHub.getEncoderTicks(0); //Motor 3 on the Expansion Hub
 
         // Convert encoder ticks to distance traveled (in mm)
         double leftDistMM = ticksToMM(leftTicks);
@@ -58,20 +53,20 @@ public class Odometry extends Drivetrain {
         double deltaThetaRad = (rightDistMM - leftDistMM) / DISTANCE_BETWEEN_WHEELS; // Change in radians
 
         // Update robot's orientation (theta) and normalize it between 0 and 2π
-        thetaRad = normalizeAngle(thetaRad + deltaThetaRad);
+        theta = normalizeAngle(theta + deltaThetaRad);
 
         // Calculate the change in position (Δx, Δy) based on the new orientation
-        double deltaX = forwardMovementMM * Math.cos(thetaRad);
-        double deltaY = forwardMovementMM * Math.sin(thetaRad);
+        double deltaX = forwardMovementMM * Math.cos(theta);
+        double deltaY = forwardMovementMM * Math.sin(theta);
 
         // Adjust for the movement contribution from the center wheel (perpendicular movement)
         double lateralMovementMM = centerDistMM + CENTER_WHEEL_OFFSET * deltaThetaRad;
-        deltaX += lateralMovementMM * Math.cos(thetaRad + Math.PI / 2.0);
-        deltaY += lateralMovementMM * Math.sin(thetaRad + Math.PI / 2.0);
+        deltaX += lateralMovementMM * Math.cos(theta + Math.PI / 2.0);
+        deltaY += lateralMovementMM * Math.sin(theta + Math.PI / 2.0);
 
         // Update the robot's position (xPos, yPos)
-        xPos += deltaX;
-        yPos += deltaY;
+        x += deltaX;
+        y += deltaY;
     }
 
     /**
@@ -98,24 +93,9 @@ public class Odometry extends Drivetrain {
         return angle;
     }
 
-    /**
-     * Converts the robot's orientation from radians to degrees.
-     * @return Orientation (theta) in degrees.
-     */
-    public double getThetaDegrees() {
-        return Math.toDegrees(thetaRad);
-    }
-
-    // Getter methods for position
-    public double getX() {
-        return xPos;
-    }
-
-    public double getY() {
-        return yPos;
-    }
-
-    public double getThetaRad() {
-        return thetaRad;
+    @Override
+    public void drive(double forward, double sideways, double rotation) {
+        super.drive(forward, sideways, rotation);
+        update();
     }
 }

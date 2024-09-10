@@ -5,11 +5,11 @@ import org.firstinspires.ftc.teamcode.Mechanisms.*;
 
 @Disabled
 public class RobotOpMode extends OpMode {
-    protected Drivetrain drivetrain;
+    protected Drivetrain dt;
 
     @Override
     public void init() {
-        drivetrain = new Drivetrain(hardwareMap);
+        dt = new Drivetrain(hardwareMap);
     }
     //Leave empty
     @Override public void loop() {}

@@ -7,7 +7,7 @@ public class OneDriverTeleop extends RobotOpMode {
     @Override
     public void loop() {
         if(gamepad1.b) { //slowmode toggle
-            drivetrain.toggleSlowMode();
+            dt.toggleSlowMode();
             gamepad1.rumble(200);
             bPressed = true;
         }else if(!bPressed) bPressed = false;
@@ -18,13 +18,13 @@ public class OneDriverTeleop extends RobotOpMode {
         }else if(!yPressed) yPressed = false;
 
         if(rawDrive)
-            drivetrain.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
-        else drivetrain.drive(gamepad1.left_stick_y * gamepad1.left_stick_y * gamepad1.left_stick_y,
+            dt.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+        else dt.drive(gamepad1.left_stick_y * gamepad1.left_stick_y * gamepad1.left_stick_y,
                              gamepad1.left_stick_x * gamepad1.left_stick_x * gamepad1.left_stick_x,
                               gamepad1.right_stick_x * gamepad1.right_stick_x * gamepad1.right_stick_x);
 
 
-        telemetry.addLine("Slow:  "+drivetrain.isSlow());
+        telemetry.addLine("Slow:  "+ dt.isSlow());
         telemetry.addLine("Accelerated Input: " + !rawDrive);
     }
 }
