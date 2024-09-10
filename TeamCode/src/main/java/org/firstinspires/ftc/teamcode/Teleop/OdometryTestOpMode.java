@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.Teleop;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Mechanisms.Odometry;
 
+@TeleOp(name="Odo Test", group="Teleop")
 public class OdometryTestOpMode extends OpMode {
     private Odometry odo;
 

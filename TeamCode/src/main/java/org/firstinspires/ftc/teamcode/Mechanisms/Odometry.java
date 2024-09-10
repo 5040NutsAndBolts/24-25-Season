@@ -100,7 +100,5 @@ public class Odometry extends Drivetrain {
 
     @NonNull
     @Override
-    public String toString() {
-        return "[X: "+x+",\n Y: "+y+",\n Theta: "+theta+"]\n[Left: "+leftOdo.getCurrentPosition()+",\n Center: "+centerOdo.getCurrentPosition()+",\n Right: "+rightOdo.getCurrentPosition()+"]";
-    }
+    public String toString() {return "[X: "+x+",\n Y: "+y+",\n Theta: "+theta+"]\n[Left: "+leftOdo.getCurrentPosition()+",\n Center: "+centerOdo.getCurrentPosition()+",\n Right: "+rightOdo.getCurrentPosition()+"]";}
 }

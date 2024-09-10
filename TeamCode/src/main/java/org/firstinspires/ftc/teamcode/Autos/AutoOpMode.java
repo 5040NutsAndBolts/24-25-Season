@@ -11,7 +11,6 @@ public class AutoOpMode extends RobotOpMode {
     public void init() {
         super.init();
         odo = new Odometry(hardwareMap);
-        dt = odo;
     }
 
     /**
