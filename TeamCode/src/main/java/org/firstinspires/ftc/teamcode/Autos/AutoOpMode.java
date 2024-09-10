@@ -5,7 +5,12 @@ import org.firstinspires.ftc.teamcode.RobotOpMode;
 
 @Disabled
 public class AutoOpMode extends RobotOpMode {
-    protected Odometry odo = new Odometry(hardwareMap);
+    protected Odometry odo;
+
+    @Override
+    public void init() {
+        odo = new Odometry(hardwareMap);
+    }
 
     protected double calculateSpeedArc(double dist) {
         if (dist < 10 && dist > -10)
