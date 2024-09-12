@@ -1,18 +1,29 @@
 package org.firstinspires.ftc.teamcode.Mechanisms;
-import androidx.annotation.NonNull;
 
+import androidx.annotation.NonNull;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Odometry extends Drivetrain {
 
+    private int fart = 0;
+
     // Constants for odometry
-    private static final double TICKS_PER_MM = 100.0; // Conversion factor: encoder ticks to mm
-    private static final double DISTANCE_BETWEEN_WHEELS = 200.0; // Distance between left and right wheels (mm)
-    private static final double CENTER_WHEEL_OFFSET = 50.0; // Offset of the center wheel from the robot's center of rotation (mm)
+    private static final double TICKS_PER_MM = 14.58756105; // Conversion factor: encoder ticks to mm
+    private static final double DISTANCE_BETWEEN_WHEELS = 386.08; // Distance between left and right wheels (mm)
+    private static final double CENTER_WHEEL_OFFSET = 171.45; // Offset of the center wheel from the robot's center of rotation (mm)
 
     // Odometry wheels
-    private final DcMotorEx leftOdo,centerOdo,rightOdo;
+    private final DcMotorEx leftOdo, centerOdo, rightOdo;
+
+    // Encoder offsets
+    private int leftOdoOffset, centerOdoOffset, rightOdoOffset;
+
+    // Current tick values after applying offsets
+    public int leftTicks, centerTicks, rightTicks;
+
+    // Previous tick values for comparison
+    private int prevLeftTicks, prevRightTicks, prevCenterTicks;
 
     // Robot's position and orientation
     public double x, y, theta; // x and y in mm, theta in radians
@@ -20,14 +31,25 @@ public class Odometry extends Drivetrain {
     public Odometry(HardwareMap hardwareMap) {
         super(hardwareMap);
 
+        // Initialize the odometry pods using the hardware map
         leftOdo = hardwareMap.get(DcMotorEx.class, "Left Odo");
         centerOdo = hardwareMap.get(DcMotorEx.class, "Center Odo");
         rightOdo = hardwareMap.get(DcMotorEx.class, "Right Odo");
+
+        // Capture the initial encoder positions as offsets (to account for starting positions)
+        leftOdoOffset = leftOdo.getCurrentPosition();
+        centerOdoOffset = centerOdo.getCurrentPosition();
+        rightOdoOffset = rightOdo.getCurrentPosition();
 
         // Initial position and orientation
         x = 0;
         y = 0;
         theta = 0;
+
+        // Initialize previous ticks
+        prevLeftTicks = leftOdo.getCurrentPosition();
+        prevRightTicks = rightOdo.getCurrentPosition();
+        prevCenterTicks = centerOdo.getCurrentPosition();
     }
 
     /**
@@ -35,37 +57,52 @@ public class Odometry extends Drivetrain {
      * This method calculates the robot's new position and orientation (x, y, theta).
      */
     public void update() {
-        // Get data from the encoders (both on expansion and control hub
+        // Get current encoder positions and subtract the initial offset
+        leftTicks = leftOdo.getCurrentPosition() - leftOdoOffset;
+        rightTicks = rightOdo.getCurrentPosition() - rightOdoOffset;
+        centerTicks = centerOdo.getCurrentPosition() - centerOdoOffset;
 
-        // Get current encoder positions from the odometry pods
-        int leftTicks = leftOdo.getCurrentPosition();
-        int rightTicks = rightOdo.getCurrentPosition();
-        int centerTicks = centerOdo.getCurrentPosition();
+        // Only update if there's actual movement (change in encoder ticks)
+        if (leftTicks != prevLeftTicks || rightTicks != prevRightTicks || centerTicks != prevCenterTicks) {
 
-        // Convert encoder ticks to distance traveled (in mm)
-        double leftDistMM = ticksToMM(leftTicks);
-        double rightDistMM = ticksToMM(rightTicks);
-        double centerDistMM = ticksToMM(centerTicks);
+            // Convert encoder ticks to distance traveled (in mm)
+            double leftDistMM = ticksToMM(leftTicks);
+            double rightDistMM = ticksToMM(rightTicks);
+            double centerDistMM = ticksToMM(centerTicks);
 
-        // Calculate the robot's forward movement and change in orientation (theta)
-        double forwardMovementMM = (leftDistMM + rightDistMM) / 2.0;
-        double deltaThetaRad = (rightDistMM - leftDistMM) / DISTANCE_BETWEEN_WHEELS; // Change in radians
+            // Calculate the robot's forward movement and change in orientation (theta)
+            double forwardMovementMM = (leftDistMM + rightDistMM) / 2.0;
+            double deltaThetaRad = (rightDistMM - leftDistMM) / DISTANCE_BETWEEN_WHEELS; // Change in radians
 
-        // Update robot's orientation (theta) and normalize it between 0 and 2π
-        theta = normalizeAngle(theta + deltaThetaRad);
+            // Update robot's orientation (theta) and normalize it between 0 and 2π
+            theta = normalizeAngle(theta + deltaThetaRad);
 
-        // Calculate the change in position (Δx, Δy) based on the new orientation
-        double deltaX = forwardMovementMM * Math.cos(theta);
-        double deltaY = forwardMovementMM * Math.sin(theta);
+            // Calculate the change in position (Δx, Δy) based on the new orientation
+            double deltaX = forwardMovementMM * Math.cos(theta);
+            double deltaY = forwardMovementMM * Math.sin(theta);
 
-        // Adjust for the movement contribution from the center wheel (perpendicular movement)
-        double lateralMovementMM = centerDistMM + CENTER_WHEEL_OFFSET * deltaThetaRad;
-        deltaX += lateralMovementMM * Math.cos(theta + Math.PI / 2.0);
-        deltaY += lateralMovementMM * Math.sin(theta + Math.PI / 2.0);
+            // Adjust for the movement contribution from the center wheel (perpendicular movement)
+            double lateralMovementMM = centerDistMM;
+            deltaX += lateralMovementMM * Math.cos(theta + Math.PI / 2.0);
+            deltaY += lateralMovementMM * Math.sin(theta + Math.PI / 2.0);
 
-        // Update the robot's position (xPos, yPos)
-        x += deltaX;
-        y += deltaY;
+            // Update the robot's position (x, y)
+            x += deltaX;
+            y += deltaY;
+
+            // Update previous tick values
+            prevLeftTicks = leftTicks;
+            prevRightTicks = rightTicks;
+            prevCenterTicks = centerTicks;
+        }
+
+        fart++; // Increment fart counter for debug purposes
+    }
+
+    @Override
+    public void drive(double forward, double sideways, double rotation) {
+        super.drive(forward, sideways, rotation);
+        update();
     }
 
     /**
@@ -92,13 +129,10 @@ public class Odometry extends Drivetrain {
         return angle;
     }
 
-    @Override
-    public void drive(double forward, double sideways, double rotation) {
-        super.drive(forward, sideways, rotation);
-        update();
-    }
-
     @NonNull
     @Override
-    public String toString() {return "[X: "+x+",\n Y: "+y+",\n Theta: "+theta+"]\n[Left: "+leftOdo.getCurrentPosition()+",\n Center: "+centerOdo.getCurrentPosition()+",\n Right: "+rightOdo.getCurrentPosition()+"]";}
+    public String toString() {
+        return "[X: " + x + " mm,\n Y: " + y + " mm,\n Theta: " + Math.toDegrees(theta) + "°]\n" +
+                "[Left Ticks: " + leftTicks + ", Center Ticks: " + centerTicks + ", Right Ticks: " + rightTicks + "]\nFart: " + fart;
+    }
 }

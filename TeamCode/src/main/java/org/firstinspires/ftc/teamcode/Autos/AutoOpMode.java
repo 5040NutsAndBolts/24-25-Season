@@ -37,10 +37,10 @@ public class AutoOpMode extends RobotOpMode {
             odo.drive(rampSpeed(desY - this.odo.y),//forward
                       rampSpeed(desX - this.odo.x),//sideways
                       rampSpeed(Math.toRadians(desT) - this.odo.theta));//turn
+            odo.update();
 
-            telemetry.addLine("X: " + odo.x);
-            telemetry.addLine("Y: " + odo.y);
-            telemetry.addLine("Theta: " + odo.theta);
+            telemetry.addLine(odo.toString());
+            telemetry.update();
         }
     }
 }
