@@ -15,10 +15,9 @@ public class OdometryTestOpMode extends OpMode {
 
     @Override
     public void loop() {
-        // Handle both forward and backward movement in one call to drive()
-        double forward = gamepad1.dpad_up ? 1 : (gamepad1.dpad_down ? -1 : 0);
-        odo.drive(forward, 0 , 0);
-        odo.update();
+        odo.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+
         telemetry.addLine(odo.toString());
+        telemetry.update();
     }
 }
