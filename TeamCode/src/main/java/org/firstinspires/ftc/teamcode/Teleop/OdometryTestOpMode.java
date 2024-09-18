@@ -3,21 +3,22 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Mechanisms.Odometry;
 
+import java.util.Arrays;
+
 @TeleOp(name="Odometry Test", group="Teleop")
 public class OdometryTestOpMode extends OpMode {
     private Odometry odo;
 
     @Override
     public void init() {
-        odo = new Odometry(hardwareMap);
+        odo = new Odometry(hardwareMap, telemetry);
         odo.neutral();
     }
 
     @Override
     public void loop() {
-        odo.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
-
-        telemetry.addLine(odo.toString());
+        odo.driveManual(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+        telemetry.addLine(Arrays.deepToString(odo.getCurrentPosition()));
         telemetry.update();
     }
 }

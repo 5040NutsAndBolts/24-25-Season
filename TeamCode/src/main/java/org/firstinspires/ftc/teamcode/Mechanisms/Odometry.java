@@ -1,97 +1,140 @@
 package org.firstinspires.ftc.teamcode.Mechanisms;
-import androidx.annotation.NonNull;
+
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+//EVERYTHING IS IN MILLIMETERS!!!!!!!!!!
 public class Odometry extends Drivetrain {
-    // Constants for odometry
-    private static final double TICKS_PER_MM = 14.58756105; // Conversion factor: encoder ticks to mm
-    private static final double DISTANCE_BETWEEN_WHEELS = 386.08; // Distance between left and right wheels (mm)
-    private static final double CENTER_WHEEL_OFFSET = 171.45; // Offset of center wheel from center of robot (mm)
+    //Where all the data is logged to
+    Telemetry telemetry;
 
-    // Odometry wheels
+    //Constants
+    private final double TICKS_PER_MILLIMETER = 10;
+    private final double CENTER_ODO_OFFSET = 10;//center wheel offset
+    private final double TRACKWIDTH = 10;//distance between left and right wheels
+
+    //Encoders
     private final DcMotorEx leftOdo, centerOdo, rightOdo;
 
-    // Encoder offsets
-    private final int LEFT_ODO_OFFSET, CENTER_ODO_OFFSET, RIGHT_ODO_OFFSET;
+    //because encoders don't always start at zero
+    private final double leftOffset, centerOffset, rightOffset;
 
-    // Previous tick values
-    private int pLeftTicks, pCenterTicks, pRightTicks;
+    //previous encoder values
+    private double pLeft, pCenter, pRight;
 
-    // Robot's position and orientation
-    public double x, y, theta; // x and y in mm, theta in radians
+    //Current positions
+    private double x, y, theta;
 
-    // Constructor to initialize odometry hardware
-    public Odometry(HardwareMap hardwareMap) {
-	    super(hardwareMap);
-	    leftOdo = hardwareMap.get(DcMotorEx.class, "Left Odo");
+    public Odometry(HardwareMap hardwareMap, Telemetry t) {
+        super(hardwareMap);
+
+        telemetry = t;
+
+        leftOdo = hardwareMap.get(DcMotorEx.class, "Left Odo");
         centerOdo = hardwareMap.get(DcMotorEx.class, "Center Odo");
         rightOdo = hardwareMap.get(DcMotorEx.class, "Right Odo");
 
-        // Capture initial encoder positions to account for the offsets
-        LEFT_ODO_OFFSET = leftOdo.getCurrentPosition();
-        CENTER_ODO_OFFSET = centerOdo.getCurrentPosition();
-        RIGHT_ODO_OFFSET = rightOdo.getCurrentPosition();
-
-        // Initialize previous tick values
-        pLeftTicks = leftOdo.getCurrentPosition();
-        pRightTicks = rightOdo.getCurrentPosition();
-        pCenterTicks = centerOdo.getCurrentPosition();
-
-        // Initialize robot's position and orientation
-        x = 0;
-        y = 0;
-        theta = 0;
+        leftOffset = leftOdo.getCurrentPosition();
+        centerOffset = centerOdo.getCurrentPosition();
+        rightOffset = rightOdo.getCurrentPosition();
     }
 
     /**
-     * Updates the robot's odometry based on encoder values.
-     * This method calculates the robot's new position and orientation (x, y, theta).
+     * Updates the odometry values based on the encoders
      */
-    private static final int TICK_THRESHOLD = 5; // Threshold to ignore small changes from noise
+    private void update() {
+        //Distance values (Current tick amount)
+        double dLeft = leftOdo.getCurrentPosition() - leftOffset;
+        double dCenter = centerOdo.getCurrentPosition() - centerOffset;
+        double dRight = rightOdo.getCurrentPosition() - rightOffset;
 
-    public void update() {
-        // Get current encoder positions and subtract the initial offsets
-        int leftTicks = leftOdo.getCurrentPosition() - LEFT_ODO_OFFSET;
-        int rightTicks = rightOdo.getCurrentPosition() - RIGHT_ODO_OFFSET;
-        int centerTicks = centerOdo.getCurrentPosition() - CENTER_ODO_OFFSET;
+        //Delta values (Change in tick amount)
+        double deltaLeft = dLeft - pLeft;
+        double deltaCenter = dCenter - pCenter;
+        double deltaRight = dRight - pRight;
 
-        // Only update if there’s significant movement (above the threshold)
-        if (Math.abs(leftTicks - pLeftTicks) > TICK_THRESHOLD ||
-                Math.abs(rightTicks - pRightTicks) > TICK_THRESHOLD ||
-                Math.abs(centerTicks - pCenterTicks) > TICK_THRESHOLD) {
+        //Change in theta
+        double deltaTheta = (deltaLeft - deltaRight) / TRACKWIDTH;
+        //Midpoint orientation of theta (more accurate)
+        double thetaMid = theta + (deltaTheta / 2);
 
-            // Calculate the change in distances and orientation
-            double deltaLeft = (leftTicks - pLeftTicks) * TICKS_PER_MM;
-            double deltaRight = (rightTicks - pRightTicks) * TICKS_PER_MM;
-            double deltaTheta = (deltaLeft - deltaRight) / DISTANCE_BETWEEN_WHEELS;
+        //Delta values (Change in distance)
+        double deltaX = ((deltaLeft + deltaRight) / 2) * Math.cos(thetaMid);
+        double deltaY = deltaCenter - (CENTER_ODO_OFFSET * deltaTheta);
 
-            // Calculate midpoint theta for arc integration
-            double thetaMid = theta + (deltaTheta / 2.0);
+        //Update previous values
+        pLeft = dLeft;
+        pCenter = dCenter;
+        pRight = dRight;
 
-            // Calculate the change in position based on deltaTheta and wheel distances
-            double deltaX = ((deltaLeft + deltaRight) / 2.0) * Math.cos(thetaMid);
-            double deltaY = ((deltaLeft + deltaRight) / 2.0) * Math.sin(thetaMid);
+        //Update current position
+        x += deltaX * TICKS_PER_MILLIMETER;
+        y += deltaY * TICKS_PER_MILLIMETER;
+        theta += deltaTheta;
 
-            // Apply center wheel lateral movement correction
-            double deltaYLat = centerTicks * TICKS_PER_MM; // Lateral movement from center wheel
-            double deltaYOffset = CENTER_WHEEL_OFFSET * deltaTheta; // Lateral offset due to turn
-            double deltaYLatCorrected = deltaYLat - deltaYOffset;
+        //Normalize theta between 0 and 2pi
+        theta %= (2 * Math.PI);
+        if (theta < 0)
+            theta += 2 * Math.PI;
+    }
 
-            // Update position and orientation
-            x += deltaX;
-            y += deltaY + deltaYLatCorrected;
-            theta += deltaTheta;
+    /**
+     * @param dist Distance from desired position
+     * @return speed with faux PID loop
+     */
+    private double rampSpeed(double dist) {
+        //when the bot starts to slow down (in mm)
+        short stoppingDist = 200;
 
-            // Update previous ticks for the next cycle
-            pLeftTicks = leftTicks;
-            pRightTicks = rightTicks;
-            pCenterTicks = centerTicks;
+        return dist < stoppingDist && dist > -stoppingDist ?
+                -.5 * Math.cos((dist * Math.PI) / stoppingDist) + .5
+                : 1;
+    }
+
+    /**
+     * Drive to a desired position
+     * @param desX      desired X position
+     * @param desY      desired Y position
+     * @param desTheta  desired Theta position, in degrees
+     */
+    public void moveTo(double desX, double desY, double desTheta) {
+        desTheta = Math.toRadians(desTheta);
+        //Normalize theta
+        desTheta %= (2 * Math.PI);
+        if (desTheta < 0)
+            desTheta += 2 * Math.PI;
+
+        //account for oscillation
+        while (Math.abs(desX - x) > 1 || Math.abs(desY - y) > 1 || Math.abs(desTheta - theta) > 1) {
+            update();
+
+            //Drive to desired position, adjusting speed based on distance from desired position
+            drive(rampSpeed(x - desX), rampSpeed(y - desY), rampSpeed(desTheta - theta));
+
+            //Log everything to telemetry
+            telemetry.addLine("x:" + x + "\ny:" + y + "\ntheta:" + Math.toDegrees(theta));
+            telemetry.addLine("desX:" + desX + "\ndesY:" + desY + "\ndesTheta:" + desTheta);
+            telemetry.addLine("L:" + leftOdo.getCurrentPosition() + "\nC:" + centerOdo.getCurrentPosition() + "\nR:" + rightOdo.getCurrentPosition());
+            telemetry.update();
         }
     }
 
-    @NonNull
-    public String toString() {
-        return "X: " + x + "\nY: " + y + "\nTheta: " + theta;
+    /**
+     * Allows user to directly set drivetrain powers (for tuning/testing)
+     * @param forward  forward power
+     * @param sideways strafe power
+     * @param rotation rotation power
+     */
+    public void driveManual(double forward, double sideways, double rotation) {
+        update();
+        super.drive(forward, sideways, rotation);
+    }
+
+    /**
+     * @return current position in XYT and encoder values
+     */
+    public double[][] getCurrentPosition() {
+        return new double[][] {{x, y, theta}, {leftOdo.getCurrentPosition(), centerOdo.getCurrentPosition(), rightOdo.getCurrentPosition()}};
     }
 }
