@@ -16,6 +16,8 @@ public class Drivetrain {
         //Needed for how the motors are mounted
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        brakeMode();
     }
 
     public void drive(double forward, double sideways, double rotation) {
@@ -52,6 +54,15 @@ public class Drivetrain {
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
 
+    /**
+     * sets motors to BRAKE
+     */
+    public void brakeMode() {
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
     public void toggleSlowMode() {
         speed = isSlow() ? 0.5 : 1;
     }
