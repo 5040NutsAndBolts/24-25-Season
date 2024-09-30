@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 public class BL extends AutoOpMode {
     @Override
     public void loop() {
-        odo.moveForward(10,0,0);
+        odo.moveTo(10,0,0);
+        terminateOpModeNow();
     }
 }
