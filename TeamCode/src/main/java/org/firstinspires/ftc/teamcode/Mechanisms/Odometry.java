@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Mechanisms;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Utils.Pose;
 
 //EVERYTHING IS IN MILLIMETERS!!!!!!!!!!
 public class Odometry extends Drivetrain {
@@ -10,7 +11,7 @@ public class Odometry extends Drivetrain {
     private final Telemetry telemetry;
 
     //Constants
-    private final double TICKS_PER_MILLIMETER = 13.07332296; //FB and spin tests
+    private final double TICKS_PER_MILLIMETER = 13.19710351; //FB and spin tests
     private final double CENTER_TICKS_PER_MILLIMETER = 12.94128571; //Strafe test
     private final double CENTER_ODO_OFFSET = 152.4;//center wheel offset
     private final double TRACKWIDTH = 393.7;//distance between left and right wheels
@@ -27,6 +28,8 @@ public class Odometry extends Drivetrain {
     private double x, y, theta;
     //Previous positions
     private double pX, pY, pTheta;
+
+    public Pose pose = new Pose(x, y, theta);
 
     public Odometry(HardwareMap hardwareMap, Telemetry t) {
         super(hardwareMap);
@@ -68,7 +71,7 @@ public class Odometry extends Drivetrain {
         double thetaMid = theta + (deltaTheta / 2);
 
         // If the robot is rotating significantly, focus on updating theta and avoid changing X or Y
-        if (Math.abs(deltaTheta) > 0.01) {
+        if (Math.abs(deltaTheta) > 1) {
             // Update theta
             theta += deltaTheta;
 
@@ -111,66 +114,8 @@ public class Odometry extends Drivetrain {
         theta %= (2 * Math.PI);
         if (theta < 0)
             theta += 2 * Math.PI;
-    }
 
-
-    /**
-     * @param dist Distance from desired position
-     * @return speed with faux PID loop
-     */
-    private double rampSpeed(double dist) {
-        //when the bot starts to slow down (in mm)
-        short stoppingDist = 500;
-
-        return dist < stoppingDist && dist > -stoppingDist ?
-                -.5 * Math.cos((dist * Math.PI) / stoppingDist) + .5
-                : 1;
-    }
-
-    /**
-     * Drive to a desired position / coordinate (all in mm)
-     * @param desX      desired X position
-     * @param desY      desired Y position
-     * @param desTheta  desired Theta position (deg)
-     */
-    public void moveTo(double desX, double desY, double desTheta) {
-        //Normalize Theta in radians
-        desTheta = Math.toRadians(desTheta);
-        desTheta %= 2;
-        if(desTheta > 0) desTheta += Math.PI * 2;
-
-        while(x != desX || y != desY || theta != desTheta){
-            update();
-
-            //These are kept in 'if' statements so it can create a smooth transition
-            if(x != desX){
-                drive(rampSpeed(x-desX),0,0);
-
-                //In case of drift
-                while(y != pY)
-                    drive(0,rampSpeed(y-pY),0);
-                while(theta != pTheta)
-                    drive(0,0,rampSpeed(theta-pTheta));
-            }
-            if(y != desY){
-                drive(0,rampSpeed(y-desY),0);
-
-                //In case of drift
-                while(x != pX)
-                    drive(rampSpeed(x-pX),0,0);
-                while(theta != pTheta)
-                    drive(0,0,rampSpeed(theta-pTheta));
-            }
-            if(theta != desTheta) {
-                drive(0,0,rampSpeed(theta-desTheta));
-
-                //In case of drift
-                while(x != pX)
-                    drive(rampSpeed(x-pX),0,0);
-                while(y != pY)
-                    drive(0,rampSpeed(y-pY),0);
-            }
-        }
+        pose = new Pose(x, y, theta);
     }
 
     /**
@@ -180,9 +125,23 @@ public class Odometry extends Drivetrain {
      * @param rotation  rotation (deg)
      */
     public void moveForward(double forward, double sideways, double rotation) {
-        moveTo(x + forward, y + sideways, theta + rotation);
+        moveTo(new Pose(x + forward, y + sideways, theta + rotation));
     }
 
+    public void moveTo(Pose nPose) {
+        if(!this.pose.within(nPose)) {
+            double desTheta = nPose.r;
+            double desX = nPose.x;
+            double desY = nPose.y;
+            
+            //Normalize Theta in radians
+            desTheta = Math.toRadians(desTheta);
+            desTheta %= (2 * Math.PI);
+            if(desTheta > 0) desTheta += Math.PI * 2;
+
+            drive(desX * Math.cos(desX), desY * Math.sin(desY), theta - desTheta);
+        }
+    }
 
     /**
      * Allows user to directly set drivetrain powers (for tuning/testing)
@@ -197,7 +156,7 @@ public class Odometry extends Drivetrain {
         //Log XYT and encoder values to telemetry
         telemetry.addData("X", x);
         telemetry.addData("Y", y);
-        telemetry.addData("Theta", theta);
+        telemetry.addData("Theta", Math.toDegrees(theta));
         telemetry.addData("Left: ", (leftOdo.getCurrentPosition() - leftOffset));
         telemetry.addData("Center: ", (centerOdo.getCurrentPosition() - centerOffset));
         telemetry.addData("Right: ", (rightOdo.getCurrentPosition() - rightOffset));

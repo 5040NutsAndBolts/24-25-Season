@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 public class Drivetrain {
-    private static DcMotorEx frontLeft, frontRight, backLeft, backRight;
+    protected static DcMotorEx frontLeft, frontRight, backLeft, backRight;
     private double speed = 1;
 
     public Drivetrain(HardwareMap hardwareMap) {
