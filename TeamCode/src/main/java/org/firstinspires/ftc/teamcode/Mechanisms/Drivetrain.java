@@ -7,9 +7,12 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 public class Drivetrain {
     //Drive Motors Declaration
-    private static DcMotorEx frontLeft,frontRight,backLeft,backRight;
+    public static DcMotorEx frontLeft;
+    public static DcMotorEx frontRight;
+    public static DcMotorEx backLeft;
+    public static DcMotorEx backRight;
     private double speed = 1;
-
+    public Drivetrain turn;
     public Drivetrain(HardwareMap hardwareMap)
     {
         //Drive Motor Initialization
@@ -25,32 +28,35 @@ public class Drivetrain {
 
     /**
      * <p>Cancels out the angle of the mecanum wheels and also moves us forward</p>
-     * @param forward forward position
-     * @param sideways sideways position
-     * @param rotation angle of rotation
+     *
+     * @param forward       forward position
+     * @param sideways      sideways position
+
      */
-    public void robotODrive(double forward, double sideways, double rotation)
+    public void robotODrive(double forward, double sideways)
     {
         //Multiplied by speed variable, only changes when in slowmode
         forward *= speed;
-        sideways *= speed;
-        rotation *= speed;
+        sideways *= 0;
+
 
         //adds all the inputs together to get the number to scale it by
-        double scale = Math.abs(rotation) + Math.abs(forward) + Math.abs(sideways);
+        double scale = Math.abs(forward) + Math.abs(sideways);
 
         //Scales the inputs between 0-1 for the setPower() method
         if (scale > 1) {
             forward /= scale;
-            rotation /= scale;
+
             sideways /= scale;
+
+
         }
 
         //Zeroes out and opposing or angular force from the Mecanum wheels
-        frontLeft.setPower(forward - rotation - sideways);
-        backLeft.setPower(forward - rotation + sideways);
-        frontRight.setPower(forward + rotation + sideways);
-        backRight.setPower(forward + rotation - sideways);
+        frontLeft.setPower(forward - sideways);
+        backLeft.setPower(forward + sideways);
+        frontRight.setPower(forward + sideways);
+        backRight.setPower(forward - sideways);
     }
 
     public void neutral() {
@@ -58,6 +64,19 @@ public class Drivetrain {
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+    }
+    public void robotOTurn(double rotation)
+    {
+
+        rotation *= speed;
+
+        frontLeft.setPower(rotation);
+        backLeft.setPower(rotation);
+        frontRight.setPower(-rotation);
+        backRight.setPower(-rotation);
+
+
+
     }
 
     /**
