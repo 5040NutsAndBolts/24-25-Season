@@ -4,26 +4,23 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.CRServo;
 
 public class WyattClaw {
-    private final Servo pinchServo;
-    private final CRServo rollServo;
-    private boolean open;
+    private final CRServo pinchServo;
+
     public WyattClaw (HardwareMap hardwareMap) {
-        pinchServo = hardwareMap.get(Servo.class, "Pinch Servo");
-        rollServo = hardwareMap.get(CRServo.class, "Roll Servo");
+        pinchServo = hardwareMap.get(CRServo.class, "Pinch Servo");
+
     }
-    public void pinch(Boolean input) {
-        if (input) {
-            if(!open)
-                pinchServo.setPosition(1);
-            else
-                pinchServo.setPosition(0);
-            open = true;
-        }
-        else if (!open) open = false;
+    public void close(Boolean buttonInput) {
+        if (buttonInput)
+            pinchServo.setPower(0.7);
+        else
+            pinchServo.setPower(0);
     }
-    //rolls claw up and down
-    public void roll(double input) {
-        rollServo.setPower(input);
+
+    public void open(Boolean buttonInput2) {
+        if (buttonInput2)
+            pinchServo.setPower(-0.7);
+        else
+            pinchServo.setPower(0);
     }
-    public boolean isOpen(){return open;}
 }

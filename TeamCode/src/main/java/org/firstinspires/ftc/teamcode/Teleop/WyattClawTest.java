@@ -15,10 +15,7 @@ public class WyattClawTest extends RobotOpMode {
 
     @Override
     public void loop() {
-        claw.roll(gamepad2.left_stick_y);
-        claw.roll(gamepad2.dpad_up ? 1 : 0);
-        claw.roll(gamepad2.dpad_down ? -1 : 0);
-
-        telemetry.addLine("Claw Open:  "+claw.isOpen());
+        claw.open(gamepad1.left_bumper);
+        claw.close(gamepad1.right_bumper);
     }
 }

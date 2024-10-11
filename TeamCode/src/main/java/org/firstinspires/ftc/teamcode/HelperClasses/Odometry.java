@@ -95,14 +95,14 @@ public class Odometry {
 
     public void updatePositionRoadRunner()
     {
-        /*try
+        /* try
         {
             bulkData = expansionHub.getBulkInputData();
         }
         catch(Exception e)
         {
             return;
-        }*/
+        } */
 
         // Change in the distance (centimeters) since the last update for each odometer
         double deltaLeftDist = -(getDeltaLeftTicks()/ ODOM_TICKS_PER_IN );
