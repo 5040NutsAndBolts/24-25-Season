@@ -28,7 +28,7 @@ public class AutoOpMode extends RobotOpMode {
 
     protected void moveTo(double X, double Y, double T) {
         while (odo.x != X && odo.y != Y && odo.theta != T) {
-            dt.drive(calculateSpeedArc(Y - odo.y), calculateSpeedArc(X - odo.x), calculateSpeedArc(T - odo.theta));
+            dt.robot0Drive(calculateSpeedArc(Y - odo.y), calculateSpeedArc(X - odo.x), calculateSpeedArc(T - odo.theta));
             odo.updatePositionRoadRunner();
             updateOdoTelemetry();
         }

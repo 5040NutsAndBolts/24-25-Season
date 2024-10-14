@@ -18,7 +18,7 @@ public class Drivetrain {
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
     }
-    public void drive(double forward, double sideways, double rotation) {
+    public void robot0Drive(double forward, double sideways, double rotation) {
         //Multiplied by speed variable, only changes when in slowmode
         forward *= speed;
         sideways *= speed;

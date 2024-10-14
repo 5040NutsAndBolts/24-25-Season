@@ -9,11 +9,13 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.localization.ThreeTrackingWheelLocalizer;
 
+import org.firstinspires.ftc.teamcode.Mechanisms.Drivetrain;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Odometry {
+public class Odometry extends Drivetrain {
     public double x,y,theta;
     public DcMotorEx leftOdom, rightOdom, centerOdom;
     public double leftOdomTraveled, rightOdomTraveled, centerOdomTraveled;
@@ -21,6 +23,7 @@ public class Odometry {
     public static final double ODOM_TICKS_PER_IN = 1, TRACKWIDTH = 1;
 
     public Odometry(HardwareMap hardwareMap){
+        super(hardwareMap);
         leftOdom = hardwareMap.get(DcMotorEx.class, "Left Odom");
         rightOdom = hardwareMap.get(DcMotorEx.class, "Right Odom");
         centerOdom = hardwareMap.get(DcMotorEx.class, "Center Odom");
