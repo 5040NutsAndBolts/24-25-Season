@@ -5,13 +5,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 public class Drivetrain {
     protected static DcMotorEx frontLeft, frontRight, backLeft, backRight;
-    private double speed = 1;
+    private double speed = .5;
 
     public Drivetrain(HardwareMap hardwareMap) {
-        frontLeft = hardwareMap.get(DcMotorEx.class, "Front Left");
-        frontRight = hardwareMap.get(DcMotorEx.class, "Front Right");
-        backLeft = hardwareMap.get(DcMotorEx.class, "Back Left");
-        backRight = hardwareMap.get(DcMotorEx.class, "Back Right");
+        frontLeft = hardwareMap.get(DcMotorEx.class, "leftFront");
+        frontRight = hardwareMap.get(DcMotorEx.class, "rightFront");
+        backLeft = hardwareMap.get(DcMotorEx.class, "rightRear");
+        backRight = hardwareMap.get(DcMotorEx.class, "leftRear");
 
         //Needed for how the motors are mounted
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -26,9 +26,8 @@ public class Drivetrain {
         sideways *= speed;
         rotation *= speed;
 
-        // Adds all the inputs together to get the number to scale it by
+        //adds all the inputs together to get the number to scale it by
         double scale = Math.abs(rotation) + Math.abs(forward) + Math.abs(sideways);
-
 
         //Scales the inputs between 0-1 for the setPower() method
         if (scale > 1) {
@@ -37,7 +36,7 @@ public class Drivetrain {
             sideways /= scale;
         }
 
-        //Zeroes out and opposing or angular force from the Mecanum wheels
+        //Zeroes out and opposing or angular force from the Mechanum wheels
         frontLeft.setPower(forward - rotation - sideways);
         backLeft.setPower(forward - rotation + sideways);
         frontRight.setPower(forward + rotation + sideways);

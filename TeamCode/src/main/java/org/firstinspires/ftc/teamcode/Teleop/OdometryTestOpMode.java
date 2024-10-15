@@ -16,6 +16,6 @@ public class OdometryTestOpMode extends OpMode {
     @Override
     public void loop() {
         odo.update();
-        odo.drive(0, 0, gamepad1.left_stick_x * .25);
+        odo.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
     }
 }

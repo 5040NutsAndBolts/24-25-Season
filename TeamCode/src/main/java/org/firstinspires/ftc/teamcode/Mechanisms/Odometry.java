@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode.Mechanisms;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Utils.Pose;
-
+import org.firstinspires.ftc.teamcode.Utils.*;
 //EVERYTHING IS IN MILLIMETERS!!!!!!!!!!
 public class Odometry extends Drivetrain {
     //Where all the data is logged to (necessary bc of all the weird loops :(
@@ -25,7 +25,8 @@ public class Odometry extends Drivetrain {
     private double pLeft, pCenter, pRight;
 
     //Current positions
-    private double x, y, theta;
+    private double x, y;
+	public double theta;
     //Previous positions
     private double pX, pY, pTheta;
 
@@ -40,7 +41,7 @@ public class Odometry extends Drivetrain {
         centerOdo = hardwareMap.get(DcMotorEx.class, "Center Odo");
         rightOdo = hardwareMap.get(DcMotorEx.class, "Right Odo");
 
-        leftOffset = leftOdo.getCurrentPosition();
+	    leftOffset = leftOdo.getCurrentPosition();
         centerOffset = centerOdo.getCurrentPosition();
         rightOffset = rightOdo.getCurrentPosition();
     }
@@ -50,19 +51,19 @@ public class Odometry extends Drivetrain {
      */
     public void update() {
         // Get the current encoder values, accounting for the initial offsets
-        double dLeft = leftOdo.getCurrentPosition() - leftOffset;
-        double dCenter = centerOdo.getCurrentPosition() - centerOffset;
-        double dRight = rightOdo.getCurrentPosition() - rightOffset;
+        double cLeft = leftOdo.getCurrentPosition() - leftOffset;
+        double cCenter = centerOdo.getCurrentPosition() - centerOffset;
+        double cRight = rightOdo.getCurrentPosition() - rightOffset;
 
         // Calculate delta values (change in encoder positions)
-        double deltaLeft = dLeft - pLeft;
-        double deltaCenter = dCenter - pCenter;
-        double deltaRight = dRight - pRight;
+        double deltaLeft = cLeft - pLeft;
+        double deltaCenter = cCenter - pCenter;
+        double deltaRight = cRight - pRight;
 
         // Update previous encoder positions for the next cycle
-        pLeft = dLeft;
-        pCenter = dCenter;
-        pRight = dRight;
+        pLeft = cLeft;
+        pCenter = cCenter;
+        pRight = cRight;
 
         // Calculate the change in theta (robot rotation) based on left and right wheel movement
         double deltaTheta = (deltaLeft - deltaRight) / TRACKWIDTH;
@@ -71,7 +72,7 @@ public class Odometry extends Drivetrain {
         double thetaMid = theta + (deltaTheta / 2);
 
         // If the robot is rotating significantly, focus on updating theta and avoid changing X or Y
-        if (Math.abs(deltaTheta) > 1) {
+        if (Math.abs(deltaTheta) > .001) {
             // Update theta
             theta += deltaTheta;
 
@@ -107,14 +108,12 @@ public class Odometry extends Drivetrain {
         x += deltaXWorld;
         y += deltaYWorld;
 
-        // Update theta again to account for any small rotational changes during minor movement
-        theta += deltaTheta;
-
         // Normalize theta between 0 and 2π
         theta %= (2 * Math.PI);
         if (theta < 0)
             theta += 2 * Math.PI;
 
+        //Update current pose
         pose = new Pose(x, y, theta);
     }
 
@@ -129,19 +128,25 @@ public class Odometry extends Drivetrain {
     }
 
     public void moveTo(Pose nPose) {
-        if(!this.pose.within(nPose)) {
-            double desTheta = nPose.r;
-            double desX = nPose.x;
-            double desY = nPose.y;
-            
-            //Normalize Theta in radians
-            desTheta = Math.toRadians(desTheta);
-            desTheta %= (2 * Math.PI);
-            if(desTheta > 0) desTheta += Math.PI * 2;
+        double deltaX = nPose.x - this.pose.x;
+        double deltaY = nPose.y - this.pose.y;
+        double desTheta = Math.atan2(deltaY, deltaX);
 
-            drive(desX * Math.cos(desX), desY * Math.sin(desY), theta - desTheta);
-        }
+        // Normalize the angle
+        double driveTheta = desTheta - this.theta;
+        if (driveTheta < 0) driveTheta += Math.PI * 2;
+        if (driveTheta > Math.PI) driveTheta -= 2 * Math.PI;
+
+        // Set motor speeds based on distance and angle
+        double distance = Math.hypot(deltaX, deltaY);
+        double forward = Math.cos(driveTheta) * distance;
+        double sideways = Math.sin(driveTheta) * distance;
+
+        // Drive to the target
+        this.drive(-forward, sideways, 0); // Rotation control left as zero for now
     }
+
+
 
     /**
      * Allows user to directly set drivetrain powers (for tuning/testing)
@@ -154,14 +159,21 @@ public class Odometry extends Drivetrain {
         update();
 
         //Log XYT and encoder values to telemetry
-        telemetry.addData("X", x);
-        telemetry.addData("Y", y);
-        telemetry.addData("Theta", Math.toDegrees(theta));
+        telemetry.addData("X", x );
+        telemetry.addData("Y", y );
+        telemetry.addData("Theta", theta);
         telemetry.addData("Left: ", (leftOdo.getCurrentPosition() - leftOffset));
         telemetry.addData("Center: ", (centerOdo.getCurrentPosition() - centerOffset));
         telemetry.addData("Right: ", (rightOdo.getCurrentPosition() - rightOffset));
+        telemetry.addLine("forward: "+forward);
+        telemetry.addLine("side: "+sideways);
+        telemetry.addLine("rot: " + rotation);
         telemetry.update();
 
         super.drive(forward, sideways, rotation);
+    }
+
+    private double rampSpeed(double robotcoordinate, double fieldcoordinate) {
+        return robotcoordinate - fieldcoordinate > 200 ? (robotcoordinate - fieldcoordinate > 0 ? -1 : 1) : robotcoordinate / 200;
     }
 }
