@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 public class Drivetrain {
-    private final DcMotorEx frontLeft,frontRight,backLeft,backRight;
+    public final DcMotorEx frontLeft,frontRight,backLeft,backRight;
     private double speed = 1;
 
     public Drivetrain(HardwareMap hardwareMap) {
@@ -14,9 +14,9 @@ public class Drivetrain {
         backLeft = hardwareMap.get(DcMotorEx.class, "Back Left");
         backRight = hardwareMap.get(DcMotorEx.class, "Back Right");
 
-        //Needed for how the motors are mounted
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
     }
     public void robot0Drive(double forward, double sideways, double rotation) {
         //Multiplied by speed variable, only changes when in slowmode

@@ -1,13 +1,19 @@
 package org.firstinspires.ftc.teamcode.Autos;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous(name = "Odom Test",group="Autonomous")
 public class RoadRunnerAuto extends AutoOpMode {
-//Sideways and Rotation both work :)
+    public void init(){
+        super.init();
+        odo.resetOdometry(0,0,0);
+
+    }
     public void loop() {
-        odo.robot0Drive(1000,0,0);
-        terminateOpModeNow();
+
+        //moveTo(10,0,0);
+
+        updateOdoTelemetry();
+        odo.updatePositionRoadRunner();
     }
 }
 

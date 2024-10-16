@@ -16,11 +16,11 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Odometry extends Drivetrain {
-    public double x,y,theta;
+    public double x = 0, y = 0, theta = 0;
     public DcMotorEx leftOdom, rightOdom, centerOdom;
-    public double leftOdomTraveled, rightOdomTraveled, centerOdomTraveled;
-    public int leftEncoderPos, rightEncoderPos, centerEncoderPos;
-    public static final double ODOM_TICKS_PER_IN = 1, TRACKWIDTH = 1;
+    private double leftOdomTraveled, rightOdomTraveled, centerOdomTraveled;
+    private int leftEncoderPos, rightEncoderPos, centerEncoderPos;
+    private static final double ODOM_TICKS_PER_IN = 328.708657034, TRACKWIDTH = 15.5;
 
     public Odometry(HardwareMap hardwareMap){
         super(hardwareMap);
@@ -34,12 +34,11 @@ public class Odometry extends Drivetrain {
             (
                     new ArrayList<>(Arrays.asList(
                             new Pose2d(6.294091345, 0, Math.PI / 2), //center wheel
-                            new Pose2d(0, TRACKWIDTH/2, 0), //right wheel
+                            new Pose2d(0,  TRACKWIDTH/2, 0), //right wheel
                             new Pose2d(0, -TRACKWIDTH/2, 0))) //left wheel
             )
     {
         //overrides getWheelPositions method
-        @NonNull
         @Override
         public List<Double> getWheelPositions()
         {
@@ -98,14 +97,14 @@ public class Odometry extends Drivetrain {
 
     public void updatePositionRoadRunner()
     {
-        /* try
+        /*try
         {
             bulkData = expansionHub.getBulkInputData();
         }
         catch(Exception e)
         {
             return;
-        } */
+        }*/
 
         // Change in the distance (centimeters) since the last update for each odometer
         double deltaLeftDist = -(getDeltaLeftTicks()/ ODOM_TICKS_PER_IN );
@@ -133,7 +132,7 @@ public class Odometry extends Drivetrain {
     {
         odom.setPoseEstimate(new Pose2d(-x, -y, theta));
 
-        leftOdomTraveled = 0;
+
         rightOdomTraveled = 0;
         leftOdomTraveled = 0;
 
