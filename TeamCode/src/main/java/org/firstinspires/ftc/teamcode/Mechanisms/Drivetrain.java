@@ -17,8 +17,17 @@ public class Drivetrain {
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
     public void robot0Drive(double forward, double sideways, double rotation) {
+        double temp = sideways;
+        sideways = rotation;
+        rotation = temp;
+
+
         //Multiplied by speed variable, only changes when in slowmode
         forward *= speed;
         sideways *= speed;
