@@ -9,7 +9,7 @@ public class RichardWheel {
     public RichardWheel(HardwareMap hardwareMap) {
         leftServo = hardwareMap.get(CRServo.class, "Left Intake Servo");
         rightServo = hardwareMap.get(CRServo.class, "Right Intake Servo");
-        rightServo.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftServo.setDirection(DcMotorSimple.Direction.REVERSE);
     }
     public void spinIn(double in) {
         rightServo.setPower(in);

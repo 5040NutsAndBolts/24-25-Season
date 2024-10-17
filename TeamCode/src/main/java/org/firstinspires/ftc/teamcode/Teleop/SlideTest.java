@@ -1,21 +1,22 @@
 package org.firstinspires.ftc.teamcode.Teleop;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import org.firstinspires.ftc.teamcode.Mechanisms.WyattOneWheel;
+
+import org.firstinspires.ftc.teamcode.Mechanisms.Slides;
 import org.firstinspires.ftc.teamcode.RobotOpMode;
 
 @TeleOp(name = "WyattWheel", group = "Teleop")
-public class WyattWheelTest extends RobotOpMode {
-    private WyattOneWheel wheel;
+public class SlideTest extends TwoDriverTeleop {
+    private Slides slides;
 
     @Override
     public void init() {
         super.init();
-        wheel = new WyattOneWheel(hardwareMap);
+        slides = new Slides(hardwareMap);
     }
 
     @Override
     public void loop() {
-        wheel.spinIn(gamepad1.left_trigger);
-        wheel.spinOut(gamepad1.right_trigger);
+        super.loop();
+        slides.lift(gamepad1.right_stick_y);
     }
 }

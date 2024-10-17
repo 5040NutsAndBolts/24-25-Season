@@ -5,16 +5,18 @@ import org.firstinspires.ftc.teamcode.Mechanisms.RichardWheel;
 import org.firstinspires.ftc.teamcode.RobotOpMode;
 
 @TeleOp(name = "Richard Wheel", group = "Teleop")
-public class RichardWheelTest extends OpMode {
+public class RichardWheelTest extends TwoDriverTeleop {
     private RichardWheel wheel;
 
     @Override
     public void init() {
+        super.init();
         wheel = new RichardWheel(hardwareMap);
     }
 
     @Override
     public void loop() {
+        super.loop();
         wheel.spinIn(gamepad1.left_trigger);
         wheel.spinOut(gamepad1.right_trigger);
         telemetry.addData("Left", gamepad1.left_trigger);

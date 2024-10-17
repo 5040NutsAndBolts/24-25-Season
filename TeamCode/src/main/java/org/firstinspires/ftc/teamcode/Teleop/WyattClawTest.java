@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Mechanisms.WyattClaw;
 import org.firstinspires.ftc.teamcode.RobotOpMode;
 @TeleOp(name = "WyattClaw", group = "Teleop")
-public class WyattClawTest extends RobotOpMode {
+public class WyattClawTest extends TwoDriverTeleop {
     private WyattClaw claw;
 
     @Override
@@ -15,10 +15,8 @@ public class WyattClawTest extends RobotOpMode {
 
     @Override
     public void loop() {
-        claw.roll(gamepad2.left_stick_y);
-        claw.roll(gamepad2.dpad_up ? 1 : 0);
-        claw.roll(gamepad2.dpad_down ? -1 : 0);
-
-        telemetry.addLine("Claw Open:  "+claw.isOpen());
+        super.loop();
+        claw.roll(gamepad1.right_trigger);
+        claw.pinch(gamepad1.left_trigger);
     }
 }
