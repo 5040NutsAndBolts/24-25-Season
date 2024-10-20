@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 
 public class Blinkin {
-    private RevBlinkinLedDriver lights;
+    private final RevBlinkinLedDriver lights;
 
     public Blinkin(HardwareMap hardwareMap){
         lights = hardwareMap.get(RevBlinkinLedDriver.class, "lights");

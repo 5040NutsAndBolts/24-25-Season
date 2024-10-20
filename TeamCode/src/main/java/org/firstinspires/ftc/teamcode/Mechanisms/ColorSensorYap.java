@@ -5,8 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 
 public class ColorSensorYap {
-    public ColorSensor colorSensor;
-
+    private final ColorSensor colorSensor;
 
     public ColorSensorYap(HardwareMap hardwareMap) {
         colorSensor = hardwareMap.get(ColorSensor.class, "Color Sensor");
@@ -17,12 +16,7 @@ public class ColorSensorYap {
     public double getBlue(){
        return colorSensor.blue();
     }
-    public double getYellow(){
-        return ((double) (colorSensor.red() + colorSensor.green()) / 2);
+    public double getYellow() {
+        return (colorSensor.green() + colorSensor.red()) / 2.0;
     }
-
-
-
-
-
 }

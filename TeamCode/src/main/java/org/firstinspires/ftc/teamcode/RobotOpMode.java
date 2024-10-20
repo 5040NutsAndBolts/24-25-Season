@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-
-import org.firstinspires.ftc.teamcode.Mechanisms.*;
+import org.firstinspires.ftc.teamcode.Mechanisms.Drivetrain;
 
 @Disabled
 public class RobotOpMode extends OpMode {
