@@ -25,9 +25,10 @@ public class AutoOpMode extends RobotOpMode {
         telemetry.addLine("x" + odo.x);
         telemetry.addLine("y" + Math.toDegrees(odo.y));
         telemetry.addLine("theta" + odo.theta);
-        telemetry.addLine("odo wheel l"+odo.leftOdom.getCurrentPosition());
-        telemetry.addLine("odo wheel r"+odo.rightOdom.getCurrentPosition());
-        telemetry.addLine("odo wheel c"+odo.centerOdom.getCurrentPosition());
+
+        telemetry.addLine("l: "+odo.leftE);
+        telemetry.addLine("r: "+odo.rightE);
+        telemetry.addLine("c: "+odo.centerE);
         telemetry.update();
     }
 

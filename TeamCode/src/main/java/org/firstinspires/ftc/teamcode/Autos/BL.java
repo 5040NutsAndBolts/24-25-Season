@@ -10,24 +10,43 @@ public class BL extends AutoOpMode {
     }
     @Override
     public void loop() {
-        while(odo.x < 11){
-            dt.robot0Drive(-0.5,0,0);
+        while((odo.leftE + odo.rightE)/2 < 16000){
             odo.updatePositionRoadRunner();
             updateOdoTelemetry();
-            if(odo.x > 10) dt.robot0Drive(0,0,0);
+            dt.frontLeft.setPower(-.2 + (odo.leftE > odo.rightE ? -.1 : 1) );
+            dt.frontRight.setPower(-.2 + (odo.leftE > odo.rightE ? -.1 : 1) );
+            dt.backLeft.setPower(-.2 + (odo.leftE > odo.rightE ? .1 : -1) );
+            dt.backRight.setPower(-.2 + (odo.leftE > odo.rightE ? .1 : -1) );
+            odo.updatePositionRoadRunner();
+            if((odo.leftE + odo.rightE)/2 >= 20000){
+                dt.frontLeft.setPower(0);
+                dt.frontRight.setPower(0);
+                dt.backLeft.setPower(0);
+                dt.backRight.setPower(0);
+                return;
+            }
         }
-        while(odo.y < 105){
-            dt.robot0Drive(0,0,0.5);
+        ElapsedTime sideSlamResetTimer = new ElapsedTime();
+        while(odo.centerE < 10000 && sideSlamResetTimer.seconds() < 3){
+            telemetry.addLine("timer: " + sideSlamResetTimer.seconds());
             odo.updatePositionRoadRunner();
             updateOdoTelemetry();
-            if(odo.x > 100) dt.robot0Drive(0,0,0);
+            dt.robot0Drive(0,-.2,0);
+            odo.updatePositionRoadRunner();
+            if(odo.centerE >= 10000 || sideSlamResetTimer.seconds() >= 3){
+                dt.frontLeft.setPower(0);
+                dt.frontRight.setPower(0);
+                dt.backLeft.setPower(0);
+                dt.backRight.setPower(0);
+                odo.resetOdometry(0,0,0);
+                return;
+            }
         }
-        ElapsedTime e = new ElapsedTime();
-        e.startTime();
-        while(e.seconds() < 10)
-            telemetry.addLine("secs: "+e.seconds());
+    }
 
-        //this ends the opmode after everything is done to save battery :)
+    @Override
+    public void stop() {
+        super.stop();
         terminateOpModeNow();
     }
 }

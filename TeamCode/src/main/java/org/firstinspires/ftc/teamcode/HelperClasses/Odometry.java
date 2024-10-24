@@ -21,12 +21,17 @@ public class Odometry extends Drivetrain {
     private double leftOdomTraveled, rightOdomTraveled, centerOdomTraveled;
     private int leftEncoderPos, rightEncoderPos, centerEncoderPos;
     private static final double ODOM_TICKS_PER_IN = 328.708657034, TRACKWIDTH = 15.5;
+    public int leftE, rightE, centerE;
+    private int leftO, rightO, centerO;
 
     public Odometry(HardwareMap hardwareMap){
         super(hardwareMap);
         leftOdom = hardwareMap.get(DcMotorEx.class, "Left Odom");
         rightOdom = hardwareMap.get(DcMotorEx.class, "Right Odom");
         centerOdom = hardwareMap.get(DcMotorEx.class, "Center Odom");
+        leftO = leftOdom.getCurrentPosition();
+        rightO = rightOdom.getCurrentPosition();
+        centerO = centerOdom.getCurrentPosition();
     }
 
     //constructs localizer object using one parameter of a list of three wheel positions
@@ -97,6 +102,9 @@ public class Odometry extends Drivetrain {
 
     public void updatePositionRoadRunner()
     {
+        leftE = leftOdom.getCurrentPosition() - leftO;
+        rightE = rightOdom.getCurrentPosition() - rightO;
+        centerE = centerOdom.getCurrentPosition() - centerO;
         /*try
         {
             bulkData = expansionHub.getBulkInputData();
@@ -130,6 +138,10 @@ public class Odometry extends Drivetrain {
 
     public void resetOdometry(double x, double y, double theta)
     {
+        leftO = leftE;
+        rightO = rightE;
+        centerO = centerE;
+
         odom.setPoseEstimate(new Pose2d(-x, -y, theta));
 
 
