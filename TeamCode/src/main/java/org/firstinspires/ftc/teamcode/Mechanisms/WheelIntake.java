@@ -3,12 +3,12 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class RichardWheel {
+public class WheelIntake {
     private final CRServo leftServo, rightServo;
 
-    public RichardWheel(HardwareMap hardwareMap) {
-        leftServo = hardwareMap.get(CRServo.class, "Left Intake Servo");
-        rightServo = hardwareMap.get(CRServo.class, "Right Intake Servo");
+    public WheelIntake(HardwareMap hardwareMap) {
+        leftServo = hardwareMap.get(CRServo.class, "Left Wheel Servo");
+        rightServo = hardwareMap.get(CRServo.class, "Right Wheel Servo");
         leftServo.setDirection(DcMotorSimple.Direction.REVERSE);
     }
     public void spinIn(double in) {

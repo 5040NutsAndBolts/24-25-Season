@@ -1,17 +1,15 @@
 package org.firstinspires.ftc.teamcode.Teleop;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import org.firstinspires.ftc.teamcode.Mechanisms.RichardWheel;
-import org.firstinspires.ftc.teamcode.RobotOpMode;
+import org.firstinspires.ftc.teamcode.Mechanisms.WheelIntake;
 
 @TeleOp(name = "Richard Wheel", group = "Teleop")
 public class RichardWheelTest extends TwoDriverTeleop {
-    private RichardWheel wheel;
+    private WheelIntake wheel;
 
     @Override
     public void init() {
         super.init();
-        wheel = new RichardWheel(hardwareMap);
+        wheel = new WheelIntake(hardwareMap);
     }
 
     @Override
