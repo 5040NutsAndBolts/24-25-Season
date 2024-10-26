@@ -10,38 +10,34 @@ public class BL extends AutoOpMode {
     }
     @Override
     public void loop() {
+        int t = 0;
         while((odo.leftE + odo.rightE)/2 < 16000){
-            odo.updatePositionRoadRunner();
-            updateOdoTelemetry();
+            t++;
+            telemetry.addLine("Moving forward");
+            telemetry.addLine(""+t);
+            telemetry.update();
             dt.frontLeft.setPower(-.2 + (odo.leftE > odo.rightE ? -.1 : 1) );
             dt.frontRight.setPower(-.2 + (odo.leftE > odo.rightE ? -.1 : 1) );
             dt.backLeft.setPower(-.2 + (odo.leftE > odo.rightE ? .1 : -1) );
             dt.backRight.setPower(-.2 + (odo.leftE > odo.rightE ? .1 : -1) );
             odo.updatePositionRoadRunner();
-            if((odo.leftE + odo.rightE)/2 >= 20000){
-                dt.frontLeft.setPower(0);
-                dt.frontRight.setPower(0);
-                dt.backLeft.setPower(0);
-                dt.backRight.setPower(0);
-                return;
-            }
-        }
-        ElapsedTime sideSlamResetTimer = new ElapsedTime();
-        while(odo.centerE < 10000 && sideSlamResetTimer.seconds() < 3){
-            telemetry.addLine("timer: " + sideSlamResetTimer.seconds());
-            odo.updatePositionRoadRunner();
             updateOdoTelemetry();
+        }
+        telemetry.addLine("between");
+        telemetry.update();
+        dt.robot0Drive(0,0,0);
+        odo.updatePositionRoadRunner();
+        ElapsedTime sideSlamResetTimer = new ElapsedTime();
+        while(odo.centerE < 10000 && sideSlamResetTimer.startTime() < 3){
+            telemetry.addLine("Strafing Left");
+            telemetry.addLine("timer: " + sideSlamResetTimer.startTime());
             dt.robot0Drive(0,-.2,0);
             odo.updatePositionRoadRunner();
-            if(odo.centerE >= 10000 || sideSlamResetTimer.seconds() >= 3){
-                dt.frontLeft.setPower(0);
-                dt.frontRight.setPower(0);
-                dt.backLeft.setPower(0);
-                dt.backRight.setPower(0);
-                odo.resetOdometry(0,0,0);
-                return;
-            }
+            updateOdoTelemetry();
         }
+        telemetry.addLine("between");
+        telemetry.update();
+        dt.robot0Drive(0,0,0);
     }
 
     @Override
