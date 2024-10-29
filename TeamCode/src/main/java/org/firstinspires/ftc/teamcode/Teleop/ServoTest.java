@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Teleop;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name="ServoOp")
 public class ServoTest extends LinearOpMode {
@@ -25,9 +26,9 @@ public class ServoTest extends LinearOpMode {
 		waitForStart();
 
 		while (opModeIsActive()) {
-			servo.setPower(1);
-//			sleep(500);
-//			servo.setPower(-1);
+			servo.setPower(gamepad1.right_trigger);
+			telemetry.addLine("sp " + servo.getPower());
+			telemetry.update();
 		}
 	}
 }

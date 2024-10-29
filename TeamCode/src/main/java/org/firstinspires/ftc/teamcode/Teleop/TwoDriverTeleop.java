@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.Teleop;
+
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.RobotOpMode;
@@ -10,17 +11,16 @@ public class TwoDriverTeleop extends RobotOpMode {
         dt.toggleSlowMode(gamepad1.y);
 
         wheel.lift (gamepad2.left_stick_y);
-        wheel.spinIn (gamepad2.left_trigger);
-        wheel.spinOut (gamepad2.right_trigger);
+        wheel.spinIn (gamepad2.left_trigger > .1 ? 1 : gamepad2.right_trigger > .1 ? -1 : 0);
 
-	    claw.liftSlides (gamepad2.right_stick_y);
-        if(gamepad2.x)
-            claw.pinch ();
-        else if (gamepad2.b)
-            claw.open ();
+        //claw.liftSlides (gamepad2.right_stick_y);
+        //if(gamepad2.x)
+        //    claw.pinch ();
+        //else if (gamepad2.b)
+        //    claw.open ();
 
         telemetry.addLine("Slowmode: " + dt.isSlow());
-        telemetry.addLine("Claw Position: " + claw.getPosition());
+        //telemetry.addLine("Claw Position: " + claw.getPosition());
         telemetry.addLine("Wheel Position: " + wheel.getPosition());
     }
 

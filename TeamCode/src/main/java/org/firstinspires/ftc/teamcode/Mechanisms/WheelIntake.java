@@ -6,8 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class WheelIntake {
-    public
-    final CRServo leftServo, rightServo;
+    public final CRServo leftServo, rightServo;
     private final DcMotorEx liftMotor;
 
     public WheelIntake(HardwareMap hardwareMap) {
