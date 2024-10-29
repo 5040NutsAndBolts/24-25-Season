@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 public class Drivetrain {
 	private final DcMotorEx frontLeft,frontRight,backLeft,backRight;
+	private boolean slow;
 	private double speed = 1;
 
 	public Drivetrain(HardwareMap hardwareMap) {
@@ -51,8 +52,13 @@ public class Drivetrain {
 
 	//Silly button logic stuff
 	public void toggleSlowMode(boolean input) {
-		if (input && speed != 1) speed = 1;
-		else if (input) speed = .5;
+		if(input && !slow){
+			slow = true;
+			speed = .5;
+		}else{
+			slow =false;
+			speed = 1;
+		}
 	}
 	public boolean isSlow() {return speed != 1;}
 }
