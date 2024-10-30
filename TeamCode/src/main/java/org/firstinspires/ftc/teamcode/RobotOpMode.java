@@ -19,4 +19,9 @@ public class RobotOpMode extends OpMode {
     }
     //Leave empty
     @Override public void loop() {}
+
+    @Override
+    public void stop() {
+        terminateOpModeNow();
+    }
 }
