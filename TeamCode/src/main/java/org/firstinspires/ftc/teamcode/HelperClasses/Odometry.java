@@ -6,9 +6,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.localization.ThreeTrackingWheelLocalizer;
-
 import org.firstinspires.ftc.teamcode.Mechanisms.Drivetrain;
 
 import java.util.ArrayList;
@@ -26,34 +23,13 @@ public class Odometry extends Drivetrain {
 
     public Odometry(HardwareMap hardwareMap){
         super(hardwareMap);
-        leftOdom = hardwareMap.get(DcMotorEx.class, "Left Odom");
-        rightOdom = hardwareMap.get(DcMotorEx.class, "Right Odom");
-        centerOdom = hardwareMap.get(DcMotorEx.class, "Center Odom");
+        leftOdom = hardwareMap.get(DcMotorEx.class, "Front Left");
+        rightOdom = hardwareMap.get(DcMotorEx.class, "Front Right");
+        centerOdom = hardwareMap.get(DcMotorEx.class, "Back Left");
         leftO = leftOdom.getCurrentPosition();
         rightO = rightOdom.getCurrentPosition();
         centerO = centerOdom.getCurrentPosition();
     }
-
-    //constructs localizer object using one parameter of a list of three wheel positions
-    public ThreeTrackingWheelLocalizer odom = new ThreeTrackingWheelLocalizer
-            (
-                    new ArrayList<>(Arrays.asList(
-                            new Pose2d(6.294091345, 0, Math.PI / 2), //center wheel
-                            new Pose2d(0,  TRACKWIDTH/2, 0), //right wheel
-                            new Pose2d(0, -TRACKWIDTH/2, 0))) //left wheel
-            )
-    {
-        //overrides getWheelPositions method
-        @Override
-        public List<Double> getWheelPositions()
-        {
-            ArrayList<Double> wheelPositions = new ArrayList<>(3);
-            wheelPositions.add(centerOdomTraveled);
-            wheelPositions.add(leftOdomTraveled);
-            wheelPositions.add(rightOdomTraveled);
-            return wheelPositions;
-        }
-    };
 
     private int getDeltaLeftTicks()
     {
@@ -128,12 +104,6 @@ public class Odometry extends Drivetrain {
         leftOdomTraveled += deltaLeftDist;
         rightOdomTraveled += deltaRightDist;
         centerOdomTraveled += deltaCenterDist;
-
-        //add negatives here to reverse x or y directions
-        odom.update();
-        theta = odom.getPoseEstimate().component3();
-        x = odom.getPoseEstimate().component1();
-        y = odom.getPoseEstimate().component2();
     }
 
     public void resetOdometry(double x, double y, double theta)
@@ -141,8 +111,6 @@ public class Odometry extends Drivetrain {
         leftO = leftE;
         rightO = rightE;
         centerO = centerE;
-
-        odom.setPoseEstimate(new Pose2d(-x, -y, theta));
 
 
         rightOdomTraveled = 0;

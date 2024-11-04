@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 public class Drivetrain {
     public final DcMotorEx frontLeft,frontRight,backLeft,backRight;
+    private boolean slow;
     private double speed = 1;
 
     public Drivetrain(HardwareMap hardwareMap) {
@@ -14,20 +15,11 @@ public class Drivetrain {
         backLeft = hardwareMap.get(DcMotorEx.class, "Back Left");
         backRight = hardwareMap.get(DcMotorEx.class, "Back Right");
 
+        //Needed for how the motors are mounted
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
     }
-    public void robot0Drive(double forward, double sideways, double rotation) {
-        double temp = sideways;
-        sideways = rotation;
-        rotation = temp;
-
-
+    public void drive(double forward, double sideways, double rotation) {
         //Multiplied by speed variable, only changes when in slowmode
         forward *= speed;
         sideways *= speed;
@@ -60,8 +52,13 @@ public class Drivetrain {
 
     //Silly button logic stuff
     public void toggleSlowMode(boolean input) {
-        if (input) speed = 1;
-        else if (!(speed == 1)) speed = .5;
+        if(input && !slow){
+            slow = true;
+            speed = .5;
+        }else{
+            slow =false;
+            speed = 1;
+        }
     }
     public boolean isSlow() {return speed != 1;}
 }
