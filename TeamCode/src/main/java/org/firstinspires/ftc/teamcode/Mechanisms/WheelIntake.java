@@ -12,17 +12,16 @@ public class WheelIntake {
     public WheelIntake(HardwareMap hardwareMap) {
         leftServo = hardwareMap.get(CRServo.class, "Left Wheel Servo");
         leftServo.setDirection(DcMotorSimple.Direction.REVERSE);
-
         rightServo = hardwareMap.get(CRServo.class, "Right Wheel Servo");
 
         liftMotor = hardwareMap.get(DcMotorEx.class, "Wheel Slides");
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
-    public void spin(double in, double out)  {
+    public double spin(double in, double out) {
         //ignore stick/trigger drift
-        if(!(in < .05))
+        if(in < .05)
             in = 0;
-        if(!(out < .05))
+        if(out < .05)
             out = 0;
         //stops servo from freaking out if both are pressed
         double power = in-out;
@@ -30,6 +29,7 @@ public class WheelIntake {
         leftServo.setPower(power);
         rightServo.setPower(power);
 
+        return power;
     }
 
     public void lift (double in) {liftMotor.setPower(in);}

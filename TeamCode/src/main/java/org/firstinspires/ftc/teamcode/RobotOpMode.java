@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 //import org.firstinspires.ftc.teamcode.Mechanisms.Claw;
+import org.firstinspires.ftc.teamcode.Mechanisms.Claw;
 import org.firstinspires.ftc.teamcode.Mechanisms.Drivetrain;
 import org.firstinspires.ftc.teamcode.Mechanisms.WheelIntake;
 

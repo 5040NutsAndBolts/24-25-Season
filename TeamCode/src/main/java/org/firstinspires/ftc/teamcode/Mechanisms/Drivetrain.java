@@ -18,6 +18,12 @@ public class Drivetrain {
         //Needed for how the motors are mounted
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
     public void drive(double forward, double sideways, double rotation) {
         //Multiplied by speed variable, only changes when in slowmode
@@ -40,6 +46,25 @@ public class Drivetrain {
         backLeft.setPower(forward - rotation + sideways);
         frontRight.setPower(forward + rotation + sideways);
         backRight.setPower(forward + rotation - sideways);
+    }
+
+    public void forward(double power) {
+        frontLeft.setPower(power);
+        frontRight.setPower(power);
+        backLeft.setPower(power);
+        backRight.setPower(power);
+    }
+    public void strafe(double power) {
+        frontLeft.setPower(-power);
+        frontRight.setPower(-power);
+        backLeft.setPower(power);
+        backRight.setPower(power);
+    }
+    public void rotate(double power) {
+        frontLeft.setPower(-power);
+        frontRight.setPower(power);
+        backLeft.setPower(-power);
+        backRight.setPower(power);
     }
 
     //Battery/motor saver

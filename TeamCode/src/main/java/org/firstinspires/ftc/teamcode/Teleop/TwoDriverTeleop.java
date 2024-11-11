@@ -8,19 +8,17 @@ public class TwoDriverTeleop extends RobotOpMode {
     @Override
     public void loop() {
         dt.drive (gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
-        dt.toggleSlowMode (gamepad1.y);
 
         wheel.lift (gamepad2.left_stick_y);
-        wheel.spin(gamepad2.left_trigger, gamepad2.right_trigger);
+        telemetry.addLine("wheel power: "+ wheel.spin(gamepad2.left_trigger, gamepad2.right_trigger));
+        telemetry.addLine("lt: " + gamepad2.left_trigger);
+        telemetry.addLine("rt: " + gamepad2.right_trigger);
 
         //claw.liftSlides (gamepad2.right_stick_y);
-        //if(gamepad2.x)
-        //    claw.pinch ();
-        //else if (gamepad2.b)
+        //claw.liftClaw(gamepad1.left_bumper ? 1 : gamepad1.right_bumper ? -.2 : 0);
+        //if(gamepad1.left_trigger > .05)
         //    claw.open ();
-
-        telemetry.addLine("Slowmode: " + dt.isSlow());
-        //telemetry.addLine("Claw Position: " + claw.getPosition());
-        telemetry.addLine("Wheel Position: " + wheel.getPosition());
+        //else if(gamepad1.right_trigger > .05)
+        //    claw.pinch ();
     }
 }
