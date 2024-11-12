@@ -8,7 +8,7 @@ public class TwoDriverTeleop extends RobotOpMode {
     public void loop() {
         dt.drive (gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
         dt.toggleSlowMode(gamepad1.x);
-        wheel.lift (gamepad2.left_stick_y);
+      //  wheel.lift (gamepad2.left_stick_y);
 
         //claw.liftSlides (gamepad2.right_stick_y);
         //claw.liftClaw(gamepad1.left_bumper ? 1 : gamepad1.right_bumper ? -.2 : 0);

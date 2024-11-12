@@ -17,10 +17,8 @@ public class OdoTest extends RobotOpMode {
 
 	@Override
 	public void loop() {
-		odo.updatePositionRoadRunner();
-		telemetry.addLine("l: "+odo.leftE);
-		telemetry.addLine("r: "+odo.rightE);
-		telemetry.addLine("c: "+odo.centerE);
+		telemetry.addData("x", odo.yas().toString());
 		telemetry.update();
+
 	}
 }

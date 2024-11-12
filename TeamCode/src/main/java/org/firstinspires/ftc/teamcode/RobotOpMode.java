@@ -4,18 +4,18 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 //import org.firstinspires.ftc.teamcode.Mechanisms.Claw;
 import org.firstinspires.ftc.teamcode.Mechanisms.Claw;
 import org.firstinspires.ftc.teamcode.Mechanisms.Drivetrain;
-import org.firstinspires.ftc.teamcode.Mechanisms.WheelIntake;
+//import org.firstinspires.ftc.teamcode.Mechanisms.WheelIntake;
 
 @Disabled
 public class RobotOpMode extends OpMode {
     protected Drivetrain dt;
-    protected WheelIntake wheel;
+   // protected WheelIntake wheel;
     //protected Claw claw;
 
     @Override
     public void init() {
         dt = new Drivetrain (hardwareMap);
-        wheel = new WheelIntake(hardwareMap);
+   //     wheel = new WheelIntake(hardwareMap);
         //claw = new Claw(hardwareMap);
     }
     //Leave empty

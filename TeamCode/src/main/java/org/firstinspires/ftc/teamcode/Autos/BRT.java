@@ -11,7 +11,7 @@ public class BRT extends AutoOpMode {
 		while(timer.seconds() < 3) {
 			telemetry.addLine("strafing");
 			telemetry.addLine("time: " + timer.seconds());
-			telemetry.addLine("ce: " +odo.centerE);
+			//telemetry.addLine("ce: " +odo.theta);
 			telemetry.update();
 			dt.backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 			dt.drive(0,.5,0);

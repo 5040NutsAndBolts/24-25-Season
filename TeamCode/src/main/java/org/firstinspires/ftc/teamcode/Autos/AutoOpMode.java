@@ -12,11 +12,4 @@ public class AutoOpMode extends RobotOpMode {
         super.init();
         odo = new Odometry(hardwareMap);
     }
-
-    protected void updateOdoTelemetry() {
-        telemetry.addLine("l: "+odo.leftE);
-        telemetry.addLine("r: "+odo.rightE);
-        telemetry.addLine("c: "+odo.centerE);
-        telemetry.update();
-    }
 }
