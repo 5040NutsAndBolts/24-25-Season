@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous (name = "Blue Left Time", group = "Autonomous")
-public class BLT extends AutoOpMode {
+public class 	BLT extends AutoOpMode {
 	@Override
 	public void loop() {
 		ElapsedTime timer = new ElapsedTime();

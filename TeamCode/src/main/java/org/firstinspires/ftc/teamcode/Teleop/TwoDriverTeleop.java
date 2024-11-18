@@ -9,8 +9,8 @@ public class TwoDriverTeleop extends RobotOpMode {
     public void loop() {
         dt.drive (gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
 
-        wheel.lift (gamepad2.left_stick_y);
-        telemetry.addLine("wheel power: "+ wheel.spin(gamepad2.left_trigger, gamepad2.right_trigger));
+    //    wheel.lift (gamepad2.left_stick_y);
+    //    telemetry.addLine("wheel power: "+ wheel.spin(gamepad2.left_trigger, gamepad2.right_trigger));
         telemetry.addLine("lt: " + gamepad2.left_trigger);
         telemetry.addLine("rt: " + gamepad2.right_trigger);
 
