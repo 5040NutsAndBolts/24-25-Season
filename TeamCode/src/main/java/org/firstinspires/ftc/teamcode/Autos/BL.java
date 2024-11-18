@@ -16,7 +16,7 @@ public class BL extends AutoOpMode {
         telemetry.update();
         while (odo.leftE < 8000 && odo.rightE < 8000){
             dt.forward(0.5);
-            telemetry.update();        }
+            telemetry.update();   }
     }
 
     @Override
