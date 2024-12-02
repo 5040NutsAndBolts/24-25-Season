@@ -16,8 +16,9 @@ public class Drivetrain {
         backRight = hardwareMap.get(DcMotorEx.class, "Back Right");
 
         //Needed for how the motors are mounted
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
 
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -73,7 +74,12 @@ public class Drivetrain {
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
-
+    public void brake(){
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
     //Silly button logic stuff
     public void toggleSlowMode(boolean input) {
         if(input && !slow){
@@ -84,5 +90,9 @@ public class Drivetrain {
             speed = 1;
         }
     }
+    public void autoSlowMode(){
+        speed = 0;
+    }
+
     public boolean isSlow() {return speed != 1;}
 }
