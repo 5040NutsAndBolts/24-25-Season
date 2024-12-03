@@ -14,6 +14,7 @@ public class TwoDriverTeleop extends RobotOpMode {
         telemetry.addLine("lt: " + gamepad2.left_trigger);
         telemetry.addLine("rt: " + gamepad2.right_trigger);
 
+
         //claw.liftSlides (gamepad2.right_stick_y);
         //claw.liftClaw(gamepad1.left_bumper ? 1 : gamepad1.right_bumper ? -.2 : 0);
         //if(gamepad1.left_trigger > .05)
