@@ -10,13 +10,13 @@ import org.firstinspires.ftc.teamcode.Mechanisms.WheelIntake;
 public class RobotOpMode extends OpMode {
     protected Drivetrain dt;
     protected WheelIntake wheel;
-    //protected Claw claw;
+    protected Claw claw;
 
     @Override
     public void init() {
         dt = new Drivetrain (hardwareMap);
         wheel = new WheelIntake(hardwareMap);
-        //claw = new Claw(hardwareMap);
+        claw = new Claw(hardwareMap);
     }
     //Leave empty
     @Override public void loop() {}
