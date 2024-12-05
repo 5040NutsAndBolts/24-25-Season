@@ -22,13 +22,24 @@ public class BL2 extends RobotOpMode {
         telemetry.update();
         dt.autoSlowMode();
 
-        if (odo.leftE > -8000 && odo.rightE < 8000) {
-            dt.forward(0.1);
+
+
+        if (odo.leftE > -5000 && odo.rightE < 5000) {
+            if (odo.centerE < 200){
+                dt.strafe(-0.2);
+            }
+            dt.forward(-0.3);
             odo.updatePositionRoadRunner();
             telemetry.update();
-
-        } else dt.forward(0); dt.neutral();
-
+        } else dt.forward(0);
+                if (odo.centerE > 2500) {
+            dt.strafe(0.3);
+        } else dt.strafe(0);
+                if (odo.leftE < -1000 && odo.rightE > 1000) {
+            dt.forward(0.3);
+            odo.updatePositionRoadRunner();
+            telemetry.update();
+        } else dt.forward(0);
     }
 
     @Override

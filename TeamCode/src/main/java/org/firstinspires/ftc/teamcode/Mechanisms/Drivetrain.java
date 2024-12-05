@@ -18,7 +18,7 @@ public class Drivetrain {
         //Needed for how the motors are mounted
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
 
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -55,9 +55,9 @@ public class Drivetrain {
         backRight.setPower(power);
     }
     public void strafe(double power) {
-        frontLeft.setPower(-power);
+        frontLeft.setPower(power);
         frontRight.setPower(-power);
-        backLeft.setPower(power);
+        backLeft.setPower(-power);
         backRight.setPower(power);
     }
     public void rotate(double power) {
