@@ -25,14 +25,12 @@ public class Claw {
 		liftMotorTop.setPower(input);
 		liftMotorBottom.setPower(input);
 	}
-	public void pinch(double leftTrig, double rightTrig){
-		rightTrigDown = rightTrig;
-		if (rightTrigDown > 0.5){
+	public void pinch(double inOne, double inTwo){
+		double num = inOne - inTwo;
+		if(num < -.05)
 			pinchServo.setPosition(1);
-		}
-		leftTrigDown = leftTrig;
-		if (leftTrigDown > 0.5){
-			pinchServo.setPosition(-1);
+		else if( num > 0.05) {
+			pinchServo.setPosition(0);
 		}
 	}
 
