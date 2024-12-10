@@ -1,4 +1,6 @@
 package org.firstinspires.ftc.teamcode.Teleop;
+import android.annotation.SuppressLint;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.HelperClasses.Odometry;
 import org.firstinspires.ftc.teamcode.RobotOpMode;
@@ -13,6 +15,7 @@ public class BL2 extends RobotOpMode {
         odo = new Odometry(hardwareMap);
         dt.neutral();
     }
+    @SuppressLint("SuspiciousIndentation")
     @Override
     public void loop() {
         odo.updatePositionRoadRunner();
@@ -22,24 +25,21 @@ public class BL2 extends RobotOpMode {
         telemetry.update();
         dt.autoSlowMode();
 
-
-
-        if (odo.leftE > -5000 && odo.rightE < 5000) {
-            if (odo.centerE < 200){
-                dt.strafe(-0.2);
-            }
-            dt.forward(-0.3);
-            odo.updatePositionRoadRunner();
-            telemetry.update();
-        } else dt.forward(0);
-                if (odo.centerE > 2500) {
+            if (odo.leftE < 18000 && odo.rightE > -18000) {
+                if (odo.centerE < 200) {
+                    dt.strafe(-0.2);
+                }
+                dt.forward(-0.4);
+                odo.updatePositionRoadRunner();
+                telemetry.update();
+            } else if(odo.centerE < 2500) {
             dt.strafe(0.3);
-        } else dt.strafe(0);
-                if (odo.leftE < -1000 && odo.rightE > 1000) {
+            }else if (odo.leftE < -19000 && odo.rightE > 19000) {
             dt.forward(0.3);
             odo.updatePositionRoadRunner();
             telemetry.update();
-        } else dt.forward(0);
+        }
+                dt.forward(0);
     }
 
     @Override
