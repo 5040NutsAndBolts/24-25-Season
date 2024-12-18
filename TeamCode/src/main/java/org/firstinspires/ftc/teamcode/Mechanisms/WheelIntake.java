@@ -17,7 +17,7 @@ public class WheelIntake {
         liftMotor = hardwareMap.get(DcMotorEx.class, "Wheel Slides");
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
-    public double spin(double in, double out) {
+    public void spin(double in, double out) {
         //ignore stick/trigger drift
         if(in < .05)
             in = 0;
@@ -28,8 +28,6 @@ public class WheelIntake {
 
         leftServo.setPower(power);
         rightServo.setPower(power);
-
-        return power;
     }
 
     public void lift (double in) {liftMotor.setPower(in);}

@@ -85,5 +85,5 @@ public class Drivetrain {
             speed = 1;
         }
     }
-    public boolean isSlow() {return speed != 1;}
+    public boolean isSlow() {return slow;}
 }

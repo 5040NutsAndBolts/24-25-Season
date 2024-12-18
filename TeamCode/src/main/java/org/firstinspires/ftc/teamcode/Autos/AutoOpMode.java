@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Autos;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
 import org.firstinspires.ftc.teamcode.HelperClasses.Odometry;
 import org.firstinspires.ftc.teamcode.RobotOpMode;
 
@@ -14,9 +15,7 @@ public class AutoOpMode extends RobotOpMode {
     }
 
     protected void updateOdoTelemetry() {
-        telemetry.addLine("l: "+odo.leftE);
-        telemetry.addLine("r: "+odo.rightE);
-        telemetry.addLine("c: "+odo.centerE);
+        telemetry.addLine(odo.toString());
         telemetry.update();
     }
 }
