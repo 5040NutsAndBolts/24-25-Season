@@ -117,7 +117,7 @@ public class Left extends AutoOpMode {
 		}//NO ERROR CORRECTION, CAN't BE TOO INTO PARK ZONE :)
 		dt.drive(0,0,0);
 
-		while(true) updateOdoTelemetry();
+		terminateOpModeNow();
 	}
 
 }
