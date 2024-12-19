@@ -27,9 +27,9 @@ public class Drivetrain {
     }
     public void drive(double forward, double sideways, double rotation) {
         //Multiplied by speed variable, only changes when in slowmode
-        forward *= speed;
-        sideways *= speed;
-        rotation *= speed;
+        forward *= -speed;
+        sideways *= -speed;
+        rotation *= -speed;
 
         //adds all the inputs together to get the number to scale it by
         double scale = Math.abs(rotation) + Math.abs(forward) + Math.abs(sideways);

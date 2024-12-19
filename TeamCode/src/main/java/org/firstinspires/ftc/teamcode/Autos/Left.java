@@ -10,12 +10,12 @@ public class Left extends AutoOpMode {
 		dt.drive(0, 0, 0);
 		odo.updateOdoPosition();
 		//STRAFING LEFT
-		while(odo.centerE < 6007) {
+		while(odo.centerE < 5507) {
 			telemetry.addLine("MOVING POS 1");
 			dt.drive(0, .4, 0);
 			odo.updateOdoPosition();
 			updateOdoTelemetry();
-		}if(odo.centerE > 6007) { //ERROR CORRECTION
+		}if(odo.centerE > 5507) { //ERROR CORRECTION
 			dt.drive(0, -.2, 0);
 			odo.updateOdoPosition();
 			updateOdoTelemetry();
@@ -50,9 +50,9 @@ public class Left extends AutoOpMode {
 
 		ElapsedTime matchTime = new ElapsedTime();
 		//MOVING BACKWARDS
-		while(matchTime.seconds() < 3) {
+		while(matchTime.seconds() < 4) {
 			telemetry.addLine("MOVING POS 4");
-			dt.drive(-.4, 0, 0);
+			dt.drive(-.5, 0, 0);
 			odo.updateOdoPosition();
 			updateOdoTelemetry();
 		}
@@ -84,11 +84,11 @@ public class Left extends AutoOpMode {
 		}
 		dt.drive(0,0,0);
 
-		//MOVING BACKWARDS
+		//SLIGHT MOVE BACKWARDS
 		matchTime.reset();
-		while(matchTime.seconds() < 1) {
+		while(matchTime.seconds() < 3) {
 			telemetry.addLine("MOVING POS 7");
-			dt.drive(-.4, 0, 0);
+			dt.drive(-.6, 0, 0);
 			odo.updateOdoPosition();
 			updateOdoTelemetry();
 		}
@@ -107,17 +107,82 @@ public class Left extends AutoOpMode {
 		}
 		dt.drive(0,0,0);
 
-		//STRAFING RIGHT
-		dt.neutral();
-		while(odo.centerE > -16000) {
+		//MOVING FORWARD
+		while((((double) (Math.abs(odo.leftE) + Math.abs(odo.rightE))) / 2.0) < 17010) {
 			telemetry.addLine("MOVING POS 9");
-			dt.drive(0, -.4, 0);
+			dt.drive(.4, 0, 0);
 			odo.updateOdoPosition();
 			updateOdoTelemetry();
-		}//NO ERROR CORRECTION, CAN't BE TOO INTO PARK ZONE :)
+		}if((((double) (Math.abs(odo.leftE) + Math.abs(odo.rightE))) / 2.0) > 17050) { //ERROR CORRECTION
+			dt.drive(-.2, 0, 0);
+			odo.updateOdoPosition();
+			updateOdoTelemetry();
+		}
+		dt.drive(0, 0, 0);
+
+		matchTime.reset();
+		//STRAFING LEFT
+		while(odo.centerE < 13000 && matchTime.seconds() < 2) {
+			telemetry.addLine("MOVING POS 10");
+			dt.drive(0, .4, 0);
+			odo.updateOdoPosition();
+			updateOdoTelemetry();
+		}if(odo.centerE > 13000) { //ERROR CORRECTION
+			dt.drive(0, -.2, 0);
+			odo.updateOdoPosition();
+			updateOdoTelemetry();
+		}
 		dt.drive(0,0,0);
 
-		terminateOpModeNow();
+		matchTime.reset();
+		//MOVING BACKWARDS
+		while(matchTime.seconds() < 3) {
+			telemetry.addLine("MOVING POS 12");
+			dt.drive(-.4, 0, 0);
+			odo.updateOdoPosition();
+			updateOdoTelemetry();
+		}
+		dt.drive(0,0,0);
+
+		//MOVING FORWARD
+		while((((double) (Math.abs(odo.leftE) + Math.abs(odo.rightE))) / 2.0) < 17510) {
+			telemetry.addLine("MOVING POS 13");
+			dt.drive(.4, 0, 0);
+			odo.updateOdoPosition();
+			updateOdoTelemetry();
+		}if((((double) (Math.abs(odo.leftE) + Math.abs(odo.rightE))) / 2.0) > 17050) { //ERROR CORRECTION
+			dt.drive(-.2, 0, 0);
+			odo.updateOdoPosition();
+			updateOdoTelemetry();
+		}
+		dt.drive(0, 0, 0);
+
+		matchTime.reset();
+		//STRAFING LEFT
+		while(matchTime.seconds() < 3) {
+			telemetry.addLine("MOVING POS 14");
+			dt.drive(0, .4, 0);
+			odo.updateOdoPosition();
+			updateOdoTelemetry();
+		}
+		dt.drive(0,0,0);
+
+		matchTime.reset();
+		//MOVING BACKWARDS
+		while(matchTime.seconds() < 3) {
+			telemetry.addLine("MOVING POS 15");
+			dt.drive(-.4, 0, 0);
+			odo.updateOdoPosition();
+			updateOdoTelemetry();
+		}
+		dt.drive(0,0,0);
+
+		dt.neutral();
+		while(odo.centerE != 0) {
+			odo.updateOdoPosition();
+			updateOdoTelemetry();
+
+		}
 	}
 
 }
