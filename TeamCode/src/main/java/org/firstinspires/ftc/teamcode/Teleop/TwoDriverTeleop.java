@@ -11,6 +11,7 @@ public class TwoDriverTeleop extends RobotOpMode {
         dt.drive (gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
 
         wheel.lift (gamepad2.left_stick_y);
+        wheel.spin(gamepad2.left_trigger, gamepad2.right_trigger);
 
         claw.liftSlides (gamepad2.right_stick_y);
         claw.liftClaw(gamepad1.left_bumper, gamepad1.right_bumper);

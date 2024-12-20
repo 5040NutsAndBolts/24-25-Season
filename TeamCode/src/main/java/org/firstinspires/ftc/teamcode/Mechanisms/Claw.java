@@ -26,7 +26,6 @@ public class Claw {
 		liftMotorBottom.setPower(input);
 	}
 	public void pinch(boolean open, boolean closed){
-
 		if(open && pinchServo.getPosition() != 1) pinchServo.setPosition(1);
 		else if(closed) pinchServo.setPosition(0);
 	}
