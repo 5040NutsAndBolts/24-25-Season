@@ -86,7 +86,7 @@ public class Left extends AutoOpMode {
 
 		//SLIGHT MOVE BACKWARDS
 		matchTime.reset();
-		while(matchTime.seconds() < 3) {
+		while(matchTime.seconds() < 2) {
 			telemetry.addLine("MOVING POS 7");
 			dt.drive(-.6, 0, 0);
 			odo.updateOdoPosition();
@@ -177,11 +177,59 @@ public class Left extends AutoOpMode {
 		}
 		dt.drive(0,0,0);
 
-		dt.neutral();
-		while(odo.centerE != 0) {
+		//MOVING FORWARD
+		while((((double) (Math.abs(odo.leftE) + Math.abs(odo.rightE))) / 2.0) < 15510) {
+			telemetry.addLine("MOVING POS 16");
+			dt.drive(.4, 0, 0);
 			odo.updateOdoPosition();
 			updateOdoTelemetry();
+		}if((((double) (Math.abs(odo.leftE) + Math.abs(odo.rightE))) / 2.0) > 15050) { //ERROR CORRECTION
+			dt.drive(-.2, 0, 0);
+			odo.updateOdoPosition();
+			updateOdoTelemetry();
+		}
+		dt.drive(0, 0, 0);
 
+		matchTime.reset();
+		//STRAFING LEFT
+		while(matchTime.seconds() < 3) {
+			telemetry.addLine("MOVING POS 17");
+			dt.drive(0, .4, 0);
+			odo.updateOdoPosition();
+			updateOdoTelemetry();
+		}
+		dt.drive(0,0,0);
+
+		//STRAFING RIGHT
+		while(odo.centerE > 5507) {
+			telemetry.addLine("MOVING POS 18");
+			dt.drive(0, -.2, 0);
+			odo.updateOdoPosition();
+			updateOdoTelemetry();
+		}if(odo.centerE < 5507) { //ERROR CORRECTION
+			dt.drive(0, .4, 0);
+			odo.updateOdoPosition();
+			updateOdoTelemetry();
+		}
+		dt.drive(0, 0, 0);
+
+		matchTime.reset();
+		//MOVING BACKWARDS
+		while(matchTime.seconds() < 3) {
+			telemetry.addLine("MOVING POS 19");
+			dt.drive(-.4, 0, 0);
+			odo.updateOdoPosition();
+			updateOdoTelemetry();
+		}
+		dt.drive(0,0,0);
+
+		matchTime.reset();
+		//STRAFING RIGHT
+		while(matchTime.seconds() < 10) {
+			telemetry.addLine("MOVING POS 20");
+			dt.drive(0, .4, 0);
+			odo.updateOdoPosition();
+			updateOdoTelemetry();
 		}
 	}
 
