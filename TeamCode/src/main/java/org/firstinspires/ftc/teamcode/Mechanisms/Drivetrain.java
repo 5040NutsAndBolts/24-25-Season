@@ -18,7 +18,7 @@ public class Drivetrain {
         //Needed for how the motors are mounted
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
 
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -30,6 +30,7 @@ public class Drivetrain {
         forward *= speed;
         sideways *= speed;
         rotation *= speed;
+        System.out.println("goonfeinskibidi wa here");
 
         //adds all the inputs together to get the number to scale it by
         double scale = Math.abs(rotation) + Math.abs(forward) + Math.abs(sideways);
