@@ -3,8 +3,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous (name = "Red Left Time", group = "Autonomous")
-public class RLT extends AutoOpMode {
+@Autonomous (name = "Left Time", group = "Autonomous")
+public class LeftTime extends AutoOpMode {
 	@Override
 	public void loop() {
 		ElapsedTime timer = new ElapsedTime();
