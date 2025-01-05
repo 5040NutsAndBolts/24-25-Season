@@ -6,15 +6,13 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Claw {
-	private final CRServo rollServoLeft, rollServoRight;
-	private final Servo pinchServo;
-	private final DcMotor liftMotorTop, liftMotorBottom;
+	public final Servo pinchServo;
+	private final DcMotor liftMotorTop, liftMotorBottom, rollMotor;
 	public Claw(HardwareMap hardwareMap) {
 		pinchServo = hardwareMap.get(Servo.class, "Pinch Servo");
 
-		rollServoLeft = hardwareMap.get(CRServo.class, "Claw Servo Left");
-		rollServoLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-		rollServoRight = hardwareMap.get(CRServo.class, "Claw Servo Right");
+		rollMotor = hardwareMap.get(DcMotor.class, "Roll Motor");
+		rollMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 		liftMotorTop = hardwareMap.get(DcMotor.class, "Claw Slide Top");
 		liftMotorBottom = hardwareMap.get(DcMotor.class, "Claw Slide Bottom");
@@ -22,20 +20,25 @@ public class Claw {
 		liftMotorBottom.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		liftMotorTop.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 	}
-	public void liftClaw(double input) {
-		rollServoLeft.setPower(input);
-		rollServoRight.setPower(input);
-	}
+
 	public void liftSlides(double input) {
 		liftMotorTop.setPower(input);
 		liftMotorBottom.setPower(input);
 	}
-	public void pinch(){
-		pinchServo.setPosition(1);
+	public void pinch(boolean open, boolean closed){
+		if (open && pinchServo.getPosition() != 1 && !closed)
+			pinchServo.setPosition(1);
+		else if (closed && !open)
+			pinchServo.setPosition(0);
 	}
-	public void open(){
-		pinchServo.setPosition(-1);
+	public void liftClaw(boolean down, boolean up) {
+		if(down)
+			rollMotor.setPower(-.8);
+		else if(up)
+			rollMotor.setPower(.5);
+		else rollMotor.setPower(0);
 	}
+
 	public int getPosition() {
 		return (liftMotorTop.getCurrentPosition() + liftMotorBottom.getCurrentPosition()) / 2;
 	}
