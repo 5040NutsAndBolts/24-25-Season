@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Claw {
-	private final Servo pinchServo;
+	public final Servo pinchServo;
 	private final DcMotor liftMotorTop, liftMotorBottom, rollMotor;
 	public Claw(HardwareMap hardwareMap) {
 		pinchServo = hardwareMap.get(Servo.class, "Pinch Servo");
@@ -26,8 +26,10 @@ public class Claw {
 		liftMotorBottom.setPower(input);
 	}
 	public void pinch(boolean open, boolean closed){
-		if(open && pinchServo.getPosition() != 1) pinchServo.setPosition(1);
-		else if(closed) pinchServo.setPosition(0);
+		if (open && pinchServo.getPosition() != 1 && !closed)
+			pinchServo.setPosition(1);
+		else if (closed && !open)
+			pinchServo.setPosition(0);
 	}
 	public void liftClaw(boolean down, boolean up) {
 		if(down)

@@ -27,10 +27,26 @@ public class Odometry extends Drivetrain {
         centerE = centerOdom.getCurrentPosition() - centerO;
     }
 
-    public void resetOdometry(int x, int y, int theta) {
-        leftO = leftOdom.getCurrentPosition() + x;
-        rightO = rightOdom.getCurrentPosition() + y;
-        centerO = centerOdom.getCurrentPosition() + theta;
+    public void resetOdometry(int l, int r, int c) {
+        leftO = leftE + l;
+        rightO = rightE + r;
+        centerO = centerE + c;
+
+        updateOdoPosition();
+
+        // Resets encoder values then sets them back to run without encoders because wheels and odometry are same pointer
+        leftOdom.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftOdom.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightOdom.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightOdom.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        centerOdom.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        centerOdom.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+    public void resetOdometry() {
+        leftO = leftOdom.getCurrentPosition();
+        rightO = rightOdom.getCurrentPosition();
+        centerO = centerOdom.getCurrentPosition();
 
         // Resets encoder values then sets them back to run without encoders because wheels and odometry are same pointer
         leftOdom.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
