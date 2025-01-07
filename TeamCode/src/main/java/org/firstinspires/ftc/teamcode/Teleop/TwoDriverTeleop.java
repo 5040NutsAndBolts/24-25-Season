@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.Teleop;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.RobotOpMode;
 
-import java.util.Arrays;
-
 @TeleOp (name = "Two Driver", group = "Teleop")
 public class TwoDriverTeleop extends RobotOpMode {
     @Override
