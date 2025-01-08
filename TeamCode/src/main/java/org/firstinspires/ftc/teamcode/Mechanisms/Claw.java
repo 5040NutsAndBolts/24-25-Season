@@ -1,13 +1,11 @@
 package org.firstinspires.ftc.teamcode.Mechanisms;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Claw {
 	public final Servo pinchServo;
-	private final DcMotor liftMotorTop, liftMotorBottom, rollMotor;
+	public final DcMotor liftMotorTop, liftMotorBottom, rollMotor;
 	public Claw(HardwareMap hardwareMap) {
 		pinchServo = hardwareMap.get(Servo.class, "Pinch Servo");
 
@@ -39,7 +37,7 @@ public class Claw {
 		else rollMotor.setPower(0);
 	}
 
-	public int getPosition() {
+	public int getSlidePosition() {
 		return (liftMotorTop.getCurrentPosition() + liftMotorBottom.getCurrentPosition()) / 2;
 	}
 }

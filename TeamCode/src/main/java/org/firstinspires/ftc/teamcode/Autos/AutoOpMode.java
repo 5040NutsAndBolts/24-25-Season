@@ -46,8 +46,8 @@ public class AutoOpMode extends RobotOpMode {
                 telemetry.addLine("Moving Right");
                 updateOdoTelemetry();
                 break;
-            default:
-                dt.drive(0,0,0);
+	        default:
+                dt.drive(0, 0, 0);
                 telemetry.addLine("Stopped");
                 updateOdoTelemetry();
                 break;
