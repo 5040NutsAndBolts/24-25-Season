@@ -1,16 +1,20 @@
 package org.firstinspires.ftc.teamcode.Mechanisms;
+import androidx.annotation.NonNull;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Claw {
-	public final Servo pinchServo;
-	public final DcMotor liftMotorTop, liftMotorBottom, rollMotor;
+	private final Servo pinchServo;
+	private final DcMotor liftMotorTop, liftMotorBottom, rollMotor;
+	private final double rollPositionOffset;
 	public Claw(HardwareMap hardwareMap) {
 		pinchServo = hardwareMap.get(Servo.class, "Pinch Servo");
 
 		rollMotor = hardwareMap.get(DcMotor.class, "Roll Motor");
 		rollMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+		rollPositionOffset = rollMotor.getCurrentPosition();
 
 		liftMotorTop = hardwareMap.get(DcMotor.class, "Claw Slide Top");
 		liftMotorBottom = hardwareMap.get(DcMotor.class, "Claw Slide Bottom");
@@ -29,7 +33,7 @@ public class Claw {
 		else if (closed && !open)
 			pinchServo.setPosition(0);
 	}
-	public void liftClaw(boolean down, boolean up) {
+	public void rollClaw(boolean down, boolean up) {
 		if(down)
 			rollMotor.setPower(-.8);
 		else if(up)
@@ -37,7 +41,23 @@ public class Claw {
 		else rollMotor.setPower(0);
 	}
 
+	public int getRollMotorPosition() {
+		return (int) (rollMotor.getCurrentPosition() - rollPositionOffset);
+	}
+
 	public int getSlidePosition() {
-		return (liftMotorTop.getCurrentPosition() + liftMotorBottom.getCurrentPosition()) / 2;
+		return (int) ((double) (liftMotorTop.getCurrentPosition() + liftMotorBottom.getCurrentPosition()) / 2);
+	}
+
+	@NonNull
+	@Override
+	public String toString() {
+		return "Top Motor Position: " + liftMotorTop.getCurrentPosition() + "\n" +
+		"Bottom Motor Position: " + liftMotorBottom.getCurrentPosition() + "\n" +
+		"Average Slide Position: " + getSlidePosition() + "\n" +
+		"Roll Motor Position: " + rollMotor.getCurrentPosition() + "\n" +
+		"Adjusted Roll Motor Position: " + getRollMotorPosition() + "\n" +
+		"Pinch Servo Position: " + pinchServo.getPosition() + "\n" +
+		"Roll Motor Offset: " + rollPositionOffset;
 	}
 }

@@ -44,7 +44,7 @@ public class Left extends AutoOpMode {
 		odo.updateOdoPosition();
 
 		//MOVING FORWARD IN FRONT OF BRICK LINE
-		while(((Math.abs(odo.leftE) + Math.abs(odo.rightE)) / 2.0) < 16300) {
+		while(((Math.abs(odo.leftE) + Math.abs(odo.rightE)) / 2.0) < 15800) {
 			telemetry.addLine("PARK: " + parkToggle);
 			telemetry.addLine("MOVING FORWARD IN FRONT OF BRICK LINE");
 			dt.drive(.4, 0, 0);

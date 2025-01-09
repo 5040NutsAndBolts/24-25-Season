@@ -57,4 +57,8 @@ public class Odometry extends Drivetrain {
         centerOdom.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
+    public String toString() {
+        return "le: " + leftE + "\nce: " + centerE + "\nre: " + rightE;
+    }
+
 }
