@@ -9,6 +9,7 @@ public class Claw {
 	private final Servo pinchServo;
 	private final DcMotor liftMotorTop, liftMotorBottom, rollMotor;
 	private final double rollPositionOffset;
+	private boolean dontCrash = false;
 	public Claw(HardwareMap hardwareMap) {
 		pinchServo = hardwareMap.get(Servo.class, "Pinch Servo");
 
@@ -34,11 +35,44 @@ public class Claw {
 			pinchServo.setPosition(0);
 	}
 	public void rollClaw(boolean down, boolean up) {
-		if(down)
-			rollMotor.setPower(-.8);
-		else if(up)
-			rollMotor.setPower(.5);
-		else rollMotor.setPower(0);
+		if(!dontCrash) {
+			rollMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+			if(down && up) return;
+			else if(down)
+				rollMotor.setPower(-.8);
+			else if(up)
+				rollMotor.setPower(.8);
+			else rollMotor.setPower(0);
+		}
+		else {
+			if(down && up)
+				return;
+			if(down) {
+				rollMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+				if(getRollMotorPosition() > -400)
+					rollMotor.setPower(-.8);
+				else if (getRollMotorPosition() < -700) {
+					rollMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+					rollMotor.setPower(.1);
+				}
+				else
+					rollMotor.setPower(-.2);
+			}
+			else if(up) {
+				rollMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+				if(getRollMotorPosition() > -300)
+					rollMotor.setPower(-.08);
+				else if (getRollMotorPosition() > -400)
+					rollMotor.setPower(.5);
+				else rollMotor.setPower(.7);
+			}
+			else {
+				if(getRollMotorPosition() < 50)
+					rollMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+				else rollMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+				rollMotor.setPower(0);
+			}
+		}
 	}
 
 	public int getRollMotorPosition() {
@@ -52,11 +86,16 @@ public class Claw {
 	@NonNull
 	@Override
 	public String toString() {
-		return "Top Motor Position: " + liftMotorTop.getCurrentPosition() + "\n" +
+		return
+		"Crash detection: " + dontCrash + "\n" +
+		"Top Motor Position: " + liftMotorTop.getCurrentPosition() + "\n" +
+		"Top Motor Power: " + liftMotorTop.getPower() + "\n" +
 		"Bottom Motor Position: " + liftMotorBottom.getCurrentPosition() + "\n" +
+		"Bottom Motor Power: " + liftMotorBottom.getPower() + "\n" +
 		"Average Slide Position: " + getSlidePosition() + "\n" +
 		"Roll Motor Position: " + rollMotor.getCurrentPosition() + "\n" +
 		"Adjusted Roll Motor Position: " + getRollMotorPosition() + "\n" +
+		"Roll Motor Power: " + rollMotor.getPower() + "\n" +
 		"Pinch Servo Position: " + pinchServo.getPosition() + "\n" +
 		"Roll Motor Offset: " + rollPositionOffset;
 	}
