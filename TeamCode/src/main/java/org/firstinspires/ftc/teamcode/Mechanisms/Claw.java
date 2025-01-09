@@ -52,12 +52,13 @@ public class Claw {
 	@NonNull
 	@Override
 	public String toString() {
-		return "Top Motor Position: " + liftMotorTop.getCurrentPosition() + "\n" +
-		"Bottom Motor Position: " + liftMotorBottom.getCurrentPosition() + "\n" +
-		"Average Slide Position: " + getSlidePosition() + "\n" +
-		"Roll Motor Position: " + rollMotor.getCurrentPosition() + "\n" +
-		"Adjusted Roll Motor Position: " + getRollMotorPosition() + "\n" +
-		"Pinch Servo Position: " + pinchServo.getPosition() + "\n" +
-		"Roll Motor Offset: " + rollPositionOffset;
+		return
+			"Top Motor Position: " + liftMotorTop.getCurrentPosition() + "\n" +
+			"Bottom Motor Position: " + liftMotorBottom.getCurrentPosition() + "\n" +
+			"Average Slide Position: " + getSlidePosition() + "\n" +
+			"Roll Motor Position: " + rollMotor.getCurrentPosition() + "\n" +
+			"Adjusted Roll Motor Position: " + getRollMotorPosition() + "\n" +
+			"Pinch Servo Position: " + pinchServo.getPosition() + "\n" +
+			"Roll Motor Offset: " + rollPositionOffset;
 	}
 }

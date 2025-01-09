@@ -1,4 +1,6 @@
 package org.firstinspires.ftc.teamcode.Mechanisms;
+import androidx.annotation.NonNull;
+
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -32,4 +34,13 @@ public class WheelIntake {
 
     public void lift (double in) {liftMotor.setPower(in);}
     public double getPosition () {return liftMotor.getCurrentPosition();}
+
+    @NonNull
+    @Override
+    public String toString() {
+        return
+            "Left Servo Power: " + leftServo.getPower() + "\n" +
+            "Right Servo Power: " + rightServo.getPower() + "\n" +
+            "Lift Motor Power: " + liftMotor.getCurrentPosition();
+    }
 }

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Teleop;
+package org.firstinspires.ftc.teamcode.HelperClasses.TestTeleops;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -17,7 +17,7 @@ public class OdoTest extends RobotOpMode {
 
 	@Override
 	public void loop() {
-		odo.updateOdoPosition();
+		odo.update();
 		telemetry.addLine("l: "+odo.leftE);
 		telemetry.addLine("r: "+odo.rightE);
 		telemetry.addLine("c: "+odo.centerE);
