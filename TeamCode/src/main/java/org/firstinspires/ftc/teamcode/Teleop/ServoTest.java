@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.Mechanisms.Claw;
+
 @TeleOp(name="ServoOp")
 public class ServoTest extends LinearOpMode {
 
@@ -21,13 +23,13 @@ public class ServoTest extends LinearOpMode {
 	 */
 	@Override
 	public void runOpMode() throws InterruptedException {
-		CRServo servo = hardwareMap.get(CRServo.class, "crServo");
+		Claw servo = new Claw(hardwareMap);
 
 		waitForStart();
 
 		while (opModeIsActive()) {
-			servo.setPower(gamepad1.right_trigger);
-			telemetry.addLine("sp " + servo.getPower());
+			telemetry.addLine("claw");
+			servo.pinch(gamepad1.right_trigger > .05, gamepad1.left_trigger > .05);
 			telemetry.update();
 		}
 	}
