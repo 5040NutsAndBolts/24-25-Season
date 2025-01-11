@@ -25,7 +25,7 @@ public class Left extends AutoOpMode {
 		dt.drive(0, 0, 0);
 		odo.updateOdoPosition();
 		//MOVE OUT FROM BEHIND SUBMERSIBLE
-		while(odo.centerE > -7500) {
+		while(odo.centerE > -7200) {
 			telemetry.addLine("PARK: " + parkToggle);
 			telemetry.addLine("MOVE OUT FROM BEHIND SUBMERSIBLE");
 			dt.drive(0, .4, 0);

@@ -21,8 +21,6 @@ public class Claw {
 		liftMotor = hardwareMap.get(DcMotorEx.class, "Claw Slide");
 
 		liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-
 	}
 
 	public void liftSlides(double input) {

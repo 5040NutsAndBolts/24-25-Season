@@ -10,7 +10,7 @@ public class Right extends AutoOpMode {
 		dt.drive(0, 0, 0);
 		odo.updateOdoPosition();
 		//MOVING OUT FROM BEHIND SUBMERSIBLE
-		while(odo.centerE < 6800) {
+		while(odo.centerE < 6200) {
 			telemetry.addLine("MOVE OUT FROM BEHIND SUBMERSIBLE");
 			dt.drive(0, -.4, 0);
 			odo.updateOdoPosition();
@@ -36,7 +36,7 @@ public class Right extends AutoOpMode {
 		dt.drive(0, 0, 0);
 
 		//MOVING IN FRONT OF SPECIMEN
-		while(odo.centerE < 10000) {
+		while(odo.centerE < 9600) {
 			telemetry.addLine("MOVING IN FRONT OF SPECIMEN");
 			dt.drive(0, -.4, 0);
 			odo.updateOdoPosition();
