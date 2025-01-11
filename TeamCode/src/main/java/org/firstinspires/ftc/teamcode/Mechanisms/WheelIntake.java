@@ -7,15 +7,19 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class WheelIntake {
     public final CRServo leftServo, rightServo;
-    private final DcMotorEx liftMotor;
+    private final DcMotor liftMotorTop, liftMotorBottom;
 
     public WheelIntake(HardwareMap hardwareMap) {
         leftServo = hardwareMap.get(CRServo.class, "Left Wheel Servo");
         leftServo.setDirection(DcMotorSimple.Direction.REVERSE);
         rightServo = hardwareMap.get(CRServo.class, "Right Wheel Servo");
 
-        liftMotor = hardwareMap.get(DcMotorEx.class, "Wheel Slides");
-        liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        liftMotorTop = hardwareMap.get(DcMotor.class, "Wheel Slide Top");
+        liftMotorBottom = hardwareMap.get(DcMotor.class, "Wheel Slide Bottom");
+        liftMotorBottom.setDirection(DcMotor.Direction.REVERSE);
+        liftMotorBottom.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        liftMotorTop.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
     public void spin(double in, double out) {
         //ignore stick/trigger drift
@@ -30,6 +34,6 @@ public class WheelIntake {
         rightServo.setPower(power);
     }
 
-    public void lift (double in) {liftMotor.setPower(in);}
-    public double getPosition () {return liftMotor.getCurrentPosition();}
+    public void lift (double in) {liftMotorTop.setPower(in); liftMotorBottom.setPower(in);}
+    public double getPosition () {return liftMotorTop.getCurrentPosition();} //isn't currently in use but when it is change it to show both top and bottom
 }

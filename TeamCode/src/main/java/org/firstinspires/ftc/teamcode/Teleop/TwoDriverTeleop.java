@@ -13,7 +13,7 @@ public class TwoDriverTeleop extends RobotOpMode {
         wheel.spin(gamepad2.right_trigger,gamepad2.left_trigger);
 
         claw.liftSlides (gamepad2.right_stick_y);
-        claw.rollClaw(gamepad1.left_bumper, gamepad1.right_bumper);
+        claw.rollClaw(gamepad2.left_bumper, gamepad2.right_bumper);
 
         claw.pinch(gamepad1.right_trigger > .05, gamepad1.left_trigger > .05);
 

@@ -2,12 +2,13 @@ package org.firstinspires.ftc.teamcode.Mechanisms;
 import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Claw {
 	private final Servo pinchServo;
-	private final DcMotor liftMotorTop, liftMotorBottom, rollMotor;
+	private final DcMotor liftMotor, rollMotor;
 	private final double rollPositionOffset;
 	private boolean dontCrash = false;
 	public Claw(HardwareMap hardwareMap) {
@@ -17,16 +18,16 @@ public class Claw {
 		rollMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		rollPositionOffset = rollMotor.getCurrentPosition();
 
-		liftMotorTop = hardwareMap.get(DcMotor.class, "Claw Slide Top");
-		liftMotorBottom = hardwareMap.get(DcMotor.class, "Claw Slide Bottom");
-		liftMotorBottom.setDirection(DcMotor.Direction.REVERSE);
-		liftMotorBottom.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-		liftMotorTop.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+		liftMotor = hardwareMap.get(DcMotorEx.class, "Claw Slide");
+
+		liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
 	}
 
 	public void liftSlides(double input) {
-		liftMotorTop.setPower(input);
-		liftMotorBottom.setPower(input);
+		liftMotor.setPower(input);
+
 	}
 	public void pinch(boolean open, boolean closed){
 		if (open && pinchServo.getPosition() != 1 && !closed)
@@ -80,7 +81,7 @@ public class Claw {
 	}
 
 	public int getSlidePosition() {
-		return (int) ((double) (liftMotorTop.getCurrentPosition() + liftMotorBottom.getCurrentPosition()) / 2);
+		return (int) ((double) (liftMotor.getCurrentPosition()));
 	}
 
 	@NonNull
@@ -88,10 +89,8 @@ public class Claw {
 	public String toString() {
 		return
 		"Crash detection: " + dontCrash + "\n" +
-		"Top Motor Position: " + liftMotorTop.getCurrentPosition() + "\n" +
-		"Top Motor Power: " + liftMotorTop.getPower() + "\n" +
-		"Bottom Motor Position: " + liftMotorBottom.getCurrentPosition() + "\n" +
-		"Bottom Motor Power: " + liftMotorBottom.getPower() + "\n" +
+		"Top Motor Position: " + liftMotor.getCurrentPosition() + "\n" +
+		"Top Motor Power: " + liftMotor.getPower() + "\n" +
 		"Average Slide Position: " + getSlidePosition() + "\n" +
 		"Roll Motor Position: " + rollMotor.getCurrentPosition() + "\n" +
 		"Adjusted Roll Motor Position: " + getRollMotorPosition() + "\n" +
