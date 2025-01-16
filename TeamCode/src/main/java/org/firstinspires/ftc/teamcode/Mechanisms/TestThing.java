@@ -11,8 +11,8 @@ public class TestThing extends Mechanism{
 		addPointServo("Point Servo");
 	}
 	public void testMotor() {
-		searchMotor("Motor").setPower(1);
-		searchSpinServo("Spin Servo").setPower(1);
-		searchPointServo("Point Servo").setPosition(1);
+		getMotor("Motor").setPower(1);
+		getSpinServo("Spin Servo").setPower(1);
+		getPointServo("Point Servo").setPosition(1);
 	}
 }

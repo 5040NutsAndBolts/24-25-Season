@@ -36,7 +36,7 @@ abstract class Mechanism {
 		@NonNull
 		@Override
 		public String toString() {
-			return "\n\tMotor: " + name + "\n\tPower: " + internalMotor.getPower() + "\n\tDirection: " + internalMotor.getDirection() + "\n\tZeroPowerBehavior: " + internalMotor.getZeroPowerBehavior();
+			return "\n\tMotor: " + name + "\n\tCurrent Position: " + internalMotor.getCurrentPosition() + "\n\tPower: " + internalMotor.getPower() + "\n\tDirection: " + internalMotor.getDirection() + "\n\tZeroPowerBehavior: " + internalMotor.getZeroPowerBehavior();
 		}
 	}
 	protected static class SpinServo {
@@ -102,19 +102,19 @@ abstract class Mechanism {
 		pointServos.add(new PointServo(name, hardwareMap));
 	}
 
-	protected Motor searchMotor(String name) {
+	protected Motor getMotor(String name) {
 		for(Motor motor : motors)
 			if(motor.name.equals(name))
 				return motor;
 		throw new IllegalArgumentException("Motor with name " + name + " does not exist");
 	}
-	protected SpinServo searchSpinServo(String name) {
+	protected SpinServo getSpinServo(String name) {
 		for(SpinServo spinServo : spinServos)
 			if(spinServo.name.equals(name))
 				return spinServo;
 		throw new IllegalArgumentException("SpinServo with name " + name + " does not exist");
 	}
-	protected PointServo searchPointServo(String name) {
+	protected PointServo getPointServo(String name) {
 		for(PointServo pointServo : pointServos)
 			if(pointServo.name.equals(name))
 				return pointServo;

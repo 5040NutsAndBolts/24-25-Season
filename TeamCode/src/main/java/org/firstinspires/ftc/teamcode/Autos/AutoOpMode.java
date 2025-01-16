@@ -5,8 +5,11 @@ import org.firstinspires.ftc.teamcode.HelperClasses.Odometry;
 import org.firstinspires.ftc.teamcode.Mechanisms.Drivetrain;
 import org.firstinspires.ftc.teamcode.RobotOpMode;
 
+import java.util.ArrayList;
+
 @Disabled
 public class AutoOpMode extends RobotOpMode {
+
     protected Odometry odo;
 
     @Override
@@ -16,7 +19,6 @@ public class AutoOpMode extends RobotOpMode {
     }
 
     protected void updateOdoTelemetry() {
-        telemetry.addLine(odo.toString());
         telemetry.addLine(dt.toString());
         telemetry.update();
     }
