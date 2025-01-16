@@ -2,12 +2,10 @@ package org.firstinspires.ftc.teamcode.Teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Mechanisms.Claw;
 
-@TeleOp(name="ServoOp")
+@TeleOp (name = "servotest", group = "Teleop")
 public class ServoTest extends LinearOpMode {
 
 	/**
