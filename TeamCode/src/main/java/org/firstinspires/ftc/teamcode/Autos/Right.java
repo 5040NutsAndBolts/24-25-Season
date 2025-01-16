@@ -6,59 +6,35 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Autonomous(name = "Right NC", group = "Autonomous")
 public class Right extends AutoOpMode {
 	@Override
+
 	public void loop() {
-		dt.drive(0, 0, 0);
-		odo.updateOdoPosition();
-		//MOVING OUT FROM BEHIND SUBMERSIBLE
-		while(odo.centerE < 6200) {
-			telemetry.addLine("MOVE OUT FROM BEHIND SUBMERSIBLE");
-			dt.drive(0, -.4, 0);
-			odo.updateOdoPosition();
-			updateOdoTelemetry();
-		}if(odo.centerE > 7200) { //ERROR CORRECTION
-			dt.drive(0, .2, 0);
+		while (odo.centerE < 5000) {
+			telemetry.addLine("Moving in front of chambers");
+			dt.drive(0, -0.6, 0);
 			odo.updateOdoPosition();
 			updateOdoTelemetry();
 		}
-		dt.drive(0, 0, 0);
+		if (odo.centerE > 5000){
+			dt.drive(0,0.3,0);
+			odo.updateOdoPosition();
+			updateOdoTelemetry();
+		}if(odo.leftE != 0 && odo.rightE != 0) {
+			ElapsedTime temp = new ElapsedTime();
+			while(temp.seconds() < .7)
+				dt.drive(.5, 0, 0);
+		}
 
-		//MOVING FORWARD IN FRONT OF BRICK LINE
-		while(((Math.abs(odo.leftE) + Math.abs(odo.rightE)) / 2.0) < 16300) {
-			telemetry.addLine("MOVING FORWARD IN FRONT OF BRICK LINE");
-			dt.drive(.4, 0, 0);
+		while ((Math.abs(odo.leftE) + Math.abs(odo.rightE))/2 < 9500) {
+			telemetry.addLine("Moving toward chambers");
+			dt.drive(-.5, 0, 0);
 			odo.updateOdoPosition();
 			updateOdoTelemetry();
-		}if(((Math.abs(odo.leftE) + Math.abs(odo.rightE)) / 2.0) > 16300) { //ERROR CORRECTION
-			dt.drive(-.2, 0, 0);
-			odo.updateOdoPosition();
-			updateOdoTelemetry();
-		}
-		dt.drive(0, 0, 0);
-
-		//MOVING IN FRONT OF SPECIMEN
-		while(odo.centerE < 9600) {
-			telemetry.addLine("MOVING IN FRONT OF SPECIMEN");
-			dt.drive(0, -.4, 0);
-			odo.updateOdoPosition();
-			updateOdoTelemetry();
-		}if(odo.centerE > 10500) { //ERROR CORRECTION
-			dt.drive(0, .2, 0);
+		}if((Math.abs(odo.leftE) + Math.abs(odo.rightE))/2 > 9500) {
+			dt.drive(.3,0,0);
 			odo.updateOdoPosition();
 			updateOdoTelemetry();
 		}
-		dt.drive(0, 0, 0);
-
-		//MOVE BACKWARDS INTO PARK ZONE
-		ElapsedTime parkTimer = new ElapsedTime();
-		while(parkTimer.seconds() < 4) {
-			telemetry.addLine("MOVE BACKWARDS INTO PARK ZONE");
-			dt.drive(-.3, 0, 0);
-			odo.updateOdoPosition();
-			updateOdoTelemetry();
-		}
-		terminateOpModeNow();
 	}
-
 	@Override
 	public void stop() {
 		super.stop();
