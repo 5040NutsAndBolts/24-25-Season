@@ -91,10 +91,6 @@ public class Odometry extends Drivetrain {
 		double deltaGlobalY = lengthK * Math.cos(angleV);   
 	}
 
-	public void moveTo(Position target) {
-
-	}
-
 	@NonNull
 	public String toString() {
 		return
