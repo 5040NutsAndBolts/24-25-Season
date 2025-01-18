@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 @Disabled
 public class AutoOpMode extends RobotOpMode {
-
     protected Odometry odo;
 
     @Override
@@ -19,7 +18,7 @@ public class AutoOpMode extends RobotOpMode {
     }
 
     protected void updateOdoTelemetry() {
-        telemetry.addLine(dt.toString());
+        telemetry.addLine(odo.toString());
         telemetry.update();
     }
 }

@@ -58,6 +58,8 @@ public class WheelIntake {
         return
             "Left Servo Power: " + leftServo.getPower() + "\n" +
             "Right Servo Power: " + rightServo.getPower() + "\n" +
-            "Lift Motor Power: " + liftMotor.getCurrentPosition();
+            "Lift Motor Power: " + liftMotor.getPower() + "\n" +
+            "Lift Motor Position: " + getPosition() + "\n" +
+            liftController.toString();
     }
 }

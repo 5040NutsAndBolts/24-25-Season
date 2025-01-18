@@ -1,4 +1,6 @@
 package org.firstinspires.ftc.teamcode.HelperClasses;
+import androidx.annotation.NonNull;
+
 import java.util.function.Supplier;
 
 public class PID {
@@ -36,7 +38,7 @@ public class PID {
 		return getPower(
 				getCurrent.get(),
 				getCurrent.get() + stickPower * deltaTime
-		);
+			);
 	}
 
 	//Autonomous control
@@ -45,11 +47,21 @@ public class PID {
 		return getPower(
 				getCurrent.get(),
 				target
-		);
+			);
 	}
 
 	//Update deltaTime
 	private void updateDeltaTime() {
 		deltaTime = (System.currentTimeMillis() - lastTime);
+	}
+
+	@NonNull
+	@Override
+	public String toString() {
+		return
+			"PID Controller: \n" +
+			"\tKp: " + kp + "\n" +
+			"\tKi: " + ki + "\n" +
+			"\tKd: " + kd;
 	}
 }
