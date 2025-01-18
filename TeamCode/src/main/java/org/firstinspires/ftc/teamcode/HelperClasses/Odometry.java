@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.HelperClasses;
 
+import static java.lang.Double.NaN;
+
 import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -17,7 +19,9 @@ public class Odometry extends Drivetrain {
 			this.t = t;
 		}
 		public Position() {
-			this(0,0,0);
+			this.x = 0;
+			this.y = 0;
+			this.t = 0;
 		}
 
 		/**
@@ -35,13 +39,15 @@ public class Odometry extends Drivetrain {
 		}
 	}
 
+	private int updateCount = 0;
     private final DcMotorEx leftOdom, rightOdom, centerOdom;
 	private final int leftOffset, rightOffset, centerOffset;
 	private static int lastLeft, lastRight, lastCenter;
     public static Position currentPosition;
-	private final double TRACKWIDTH = 100; //Distance between left and right encoders
-	private final double CENTER_OFFSET = 100; //Distance between center encoder and middle of bot
-	private final double TICKS_PER_INCH = 100; //Number of ticks per inch (Check google drive for spreadsheet)
+	public double x,t,y;
+	private final double TRACKWIDTH = 5018.842708; //Distance between left and right encoders
+	private final double CENTER_OFFSET = 1876.794122; //Distance between center encoder and middle of bot
+	private final double TICKS_PER_INCH = 337.4011905; //Number of ticks per inch (Check google drive for spreadsheet)
 
 	public Odometry(HardwareMap hardwareMap){
         super(hardwareMap);
@@ -56,12 +62,13 @@ public class Odometry extends Drivetrain {
 
         currentPosition = new Position();
 
-		//Handling poor configuration
-		if(TRACKWIDTH == 0) throw new Error("Odometry configuration issue! Trackwidth is 0!");
-		if(CENTER_OFFSET == 0) throw new Error("Odometry configuration issue! Center offset is 0!");
-		if(TICKS_PER_INCH == 0) throw new Error("Odometry configuration issue! Ticks per inch is 0!");
-
+		x=0;
+		y=0;
+		t=0;
     }
+
+
+
 
 	public void update() {
 		// Local encoder deltas
@@ -76,27 +83,40 @@ public class Odometry extends Drivetrain {
 
 		//Get total forward, rotational, and strafe distances
 		double deltaFwd = (double) (deltaLeft + deltaRight) / 2;
-		double deltaTheta = (deltaRight - deltaLeft) / TRACKWIDTH;
+		double deltaTheta = (double) (deltaRight - deltaLeft) / TRACKWIDTH;
 		double deltaStrafe = deltaCenter - (CENTER_OFFSET * deltaTheta);
-
-		double deltaLocalX = (deltaFwd / deltaTheta) * Math.sin(deltaTheta) - (deltaStrafe / deltaTheta) * (1-Math.cos(deltaTheta));
-		double deltaLocalY = (deltaStrafe / deltaTheta) * Math.cos(deltaTheta) + (deltaFwd / deltaTheta) * Math.cos(deltaTheta);
-
+		double deltaLocalX = 0;
+		double deltaLocalY = 0;
+		if(deltaTheta > .001) {
+			deltaLocalX = (deltaFwd / deltaTheta) * Math.sin(deltaTheta) - (deltaStrafe / deltaTheta) * (1 - Math.cos(deltaTheta));
+			deltaLocalY = (deltaStrafe / deltaTheta) * Math.sin(deltaTheta) + (deltaFwd / deltaTheta) * Math.cos(deltaTheta);
+		}else {
+			deltaLocalX = deltaStrafe;
+			deltaLocalY = deltaFwd;
+		}
 		//Globalization
 		double angleC = Math.atan(deltaLocalX/deltaLocalY);
 		double lengthK = deltaLocalX/Math.sin(angleC);
 		double angleZ = 180 - deltaTheta;
-		double angleV = 180-angleZ-angleC;
+		double angleV = 180 - angleZ - angleC;
 		double deltaGlobalX = lengthK * Math.sin(angleV);
-		double deltaGlobalY = lengthK * Math.cos(angleV);   
+		double deltaGlobalY = lengthK * Math.cos(angleV);
+
+		if(deltaLocalY == 0 || deltaTheta == 0)
+			return;
+
+		x += deltaGlobalX;
+		y += deltaGlobalY;
+		t += deltaTheta;
 	}
 
 	@NonNull
 	public String toString() {
 		return
-			"X: " + (currentPosition.x/TICKS_PER_INCH) + "\n" +
-			"Y: " + (currentPosition.y/TICKS_PER_INCH) + "\n" +
-			"T: " + (Math.toDegrees(currentPosition.t)) + "\n" +
+			"Update Count: " + updateCount + "\n" +
+			"X: " + x + "\n" +
+			"Y: " + y + "\n" +
+			"T: " + t + "\n" +
 			"leftOffset: " + leftOffset + "\n" +
 			"rightOffset: " + rightOffset + "\n" +
 			"centerOffset: " + centerOffset + "\n" +

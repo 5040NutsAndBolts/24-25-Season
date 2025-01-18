@@ -1,14 +1,11 @@
 package org.firstinspires.ftc.teamcode.HelperClasses;
 import java.util.function.Supplier;
-public class PID {
-	/*
-	 * error = target - current
-	 *
-	 */
 
+public class PID {
 	private final double kp, ki, kd;
-	private double previngrl, prevError, lastOvershoot;
+	private double previngrl, lastError;
 	private long lastTime, deltaTime;
+
 	public PID(double kp, double ki, double kd) {
 		this.kp = kp;
 		this.ki = ki;
@@ -16,37 +13,42 @@ public class PID {
 		lastTime = System.currentTimeMillis();
 	}
 
-	private double getPower(Supplier<Double> getCurrent, double target) {
-		updateDeltaTime();
-		double current = getCurrent.get();
+	//Calculates power output
+	private double getPower(double current, double target) {
+		double currentError = current - target;
 
-		double currentOvershoot = current - target;
-		double error = ((currentOvershoot - lastOvershoot) / 2) + (lastOvershoot * deltaTime);
-
-		double Proportional = kp * error;
-		double Integral = ki * (error/2 + prevError) * deltaTime + previngrl;
-		double Derivative = kd * (error-prevError)/deltaTime;
+		double Proportional = kp * currentError;
+		double Integral = previngrl + (currentError + lastError)/2 * deltaTime * ki;
+		double Derivative = kd * (currentError + lastError)/deltaTime;
 
 		double output = Proportional + Integral + Derivative;
 
 		previngrl = Integral;
-		prevError = error;
+		lastError += currentError;
 		lastTime = System.currentTimeMillis();
-		lastOvershoot = currentOvershoot;
 
 		return output;
 	}
 
-	public double teleOpControl(double stickPower, Supplier<Double> getCurrent) {
+	//TeleOp control
+	public double teleOpControl(Supplier<Double> getCurrent, double stickPower) {
 		updateDeltaTime();
 		return getPower(
-				getCurrent,
+				getCurrent.get(),
 				getCurrent.get() + stickPower * deltaTime
 		);
 	}
 
-	public double setHeight(Supplier<Double> getCurrent, double target)
+	//Autonomous control
+	public double autoControl (Supplier<Double> getCurrent, double target) {
+		updateDeltaTime();
+		return getPower(
+				getCurrent.get(),
+				target
+		);
+	}
 
+	//Update deltaTime
 	private void updateDeltaTime() {
 		deltaTime = (System.currentTimeMillis() - lastTime);
 	}

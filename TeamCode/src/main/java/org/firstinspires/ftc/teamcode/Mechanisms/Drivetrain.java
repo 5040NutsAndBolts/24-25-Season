@@ -82,7 +82,7 @@ public class Drivetrain {
         if(input && !slow){
             slow = true;
             speed = .5;
-        }else{
+        }else if (!input){
             slow =false;
             speed = 1;
         }

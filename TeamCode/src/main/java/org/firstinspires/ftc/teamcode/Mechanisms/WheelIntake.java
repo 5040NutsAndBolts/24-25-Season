@@ -5,11 +5,17 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.teamcode.HelperClasses.PID;
 
 public class WheelIntake {
     public final CRServo leftServo, rightServo;
     private final DcMotorEx liftMotor;
+    private final DigitalChannel limitSwitch;
+    private double slideOffset;
+    private final PID liftController = new PID(.01,0,.01);
 
     public WheelIntake(HardwareMap hardwareMap) {
         leftServo = hardwareMap.get(CRServo.class, "Left Wheel Servo");
@@ -18,7 +24,11 @@ public class WheelIntake {
 
         liftMotor = hardwareMap.get(DcMotorEx.class, "Wheel Slides");
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        limitSwitch = hardwareMap.get(DigitalChannel.class, "Wheel Limit Switch");
+        slideOffset = liftMotor.getCurrentPosition();
     }
+
     public void spin(double in, double out) {
         //ignore stick/trigger drift
         if(in < .05)
@@ -32,8 +42,15 @@ public class WheelIntake {
         rightServo.setPower(power);
     }
 
-    public void lift (double in) {liftMotor.setPower(in);}
-    public double getPosition () {return liftMotor.getCurrentPosition();}
+    public void lift (double in) {
+        if(!limitSwitch.getState())
+            slideOffset = liftMotor.getCurrentPosition();
+        liftMotor.setPower(liftController.teleOpControl(this::getPosition,in));
+    }
+
+    public double getPosition () {
+        return liftMotor.getCurrentPosition() - slideOffset;
+    }
 
     @NonNull
     @Override
