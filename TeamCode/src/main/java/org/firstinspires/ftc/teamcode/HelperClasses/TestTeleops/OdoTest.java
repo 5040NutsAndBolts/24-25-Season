@@ -11,7 +11,7 @@ public class OdoTest extends OpMode {
 	private Odometry odo;
 	@Override
 	public void init() {
-		odo = new Odometry(hardwareMap, 5018.842708/2, 5018.842708/2, 1876.794122);
+		odo = new Odometry(hardwareMap, 5018.842708/2, 5018.842708/2, 1876.794122, 337.4011905);
 	}
 
 	@Override
