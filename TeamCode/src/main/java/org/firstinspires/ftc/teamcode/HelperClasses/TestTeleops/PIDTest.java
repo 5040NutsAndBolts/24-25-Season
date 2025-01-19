@@ -17,6 +17,5 @@ public class PIDTest extends OpMode {
 		wheel.lift(gamepad1.left_stick_x);
 		telemetry.addLine(wheel.toString());
 		telemetry.update();
-
 	}
 }

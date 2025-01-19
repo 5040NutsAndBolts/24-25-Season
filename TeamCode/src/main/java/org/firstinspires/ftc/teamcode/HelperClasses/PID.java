@@ -7,6 +7,7 @@ public class PID {
 	private final double kp, ki, kd;
 	private double previngrl, lastError;
 	private long lastTime, deltaTime;
+	private double currentTarget;
 
 	public PID(double kp, double ki, double kd) {
 		this.kp = kp;
@@ -17,6 +18,7 @@ public class PID {
 
 	//Calculates power output
 	private double getPower(double current, double target) {
+		currentTarget = target;
 		double currentError = current - target;
 
 		double Proportional = kp * currentError;
@@ -62,6 +64,7 @@ public class PID {
 			"PID Controller: \n" +
 			"\tKp: " + kp + "\n" +
 			"\tKi: " + ki + "\n" +
-			"\tKd: " + kd;
+			"\tKd: " + kd+ "\n" +
+			"\tcurrentTarget: " +currentTarget;
 	}
 }

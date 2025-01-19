@@ -1,127 +1,104 @@
 package org.firstinspires.ftc.teamcode.HelperClasses;
-
-import static java.lang.Double.NaN;
-
 import androidx.annotation.NonNull;
-
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.Mechanisms.Drivetrain;
-
-public class Odometry extends Drivetrain {
-
-	public static class Position {
-		public double x,y,t;
-		public Position(double x, double y, double t) {
-			this.x = x;
-			this.y = y;
-			this.t = t;
-		}
-		public Position() {
-			this.x = 0;
-			this.y = 0;
-			this.t = 0;
-		}
-
-		/**
-		 * @param a first position to be compared
-		 * @param b second position to be compared
-		 * @param errorMargins x, y, and turning error margins (in inches/degrees)
-		 * @return return what axes are within error margins
-		 */
-		public static boolean[] isEqual(Position a, Position b, double[] errorMargins) {
-			return new boolean[] {
-					Math.abs(a.x - b.x) < errorMargins[0],
-					Math.abs(a.y - b.y) < errorMargins[1],
-					Math.abs(a.t - b.t) < errorMargins[2]
-			};
-		}
-	}
-
-	private int updateCount = 0;
+public class Odometry  {
     private final DcMotorEx leftOdom, rightOdom, centerOdom;
-	private final int leftOffset, rightOffset, centerOffset;
-	private static int lastLeft, lastRight, lastCenter;
+    private final int leftOffset, rightOffset, centerOffset;
+    private static int lastLeft, lastRight, lastCenter;
     public static Position currentPosition;
-	public double x,t,y;
-	private final double TRACKWIDTH = 5018.842708; //Distance between left and right encoders
-	private final double CENTER_OFFSET = 1876.794122; //Distance between center encoder and middle of bot
-	private final double TICKS_PER_INCH = 337.4011905; //Number of ticks per inch (Check google drive for spreadsheet)
 
-	public Odometry(HardwareMap hardwareMap){
-        super(hardwareMap);
+    private final double CENTER_TO_RIGHT_POD, CENTER_TO_LEFT_POD; //Distance from tracking center of bot to right and left pods
+    private final double CENTER_OFFSET;  //Distance between center encoder and tracking center
+    private final double TICKS_PER_INCH = 337.4011905; //Number of ticks per inch (Check google drive for spreadsheet to calculate)
+
+    public class Position {
+        public double x,y,t;
+        public Position(double x, double y, double t) {
+            this.x = x;
+            this.y = y;
+            this.t = t;
+        }
+        public Position() {
+            x = 0;
+            y = 0;
+            t = 0;
+        }
+        public void add(Position toAdd) {
+            x += toAdd.x;
+            y += toAdd.y;
+            t += toAdd.t;
+        }
+        @NonNull
+        @Override
+        public String toString() {
+            return
+                    "X: " + x/TICKS_PER_INCH +
+                    "\nY: " + y/TICKS_PER_INCH +
+                    "\nT: " + t;
+        }
+    }
+
+    public Odometry(HardwareMap hardwareMap, double centerToRightPod, double centerToLeftPod, double centerWheelOffset){
         leftOdom = hardwareMap.get(DcMotorEx.class, "Front Left");
         rightOdom = hardwareMap.get(DcMotorEx.class, "Front Right");
         centerOdom = hardwareMap.get(DcMotorEx.class, "Back Left");
+        CENTER_TO_RIGHT_POD = centerToRightPod;
+        CENTER_TO_LEFT_POD = centerToLeftPod;
+        CENTER_OFFSET = centerWheelOffset;
 
-		// Necessary because encoders are not zeroed at the beginning of the match
-		leftOffset = leftOdom.getCurrentPosition();
-		rightOffset = rightOdom.getCurrentPosition();
-		centerOffset = centerOdom.getCurrentPosition();
+        // Necessary because encoders are not zeroed at the beginning of the match
+        leftOffset = leftOdom.getCurrentPosition();
+        rightOffset = rightOdom.getCurrentPosition();
+        centerOffset = centerOdom.getCurrentPosition();
 
         currentPosition = new Position();
-
-		x=0;
-		y=0;
-		t=0;
     }
 
+    public void update () {
+        // Local encoder deltas
+        int leftArc = leftOdom.getCurrentPosition() - lastLeft - leftOffset;
+        int rightArc = rightOdom.getCurrentPosition() - lastRight - rightOffset;
+        int centerArc = centerOdom.getCurrentPosition() - lastCenter - centerOffset;
 
+        // Update previous odometry values
+        lastLeft += leftArc;
+        lastRight += rightArc;
+        lastCenter += centerArc;
 
+        double localDeltaX, localDeltaY;
 
-	public void update() {
-		// Local encoder deltas
-		int deltaLeft = leftOdom.getCurrentPosition() - lastLeft - leftOffset;
-		int deltaRight = rightOdom.getCurrentPosition() - lastRight - rightOffset;
-		int deltaCenter = centerOdom.getCurrentPosition() - lastCenter - centerOffset;
+        double deltaTheta = ((double)(leftArc - rightArc) / (CENTER_TO_RIGHT_POD+CENTER_TO_LEFT_POD)) % (2 * Math.PI);
+        while(deltaTheta < 0) //Normalize theta between [0,2pi)
+            deltaTheta +=  (2 * Math.PI);
 
-		// Update previous odometry values
-		lastLeft = leftOdom.getCurrentPosition() - leftOffset;
-		lastRight = rightOdom.getCurrentPosition() - rightOffset;
-		lastCenter = centerOdom.getCurrentPosition() - centerOffset;
+        if(deltaTheta != 0) {
+            localDeltaY = 2 * ((rightArc / deltaTheta) - (CENTER_TO_RIGHT_POD )) * Math.sin(deltaTheta / 2);
+            localDeltaX = 2 * (centerArc / deltaTheta + CENTER_OFFSET) * Math.sin(deltaTheta / 2);
+        }else {
+            localDeltaY = (double) (leftArc+rightArc) / 2;
+            localDeltaX = centerArc;
+        }
 
-		//Get total forward, rotational, and strafe distances
-		double deltaFwd = (double) (deltaLeft + deltaRight) / 2;
-		double deltaTheta = (double) (deltaRight - deltaLeft) / TRACKWIDTH;
-		double deltaStrafe = deltaCenter - (CENTER_OFFSET * deltaTheta);
-		double deltaLocalX = 0;
-		double deltaLocalY = 0;
-		if(deltaTheta > .001) {
-			deltaLocalX = (deltaFwd / deltaTheta) * Math.sin(deltaTheta) - (deltaStrafe / deltaTheta) * (1 - Math.cos(deltaTheta));
-			deltaLocalY = (deltaStrafe / deltaTheta) * Math.sin(deltaTheta) + (deltaFwd / deltaTheta) * Math.cos(deltaTheta);
-		}else {
-			deltaLocalX = deltaStrafe;
-			deltaLocalY = deltaFwd;
-		}
-		//Globalization
-		double angleC = Math.atan(deltaLocalX/deltaLocalY);
-		double lengthK = deltaLocalX/Math.sin(angleC);
-		double angleZ = 180 - deltaTheta;
-		double angleV = 180 - angleZ - angleC;
-		double deltaGlobalX = lengthK * Math.sin(angleV);
-		double deltaGlobalY = lengthK * Math.cos(angleV);
+        //Globalization
+        double angleC = (Math.PI/2) - deltaTheta;
+        double lengthK = localDeltaX/Math.sin(angleC);
+        double deltaGlobalX = lengthK * Math.cos(currentPosition.t);
+        double deltaGlobalY = lengthK  * Math.sin(currentPosition.t);
 
-		if(deltaLocalY == 0 || deltaTheta == 0)
-			return;
+        currentPosition.add(new Position(deltaGlobalX, deltaGlobalY, deltaTheta));
+    }
 
-		x += deltaGlobalX;
-		y += deltaGlobalY;
-		t += deltaTheta;
-	}
-
-	@NonNull
-	public String toString() {
-		return
-			"Update Count: " + updateCount + "\n" +
-			"X: " + x + "\n" +
-			"Y: " + y + "\n" +
-			"T: " + t + "\n" +
-			"leftOffset: " + leftOffset + "\n" +
-			"rightOffset: " + rightOffset + "\n" +
-			"centerOffset: " + centerOffset + "\n" +
-			"leftCurrent: " + (leftOdom.getCurrentPosition() - leftOffset) + "\n" +
-			"rightCurrent: " + (rightOdom.getCurrentPosition() - rightOffset) + "\n" +
-			"centerCurrent: " + (centerOdom.getCurrentPosition() - centerOffset);
-	}
+    @NonNull
+    public String toString() {
+        return
+                currentPosition.toString() + "\n" +
+                "leftOffset: " + leftOffset + "\n" +
+                "rightOffset: " + rightOffset + "\n" +
+                "centerOffset: " + centerOffset + "\n" +
+                "leftCurrent: " + (leftOdom.getCurrentPosition() - leftOffset) + "\n" +
+                "rightCurrent: " + (rightOdom.getCurrentPosition() - rightOffset) + "\n" +
+                "centerCurrent: " + (centerOdom.getCurrentPosition() - centerOffset);
+    }
 }

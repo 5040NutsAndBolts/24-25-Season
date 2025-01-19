@@ -14,7 +14,7 @@ public class AutoOpMode extends RobotOpMode {
     @Override
     public void init() {
         super.init();
-        odo = new Odometry(hardwareMap);
+        odo = new Odometry(hardwareMap, 5018.842708/2, 5018.842708/2, 1876.794122);
     }
 
     protected void updateOdoTelemetry() {
