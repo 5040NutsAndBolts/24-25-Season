@@ -13,7 +13,7 @@ public class Odometry  {
     /**Robot's last encoder position*/
     private static int lastLeft, lastRight, lastCenter;
     /**Robot's current position*/
-    public static Position currentPosition;
+    public Position currentPosition;
     private final double CENTER_TO_RIGHT_POD, CENTER_TO_LEFT_POD;
     private final double CENTER_OFFSET;
     private final double TICKS_PER_INCH;

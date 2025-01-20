@@ -7,13 +7,13 @@ import org.firstinspires.ftc.teamcode.RobotOpMode;
 public class TwoDriverTeleop extends RobotOpMode {
     @Override
     public void loop() {
-        dt.drive (gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
-        dt.toggleSlowMode (gamepad1.x || wheel.getPosition() > 1100);
+        drivetrain.drive (gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+        drivetrain.toggleSlowMode (gamepad1.x || wheel.getPosition() > 1100);
 
         wheel.lift (gamepad2.left_stick_y);
         wheel.spin (gamepad2.right_trigger,gamepad2.left_trigger);
 
-        telemetry.addLine(dt.toString());
+        telemetry.addLine(drivetrain.toString());
         telemetry.addLine(wheel.toString());
         telemetry.update();
     }

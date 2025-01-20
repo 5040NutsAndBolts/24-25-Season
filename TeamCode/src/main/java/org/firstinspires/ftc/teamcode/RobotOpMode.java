@@ -6,12 +6,12 @@ import org.firstinspires.ftc.teamcode.Mechanisms.WheelIntake;
 
 @Disabled
 public class RobotOpMode extends OpMode {
-    protected Drivetrain dt;
+    protected Drivetrain drivetrain;
     protected WheelIntake wheel;
 
     @Override
     public void init() {
-        dt = new Drivetrain (hardwareMap);
+        drivetrain = new Drivetrain (hardwareMap);
         wheel = new WheelIntake(hardwareMap);
     }
     //Leave empty
