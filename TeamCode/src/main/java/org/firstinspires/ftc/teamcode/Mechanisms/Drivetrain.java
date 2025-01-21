@@ -18,8 +18,8 @@ public class Drivetrain {
         backRight = hardwareMap.get(DcMotorEx.class, "Back Right");
 
         //Needed for how the motors are mounted
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -68,6 +68,7 @@ public class Drivetrain {
             speed = 1;
         }
     }
+
     public boolean isSlow() {return slow;}
 
     @NonNull

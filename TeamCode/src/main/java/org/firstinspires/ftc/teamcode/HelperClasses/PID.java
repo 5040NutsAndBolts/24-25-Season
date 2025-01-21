@@ -9,6 +9,12 @@ public class PID {
 	private long lastTime, deltaTime;
 	private double currentTarget;
 
+	/**
+	 * Creates a PID controller
+	 * @param kp Proportional gain (Gets near position faster, more prone to overshoot)
+	 * @param ki Integral gain (Decreases steady-state error, more oscillative)
+	 * @param kd Derivative gain (Reduces overshoot and smooths response)
+	 */
 	public PID(double kp, double ki, double kd) {
 		this.kp = kp;
 		this.ki = ki;
@@ -18,7 +24,6 @@ public class PID {
 
 	//Calculates power output
 	private double getPower(double current, int target) {
-		currentTarget = target;
 		double currentError = current - target;
 
 		double Proportional = kp * currentError;
@@ -35,7 +40,7 @@ public class PID {
 	}
 
 	//TeleOp control
-	public double teleOpControl(Supplier<Double> getCurrent, double stickPower) {
+	public double teleOpControl(@NonNull Supplier<Double> getCurrent, double stickPower) {
 		updateDeltaTime();
 		return getPower(
 				getCurrent.get(),
@@ -44,7 +49,7 @@ public class PID {
 	}
 
 	//Autonomous control
-	public double autoControl (Supplier<Double> getCurrent, int target) {
+	public double autoControl (@NonNull Supplier<Double> getCurrent, int target) {
 		updateDeltaTime();
 		return getPower(
 				getCurrent.get(),
@@ -52,7 +57,6 @@ public class PID {
 			);
 	}
 
-	//Update deltaTime
 	private void updateDeltaTime() {
 		deltaTime = (System.currentTimeMillis() - lastTime);
 	}

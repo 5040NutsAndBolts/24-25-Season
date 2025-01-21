@@ -4,11 +4,20 @@ import androidx.annotation.NonNull;
 
 public class Position {
     public double x,y,t;
+    /**
+     * Creates a position object
+     * @param x x position
+     * @param y y position
+     * @param t rotational position
+     */
     public Position(double x, double y, double t) {
         this.x = x;
         this.y = y;
         this.t = t;
     }
+    /**
+     * Creates a generic position object with 0 coordinates and rotation
+     */
     public Position() {
         x = 0;
         y = 0;

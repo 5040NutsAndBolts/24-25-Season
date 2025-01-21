@@ -15,7 +15,7 @@ public class WheelIntake {
     public final CRServo leftServo, rightServo;
     private final DcMotorEx liftMotorTop, liftMotorBottom;
     private final DigitalChannel limitSwitch;
-    private double slideOffset;
+    private int topSlideMotorOffset, bottomSlideMotorOffset;
     private final PID liftController = new PID(.01,0,.01);
 
     public WheelIntake(HardwareMap hardwareMap) {
@@ -29,7 +29,9 @@ public class WheelIntake {
         liftMotorTop.setDirection(DcMotorSimple.Direction.REVERSE);
 
         limitSwitch = hardwareMap.get(DigitalChannel.class, "Wheel Limit Switch");
-        slideOffset = liftMotor.getCurrentPosition();
+
+        topSlideMotorOffset = liftMotorTop.getCurrentPosition();
+        bottomSlideMotorOffset = liftMotorBottom.getCurrentPosition();
     }
 
     //Spin controls for triggers
@@ -84,18 +86,19 @@ public class WheelIntake {
             liftMotorBottom.setPower(power);
         else
             liftMotorTop.setPower(power);
-
     }
 
     //Getter for current slide position
     public double getPosition () {
-        return liftMotor.getCurrentPosition() - slideOffset;
+        return (double) ((liftMotorTop.getCurrentPosition() - topSlideMotorOffset) + (liftMotorBottom.getCurrentPosition() - bottomSlideMotorOffset)) / 2;
     }
 
     //Reset slide encoder, the reset slide offset
     private void resetPosition() {
-        liftMotor.setMode(STOP_AND_RESET_ENCODER);
-        slideOffset = liftMotor.getCurrentPosition();
+        liftMotorTop.setMode(STOP_AND_RESET_ENCODER);
+        liftMotorBottom.setMode(STOP_AND_RESET_ENCODER);
+        topSlideMotorOffset = liftMotorTop.getCurrentPosition();
+        bottomSlideMotorOffset = liftMotorBottom.getCurrentPosition();
     }
 
     @NonNull
@@ -104,7 +107,10 @@ public class WheelIntake {
         return
             "Left Servo Power: " + leftServo.getPower() + "\n" +
             "Right Servo Power: " + rightServo.getPower() + "\n" +
-            "Lift Motor Power: " + liftMotor.getPower() + "\n" +
+            "Lift Motor Top Power: " + liftMotorTop.getPower() + "\n" +
+            "Lift Motor Top Position: " + (liftMotorTop.getCurrentPosition() - topSlideMotorOffset) + "\n" +
+            "Lift Motor Bottom Power: " + liftMotorBottom.getPower() + "\n" +
+            "Lift Motor Bottom Position: " + (liftMotorBottom.getCurrentPosition() - bottomSlideMotorOffset) + "\n" +
             "Lift Motor Position: " + getPosition() + "\n" +
             liftController.toString();
     }

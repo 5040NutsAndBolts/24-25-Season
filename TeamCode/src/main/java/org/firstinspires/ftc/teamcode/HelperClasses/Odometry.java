@@ -14,8 +14,11 @@ public class Odometry  {
     private static int lastLeft, lastRight, lastCenter;
     /**Robot's current position*/
     public Position currentPosition;
+    /**You can just measure the distance between the right and left pods and divide by 2 and it'll usually be correct*/
     private final double CENTER_TO_RIGHT_POD, CENTER_TO_LEFT_POD;
+    /**How far is the center odo pod offset from the tracking center?*/
     private final double CENTER_OFFSET;
+    /**Usually calculated with a spreadsheet and an afternoon*/
     private final double TICKS_PER_INCH;
     /**
      * Creates an Odometry object
@@ -88,7 +91,7 @@ public class Odometry  {
                 case 1:
                     positionInches.append("\nY: ").append(currentPosition.toArray()[i] / TICKS_PER_INCH);
                 case 2:
-                    positionInches.append("\nT: ").append(currentPosition.toArray()[i] / TICKS_PER_INCH);
+                    positionInches.append("\nT: ").append(Math.toDegrees(currentPosition.toArray()[i] / TICKS_PER_INCH));
                 default:
                     throw new IllegalStateException("Odometry has more than 3 dimensions");
             }
