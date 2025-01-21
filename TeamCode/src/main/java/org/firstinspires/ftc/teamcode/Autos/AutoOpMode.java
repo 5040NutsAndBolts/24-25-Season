@@ -21,10 +21,4 @@ public class AutoOpMode extends RobotOpMode {
         telemetry.addLine(odo.toString());
         telemetry.update();
     }
-
-    protected void bogoMoveToPosition(Position target) {
-        Random r = new Random();
-        while(!odo.currentPosition.equals(target) )
-            drivetrain.drive(r.nextDouble() * (r.nextBoolean() ? 1 : -1), r.nextDouble() * (r.nextBoolean() ? 1 : -1), r.nextDouble() * (r.nextBoolean() ? 1 : -1));
-    }
 }

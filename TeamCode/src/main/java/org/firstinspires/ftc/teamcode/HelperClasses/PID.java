@@ -17,7 +17,7 @@ public class PID {
 	}
 
 	//Calculates power output
-	private double getPower(double current, double target) {
+	private double getPower(double current, int target) {
 		currentTarget = target;
 		double currentError = current - target;
 
@@ -39,12 +39,12 @@ public class PID {
 		updateDeltaTime();
 		return getPower(
 				getCurrent.get(),
-				getCurrent.get() + stickPower * deltaTime
+				(int) (getCurrent.get() + stickPower * deltaTime)
 			);
 	}
 
 	//Autonomous control
-	public double autoControl (Supplier<Double> getCurrent, double target) {
+	public double autoControl (Supplier<Double> getCurrent, int target) {
 		updateDeltaTime();
 		return getPower(
 				getCurrent.get(),

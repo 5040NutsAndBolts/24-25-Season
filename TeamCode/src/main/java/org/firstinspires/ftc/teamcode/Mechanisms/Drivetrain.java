@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 public class Drivetrain {
     public final DcMotorEx frontLeft,frontRight,backLeft,backRight;
     private boolean slow;
-    private double speed = -1;
+    private double speed = 1;
 
     public Drivetrain(HardwareMap hardwareMap) {
         //Drive Motor Initialization
@@ -36,7 +36,7 @@ public class Drivetrain {
         //adds all the inputs together to get the number to scale it by
         double scale = Math.abs(rotation) + Math.abs(forward) + Math.abs(sideways);
 
-        //Scales the inputs between 0-1 for the setPower() method
+        //Scales the inputs between [-1,1] for the setPower() method
         if (scale > 1) {
             forward /= scale;
             rotation /= scale;
@@ -50,26 +50,7 @@ public class Drivetrain {
         backRight.setPower(forward + rotation - sideways);
     }
 
-    public void forward(double power) {
-        frontLeft.setPower(power);
-        frontRight.setPower(power);
-        backLeft.setPower(power);
-        backRight.setPower(power);
-    }
-    public void strafe(double power) {
-        frontLeft.setPower(-power);
-        frontRight.setPower(-power);
-        backLeft.setPower(power);
-        backRight.setPower(power);
-    }
-    public void rotate(double power) {
-        frontLeft.setPower(-power);
-        frontRight.setPower(power);
-        backLeft.setPower(-power);
-        backRight.setPower(power);
-    }
-
-    //Battery/motor saver
+    //Battery/motor saver, also used for auto mapping and odo tuning
     public void neutral() {
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
