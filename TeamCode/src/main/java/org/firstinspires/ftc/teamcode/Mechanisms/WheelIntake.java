@@ -47,8 +47,9 @@ public class WheelIntake {
         if (!limitSwitch.getState()) { // Assumes active-low switch
             resetEncoder();
         }
-        if(in > 0) liftMotorTop.setPower(in);
-        else liftMotorBottom.setPower(in);
+        if(in > 0) liftMotorTop.setPower(in); liftMotorBottom.setPower(-in);
+
+
     }
 
     public double getPosition() {
