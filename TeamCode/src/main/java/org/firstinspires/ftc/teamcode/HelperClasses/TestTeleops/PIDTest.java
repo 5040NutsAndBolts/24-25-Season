@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.HelperClasses.TestTeleops;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Mechanisms.WheelIntake;
 
+@TeleOp(group = "Teleop", name = "PID Test")
 public class PIDTest extends OpMode {
 	WheelIntake wheel;
 	@Override
@@ -13,8 +15,7 @@ public class PIDTest extends OpMode {
 
 	@Override
 	public void loop() {
-		wheel.spin(gamepad1.left_stick_y, gamepad1.right_stick_y);
-		wheel.lift(gamepad1.left_stick_x);
+		wheel.update(gamepad1.left_stick_y);
 		telemetry.addLine(wheel.toString());
 		telemetry.update();
 	}

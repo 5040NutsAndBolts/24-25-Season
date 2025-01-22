@@ -4,6 +4,7 @@ import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENC
 import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -16,16 +17,17 @@ public class WheelIntake {
     private final DcMotorEx liftMotorTop, liftMotorBottom;
     private final DigitalChannel limitSwitch;
     private int topSlideMotorOffset, bottomSlideMotorOffset;
-    private final PID liftController = new PID(.01,0,.01);
+    private final PID liftController = new PID(.3,0,.00);
 
     public WheelIntake(HardwareMap hardwareMap) {
         leftServo = hardwareMap.get(CRServo.class, "Left Wheel Servo");
         leftServo.setDirection(DcMotorSimple.Direction.REVERSE);
         rightServo = hardwareMap.get(CRServo.class, "Right Wheel Servo");
 
-        liftMotorTop = hardwareMap.get(DcMotorEx.class, "Lift Motor Top");
-        liftMotorBottom = hardwareMap.get(DcMotorEx.class, "Lift Motor Bottom");
-
+        liftMotorTop = hardwareMap.get(DcMotorEx.class, "Wheel Slide Top");
+        liftMotorBottom = hardwareMap.get(DcMotorEx.class, "Wheel Slide Bottom");
+        liftMotorTop.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        liftMotorBottom.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftMotorTop.setDirection(DcMotorSimple.Direction.REVERSE);
 
         limitSwitch = hardwareMap.get(DigitalChannel.class, "Wheel Limit Switch");
@@ -62,30 +64,37 @@ public class WheelIntake {
         }
     }
 
-    //Lift controls for sticks
-    public void lift (double in) {
-        if(!limitSwitch.getState()) //If limit switch is pressed, then reset slide position
-            resetPosition();
-
-        double power = liftController.teleOpControl(this::getPosition,in);
-
-        if(power > 0) //Our slides are strung such that the bottom slide will lift the slides up, and the bottom slides will pull us down.
-            liftMotorBottom.setPower(power);
-        else
-            liftMotorTop.setPower(power);
+    //Set position for autos
+    public void setPosition (double target) {
+        liftController.setTarget(target);
     }
 
-    //Set position for autos
-    public void setPosition (int target) {
-        if(!limitSwitch.getState()) //If limit switch is pressed, then reset slide position
+    public void update() {
+        if(!limitSwitch.getState()) { //if limit switch is pressed, then reset slide position
             resetPosition();
+            if(liftController.getCurrentTarget() <= 0) //If we are already at the limit switch and the target is 0, then don't do anything
+                return;
+        }
 
-        double power = liftController.autoControl(this::getPosition, target);
 
-        if(power > 0) //Our slides are strung such that the bottom slide will lift the slides up, and the bottom slides will pull us down.
-            liftMotorBottom.setPower(power);
-        else
-            liftMotorTop.setPower(power);
+        double power = liftController.autoControl(getPosition());
+
+        liftMotorBottom.setPower(power);
+        liftMotorTop.setPower(power/2);
+    }
+
+    //Update for teleop
+    public void update(double input) {
+        if(!limitSwitch.getState()) {
+            resetPosition();
+            if(liftController.getCurrentTarget() <= 0)
+                return;
+        }
+
+        double power = liftController.teleOpControl(getPosition(), input);
+
+        liftMotorBottom.setPower(power);
+        liftMotorTop.setPower(power/2);
     }
 
     //Getter for current slide position

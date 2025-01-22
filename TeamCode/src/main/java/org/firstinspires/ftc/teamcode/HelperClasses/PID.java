@@ -1,11 +1,9 @@
 package org.firstinspires.ftc.teamcode.HelperClasses;
 import androidx.annotation.NonNull;
 
-import java.util.function.Supplier;
-
 public class PID {
 	private final double kp, ki, kd;
-	private double previngrl, lastError;
+	private double lastIntegral, lastError;
 	private long lastTime, deltaTime;
 	private double currentTarget;
 
@@ -23,16 +21,17 @@ public class PID {
 	}
 
 	//Calculates power output
-	private double getPower(double current, int target) {
+	private double calculate(double current, double target) {
+		currentTarget = target;
 		double currentError = current - target;
 
 		double Proportional = kp * currentError;
-		double Integral = previngrl + (currentError + lastError)/2 * deltaTime * ki;
+		double Integral = lastIntegral + (currentError + lastError)/2 * deltaTime * ki;
 		double Derivative = kd * (currentError + lastError)/deltaTime;
 
 		double output = Proportional + Integral + Derivative;
 
-		previngrl = Integral;
+		lastIntegral = Integral;
 		lastError += currentError;
 		lastTime = System.currentTimeMillis();
 
@@ -40,25 +39,32 @@ public class PID {
 	}
 
 	//TeleOp control
-	public double teleOpControl(@NonNull Supplier<Double> getCurrent, double stickPower) {
+	public double teleOpControl(double current, double stickPower) {
 		updateDeltaTime();
-		return getPower(
-				getCurrent.get(),
-				(int) (getCurrent.get() + stickPower * deltaTime)
+		return calculate(
+				current,
+				(current + stickPower * deltaTime)
 			);
 	}
 
-	//Autonomous control
-	public double autoControl (@NonNull Supplier<Double> getCurrent, int target) {
+	public double autoControl (double current) {
 		updateDeltaTime();
-		return getPower(
-				getCurrent.get(),
-				target
+		return calculate(
+				current,
+				currentTarget
 			);
+	}
+
+	public void setTarget(double target) {
+		currentTarget = target;
 	}
 
 	private void updateDeltaTime() {
 		deltaTime = (System.currentTimeMillis() - lastTime);
+	}
+
+	public double getCurrentTarget() {
+		return currentTarget;
 	}
 
 	@NonNull

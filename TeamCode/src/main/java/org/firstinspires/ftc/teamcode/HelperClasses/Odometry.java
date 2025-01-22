@@ -105,4 +105,8 @@ public class Odometry  {
                 "rightCurrent: " + (rightOdom.getCurrentPosition() - rightOffset) + "\n" +
                 "centerCurrent: " + (centerOdom.getCurrentPosition() - centerOffset);
     }
+
+    public Position getInchPosition() {
+        return new Position(currentPosition.toArray()[0] / TICKS_PER_INCH, currentPosition.toArray()[1] / TICKS_PER_INCH, currentPosition.toArray()[2] / TICKS_PER_INCH);
+    }
 }
