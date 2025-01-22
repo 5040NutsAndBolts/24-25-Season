@@ -88,10 +88,13 @@ public class Odometry  {
             switch(i){
                 case 0:
                     positionInches.append("X: ").append(currentPosition.toArray()[i] / TICKS_PER_INCH);
+                    break;
                 case 1:
                     positionInches.append("\nY: ").append(currentPosition.toArray()[i] / TICKS_PER_INCH);
+                    break;
                 case 2:
                     positionInches.append("\nT: ").append(Math.toDegrees(currentPosition.toArray()[i] / TICKS_PER_INCH));
+                    break;
                 default:
                     throw new IllegalStateException("Odometry has more than 3 dimensions");
             }
