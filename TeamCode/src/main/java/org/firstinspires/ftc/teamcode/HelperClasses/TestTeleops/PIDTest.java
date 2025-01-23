@@ -15,7 +15,7 @@ public class PIDTest extends OpMode {
 
 	@Override
 	public void loop() {
-		wheel.update(gamepad1.left_stick_y);
+		wheel.update(gamepad1.left_stick_x);
 		telemetry.addLine(wheel.toString());
 		telemetry.update();
 	}

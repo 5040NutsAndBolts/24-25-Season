@@ -9,14 +9,13 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
 import org.firstinspires.ftc.teamcode.HelperClasses.PID;
 
 public class WheelIntake {
     public final CRServo leftServo, rightServo;
-    private final DcMotorEx liftMotorTop, liftMotorBottom;
+    private final DcMotorEx slideMotor;
     private final DigitalChannel limitSwitch;
-    private int topSlideMotorOffset, bottomSlideMotorOffset;
+    private int slideMotorOffset;
     private final PID liftController = new PID(.3,0,.00);
 
     public WheelIntake(HardwareMap hardwareMap) {
@@ -24,16 +23,13 @@ public class WheelIntake {
         leftServo.setDirection(DcMotorSimple.Direction.REVERSE);
         rightServo = hardwareMap.get(CRServo.class, "Right Wheel Servo");
 
-        liftMotorTop = hardwareMap.get(DcMotorEx.class, "Wheel Slide Top");
-        liftMotorBottom = hardwareMap.get(DcMotorEx.class, "Wheel Slide Bottom");
-        liftMotorTop.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        liftMotorBottom.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        liftMotorTop.setDirection(DcMotorSimple.Direction.REVERSE);
+        slideMotor = hardwareMap.get(DcMotorEx.class, "Wheel Slide Top");
+        slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slideMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         limitSwitch = hardwareMap.get(DigitalChannel.class, "Wheel Limit Switch");
 
-        topSlideMotorOffset = liftMotorTop.getCurrentPosition();
-        bottomSlideMotorOffset = liftMotorBottom.getCurrentPosition();
+        slideMotorOffset = slideMotor.getCurrentPosition();
     }
 
     //Spin controls for triggers
@@ -64,50 +60,39 @@ public class WheelIntake {
         }
     }
 
-    //Set position for autos
-    public void setPosition (double target) {
-        liftController.setTarget(target);
+    //Lift controls for sticks
+    public void update(double in) {
+        if(!limitSwitch.getState()) //If limit switch is pressed, then reset slide position
+            resetPosition();
+
+        if(in > 0.5)
+            slideMotor.setPower(liftController.teleOpControl(getPosition(), in));
     }
 
     public void update() {
-        if(!limitSwitch.getState()) { //if limit switch is pressed, then reset slide position
+        if(!limitSwitch.getState()) //If limit switch is pressed, then reset slide position
             resetPosition();
-            if(liftController.getCurrentTarget() <= 0) //If we are already at the limit switch and the target is 0, then don't do anything
-                return;
-        }
 
-
-        double power = liftController.autoControl(getPosition());
-
-        liftMotorBottom.setPower(power);
-        liftMotorTop.setPower(power/2);
+        slideMotor.setPower(liftController.autoControl(getPosition()));
     }
 
-    //Update for teleop
-    public void update(double input) {
-        if(!limitSwitch.getState()) {
+    //Set position for autos
+    public void setPosition (int target) {
+        if(!limitSwitch.getState()) //If limit switch is pressed, then reset slide position
             resetPosition();
-            if(liftController.getCurrentTarget() <= 0)
-                return;
-        }
 
-        double power = liftController.teleOpControl(getPosition(), input);
-
-        liftMotorBottom.setPower(power);
-        liftMotorTop.setPower(power/2);
+        liftController.setTarget(target);
     }
 
     //Getter for current slide position
     public double getPosition () {
-        return (double) ((liftMotorTop.getCurrentPosition() - topSlideMotorOffset) + (liftMotorBottom.getCurrentPosition() - bottomSlideMotorOffset)) / 2;
+        return slideMotor.getCurrentPosition() - slideMotorOffset;
     }
 
     //Reset slide encoder, the reset slide offset
     private void resetPosition() {
-        liftMotorTop.setMode(STOP_AND_RESET_ENCODER);
-        liftMotorBottom.setMode(STOP_AND_RESET_ENCODER);
-        topSlideMotorOffset = liftMotorTop.getCurrentPosition();
-        bottomSlideMotorOffset = liftMotorBottom.getCurrentPosition();
+        slideMotor.setMode(STOP_AND_RESET_ENCODER);
+        slideMotorOffset = slideMotor.getCurrentPosition();
     }
 
     @NonNull
@@ -116,11 +101,8 @@ public class WheelIntake {
         return
             "Left Servo Power: " + leftServo.getPower() + "\n" +
             "Right Servo Power: " + rightServo.getPower() + "\n" +
-            "Lift Motor Top Power: " + liftMotorTop.getPower() + "\n" +
-            "Lift Motor Top Position: " + (liftMotorTop.getCurrentPosition() - topSlideMotorOffset) + "\n" +
-            "Lift Motor Bottom Power: " + liftMotorBottom.getPower() + "\n" +
-            "Lift Motor Bottom Position: " + (liftMotorBottom.getCurrentPosition() - bottomSlideMotorOffset) + "\n" +
-            "Lift Motor Position: " + getPosition() + "\n" +
+            "Slide Motor Power: " + slideMotor.getPower() + "\n" +
+            "Slide Motor Position: " + getPosition() + "\n" +
             liftController.toString();
     }
 }

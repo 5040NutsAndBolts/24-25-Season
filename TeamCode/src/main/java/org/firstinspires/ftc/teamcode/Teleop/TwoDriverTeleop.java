@@ -10,7 +10,7 @@ public class TwoDriverTeleop extends RobotOpMode {
         drivetrain.drive (gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
         drivetrain.toggleSlowMode (gamepad1.x || wheel.getPosition() > 1100);
 
-        wheel.lift (gamepad2.left_stick_y);
+        wheel.update(gamepad1.right_stick_y);
         wheel.spin (gamepad2.right_trigger,gamepad2.left_trigger);
 
         telemetry.addLine(drivetrain.toString());

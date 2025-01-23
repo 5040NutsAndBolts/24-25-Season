@@ -11,6 +11,10 @@ public class LimitSwitch {
 		limitSwitch = hardwareMap.get(DigitalChannel.class, "Wheel Limit Switch");
 	}
 
+	public boolean getState () {
+		return limitSwitch.getState();
+	}
+
 	@NonNull
 	@Override
 	public String toString() {
