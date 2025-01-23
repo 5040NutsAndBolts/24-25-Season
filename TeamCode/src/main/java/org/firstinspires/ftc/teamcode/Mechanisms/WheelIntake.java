@@ -1,34 +1,38 @@
 package org.firstinspires.ftc.teamcode.Mechanisms;
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
+
+import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import org.firstinspires.ftc.teamcode.HelperClasses.PID;
 
 public class WheelIntake {
     public final CRServo leftServo, rightServo;
-    private final DcMotor liftMotorTop, liftMotorBottom;
+    private final DcMotorEx slideMotor;
     private final DigitalChannel limitSwitch;
-    private int slideResetPosition;
+    private int slideMotorOffset;
+    private final PID liftController = new PID(.3,0,.00);
 
     public WheelIntake(HardwareMap hardwareMap) {
         leftServo = hardwareMap.get(CRServo.class, "Left Wheel Servo");
         leftServo.setDirection(DcMotorSimple.Direction.REVERSE);
         rightServo = hardwareMap.get(CRServo.class, "Right Wheel Servo");
 
-        liftMotorTop = hardwareMap.get(DcMotor.class, "Wheel Slide Top");
-        liftMotorBottom = hardwareMap.get(DcMotor.class, "Wheel Slide Bottom");
-        liftMotorBottom.setDirection(DcMotor.Direction.REVERSE);
-        liftMotorBottom.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        liftMotorTop.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slideMotor = hardwareMap.get(DcMotorEx.class, "Wheel Slide Top");
+        slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slideMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        limitSwitch = hardwareMap.get(DigitalChannel.class, "Limit Switch");
-        limitSwitch.setMode(DigitalChannel.Mode.INPUT);
+        limitSwitch = hardwareMap.get(DigitalChannel.class, "Wheel Limit Switch");
 
-        slideResetPosition = 0;
+        slideMotorOffset = slideMotor.getCurrentPosition();
     }
 
+    //Spin controls for triggers
     public void spin(double in, double out) {
         //ignore stick/trigger drift
         if(in < .05)
@@ -42,28 +46,67 @@ public class WheelIntake {
         rightServo.setPower(power);
     }
 
-    public void lift(double in) {
-        // Check if limit switch is pressed and reset encoder if necessary
-        if (!limitSwitch.getState()) { // Assumes active-low switch
-            resetEncoder();
+    //Spin controls for buttons
+    public void spin(boolean in, boolean out) {
+        if(in && ! out) {
+            leftServo.setPower(1);
+            rightServo.setPower(1);
+        }else if (out && !in) {
+            leftServo.setPower(-1);
+            rightServo.setPower(-1);
+        }else {
+            leftServo.setPower(0);
+            rightServo.setPower(0);
         }
-        if(in > 0) liftMotorTop.setPower(in);
-        else liftMotorBottom.setPower(in);
     }
 
-    public double getPosition() {
-        return liftMotorTop.getCurrentPosition() - slideResetPosition; // Adjusted to account for resets
+    //Lift controls for sticks
+    public void update(double in) {
+        if(!limitSwitch.getState()) //If limit switch is pressed, then reset slide position
+            resetPosition();
+
+        if(in > 0.5)
+            slideMotor.setPower(liftController.teleOpControl(getPosition(), in));
     }
 
-    public boolean isLimitSwitchPressed() {
-        return !limitSwitch.getState(); // Return true if the switch is pressed
+    public void update() {
+        if(!limitSwitch.getState()) //If limit switch is pressed, then reset slide position
+            resetPosition();
+
+        slideMotor.setPower(liftController.autoControl(getPosition()));
     }
 
-    public void resetEncoder() {
-        liftMotorTop.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        liftMotorBottom.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        liftMotorTop.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        liftMotorBottom.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        slideResetPosition = 0;
+    //Set position for autos
+    public void setPosition (int target) {
+        if(!limitSwitch.getState()) //If limit switch is pressed, then reset slide position
+            resetPosition();
+
+        liftController.setTarget(target);
+    }
+
+    //Getter for current slide position
+    public double getPosition () {
+        return slideMotor.getCurrentPosition() - slideMotorOffset;
+    }
+
+    //Reset slide encoder, the reset slide offset
+    private void resetPosition() {
+        slideMotor.setMode(STOP_AND_RESET_ENCODER);
+        slideMotorOffset = slideMotor.getCurrentPosition();
+    }
+
+    public void rawLift(double power) {
+        slideMotor.setPower(power);
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return
+            "Left Servo Power: " + leftServo.getPower() + "\n" +
+            "Right Servo Power: " + rightServo.getPower() + "\n" +
+            "Slide Motor Power: " + slideMotor.getPower() + "\n" +
+            "Slide Motor Position: " + getPosition() + "\n" +
+            liftController.toString();
     }
 }
