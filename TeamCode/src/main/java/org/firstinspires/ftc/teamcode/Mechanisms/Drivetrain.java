@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 public class Drivetrain {
     public final DcMotorEx frontLeft,frontRight,backLeft,backRight;
     private boolean slow;
-    private double speed = -1;
+    private double speed = 1;
 
     public Drivetrain(HardwareMap hardwareMap) {
         //Drive Motor Initialization
@@ -17,7 +17,6 @@ public class Drivetrain {
 
         //Needed for how the motors are mounted
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -75,15 +74,16 @@ public class Drivetrain {
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
 
+    boolean lastButton = false;
     //Silly button logic stuff
     public void toggleSlowMode(boolean input) {
-        if(input && !slow){
-            slow = true;
-            speed = .5;
-        }else{
-            slow =false;
-            speed = 1;
+        if(lastButton != input) {
+            if(input) {
+                slow = !slow;
+            }
         }
+        speed = slow ? .5 : 1;
+        lastButton = input;
     }
     public boolean isSlow() {return slow;}
 }

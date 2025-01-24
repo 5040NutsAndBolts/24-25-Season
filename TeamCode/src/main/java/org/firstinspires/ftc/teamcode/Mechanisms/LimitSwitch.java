@@ -7,11 +7,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class LimitSwitch {
 	private final DigitalChannel limitSwitch;
-	public LimitSwitch (HardwareMap hardwareMap) {
-		limitSwitch = hardwareMap.get(DigitalChannel.class, "Wheel Limit Switch");
+	public LimitSwitch (HardwareMap hardwareMap, String name) {
+		limitSwitch = hardwareMap.get(DigitalChannel.class, name);
 	}
 
-	public boolean getState () {
+	public boolean isPressed() {
 		return !limitSwitch.getState();
 	}
 

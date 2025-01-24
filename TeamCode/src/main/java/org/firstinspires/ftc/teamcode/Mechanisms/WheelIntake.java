@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.HelperClasses.PID;
 public class WheelIntake {
     public final CRServo leftServo, rightServo;
     private final DcMotorEx slideMotor;
-    private final DigitalChannel limitSwitch;
+    //private final DigitalChannel limitSwitch;
     private int slideMotorOffset;
     private final PID liftController = new PID(.3,0,.00);
 
@@ -23,11 +23,11 @@ public class WheelIntake {
         leftServo.setDirection(DcMotorSimple.Direction.REVERSE);
         rightServo = hardwareMap.get(CRServo.class, "Right Wheel Servo");
 
-        slideMotor = hardwareMap.get(DcMotorEx.class, "Wheel Slide Top");
+        slideMotor = hardwareMap.get(DcMotorEx.class, "Wheel Slide Motor");
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slideMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        limitSwitch = hardwareMap.get(DigitalChannel.class, "Wheel Limit Switch");
+        //limitSwitch = hardwareMap.get(DigitalChannel.class, "Wheel Limit Switch");
 
         slideMotorOffset = slideMotor.getCurrentPosition();
     }
@@ -62,24 +62,24 @@ public class WheelIntake {
 
     //Lift controls for sticks
     public void update(double in) {
-        if(!limitSwitch.getState()) //If limit switch is pressed, then reset slide position
-            resetPosition();
+       // if(limitSwitch.getState()) //If limit switch is pressed, then reset slide position
+       //     resetPosition();
 
         if(in > 0.5)
             slideMotor.setPower(liftController.teleOpControl(getPosition(), in));
     }
 
     public void update() {
-        if(!limitSwitch.getState()) //If limit switch is pressed, then reset slide position
-            resetPosition();
+       // if(limitSwitch.getState()) //If limit switch is pressed, then reset slide position
+       //     resetPosition();
 
         slideMotor.setPower(liftController.autoControl(getPosition()));
     }
 
     //Set position for autos
     public void setPosition (int target) {
-        if(!limitSwitch.getState()) //If limit switch is pressed, then reset slide position
-            resetPosition();
+        //if(limitSwitch.getState()) //If limit switch is pressed, then reset slide position
+        //    resetPosition();
 
         liftController.setTarget(target);
     }

@@ -11,7 +11,7 @@ public class LimitSwitchTest extends OpMode {
 
 	@Override
 	public void init() {
-		ls = new LimitSwitch(hardwareMap);
+		ls = new LimitSwitch(hardwareMap, "Min Scissor Switch");
 	}
 
 	@Override

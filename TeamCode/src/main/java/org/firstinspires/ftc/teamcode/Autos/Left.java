@@ -28,17 +28,17 @@ public class Left extends AutoOpMode {
 		while(odo.centerE > -7200) {
 			telemetry.addLine("PARK: " + parkToggle);
 			telemetry.addLine("MOVE OUT FROM BEHIND SUBMERSIBLE");
-			dt.drive(0, .4, 0);
+			dt.drive(0, -.4, 0);
 			odo.updateOdoPosition();
 			updateOdoTelemetry();
 		}if(odo.centerE <-7500) { //ERROR CORRECTION
-			dt.drive(0, -.2, 0);
+			dt.drive(0, .2, 0);
 			odo.updateOdoPosition();
 			updateOdoTelemetry();
 		}if(odo.leftE != 0 && odo.rightE != 0) {
 			ElapsedTime temp = new ElapsedTime();
 			while(temp.seconds() < .7)
-				dt.drive(-.5, 0, 0);
+				dt.drive(.5, 0, 0);
 		}
 		dt.drive(0, 0, 0);
 		odo.updateOdoPosition();

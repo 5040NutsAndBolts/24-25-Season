@@ -12,7 +12,6 @@ public class RightTime extends AutoOpMode {
 			telemetry.addLine("strafing");
 			telemetry.addLine("time: " + timer.seconds());
 			telemetry.update();
-			dt.backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 			dt.drive(0,.5,0);
 			if(timer.seconds() >= 3) {
 				timer.reset();
