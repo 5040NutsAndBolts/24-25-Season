@@ -13,16 +13,14 @@ public class ScissorMech {
 		private final LimitSwitch maximumSwitch;
 		private final LimitSwitch minimumSwitch;
 		private final CRServo intakeServo;
-		private final Servo leftTiltServo;
-		private final Servo rightTiltServo;
+		private final Servo tiltServo;
 
 		public ScissorMech(HardwareMap hardwareMap) {
 			scissorMotor = hardwareMap.get(DcMotor.class, "Scissor Motor");
 			maximumSwitch = new LimitSwitch(hardwareMap, "Max Scissor Switch");
 			minimumSwitch = new LimitSwitch(hardwareMap, "Min Scissor Switch");
 			intakeServo = hardwareMap.get(CRServo.class, "Scissor Intake Servo");
-			leftTiltServo = hardwareMap.get(Servo.class, "Left Tilt Servo");
-			rightTiltServo = hardwareMap.get(Servo.class, "Right Tilt Servo");
+			tiltServo = hardwareMap.get(Servo.class, "Tilt Servo");
 			scissorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		}
 
@@ -33,14 +31,11 @@ public class ScissorMech {
 			if((maximumSwitch.isPressed() && (in > 0)) || (minimumSwitch.isPressed() && (in < 0)))
 				return;
 
-			if(maximumSwitch.isPressed()) {
-				leftTiltServo.setPosition(1);
-				rightTiltServo.setPosition(1);
-			}
-			else {
-				leftTiltServo.setPosition(0);
-				rightTiltServo.setPosition(0);
-			}
+			if(maximumSwitch.isPressed())
+				tiltServo.setPosition(1);
+			else
+				tiltServo.setPosition(0);
+
 			scissorMotor.setPower(in);
 		}
 		public void spin (boolean in, boolean out){
@@ -61,7 +56,7 @@ public class ScissorMech {
 				"Maximum Switch: " + maximumSwitch.isPressed() + "\n" +
 				"Minimum Switch: " + minimumSwitch.isPressed() + "\n" +
 				"Intake Servo Power: " + intakeServo.getPower() + "\n" +
-				"Tilt Servo Position: " + leftTiltServo.getPosition();
+				"Tilt Servo Position: " + tiltServo.getPosition();
 		}
 }
 
