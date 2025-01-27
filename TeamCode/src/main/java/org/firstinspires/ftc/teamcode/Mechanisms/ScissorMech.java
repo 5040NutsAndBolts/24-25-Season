@@ -1,17 +1,13 @@
 package org.firstinspires.ftc.teamcode.Mechanisms;
-
 import androidx.annotation.NonNull;
-
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-
 public class ScissorMech {
 		private final DcMotor scissorMotor;
-		private final LimitSwitch maximumSwitch;
-		private final LimitSwitch minimumSwitch;
+		private final LimitSwitch maximumSwitch,minimumSwitch;
 		private final CRServo intakeServo;
 		private final Servo tiltServo;
 
@@ -20,7 +16,7 @@ public class ScissorMech {
 			maximumSwitch = new LimitSwitch(hardwareMap, "Max Scissor Switch");
 			minimumSwitch = new LimitSwitch(hardwareMap, "Min Scissor Switch");
 			intakeServo = hardwareMap.get(CRServo.class, "Scissor Intake Servo");
-			tiltServo = hardwareMap.get(Servo.class, "Tilt Servo");
+			tiltServo = hardwareMap.get(Servo.class, "Scissor Tilt Servo");
 			scissorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		}
 
@@ -31,21 +27,26 @@ public class ScissorMech {
 			if((maximumSwitch.isPressed() && (in > 0)) || (minimumSwitch.isPressed() && (in < 0)))
 				return;
 
-			if(maximumSwitch.isPressed())
-				tiltServo.setPosition(1);
-			else
-				tiltServo.setPosition(0);
-
 			scissorMotor.setPower(in);
 		}
 		public void spin (boolean in, boolean out){
 			if(in && !out)
-				intakeServo.setPower(1);
-			if(!in && out)
 				intakeServo.setPower(-1);
+			else if(out)
+				intakeServo.setPower(1);
 			else
 				intakeServo.setPower(0);
 		}
+		public void spin (double in, double out){
+				spin(in > .06, out > .06);
+		}
+		public void tiltCarriage(boolean up, boolean down) {
+				if(up && !down)
+					tiltServo.setPosition(1);
+				else if(!up && down)
+					tiltServo.setPosition(0);
+		}
+
 
 		@NonNull
 		@Override
@@ -59,4 +60,3 @@ public class ScissorMech {
 				"Tilt Servo Position: " + tiltServo.getPosition();
 		}
 }
-

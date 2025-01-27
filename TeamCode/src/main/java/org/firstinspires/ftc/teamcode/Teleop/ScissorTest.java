@@ -15,9 +15,14 @@ public class ScissorTest extends OpMode {
 
 	@Override
 	public void loop() {
-		scissor.extend(gamepad1.left_stick_y);
-		scissor.spin(gamepad1.left_bumper, gamepad1.right_bumper);
+
+		scissor.extend(Math.min(Math.max(-.7, gamepad2.right_stick_y), .7));
+		scissor.spin(gamepad2.left_trigger, gamepad1.right_trigger);
+		scissor.tiltCarriage(gamepad2.left_bumper, gamepad2.right_bumper);
+
 		telemetry.addLine(scissor.toString());
+		telemetry.addLine(""+gamepad2.left_trigger);
+		telemetry.addLine(""+gamepad2.right_trigger);
 		telemetry.update();
 	}
 }

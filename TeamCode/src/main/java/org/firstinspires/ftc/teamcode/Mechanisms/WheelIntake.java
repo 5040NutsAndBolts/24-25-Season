@@ -25,7 +25,6 @@ public class WheelIntake {
 
         slideMotor = hardwareMap.get(DcMotorEx.class, "Wheel Slide Motor");
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        slideMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         //limitSwitch = hardwareMap.get(DigitalChannel.class, "Wheel Limit Switch");
 
