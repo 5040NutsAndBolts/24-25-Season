@@ -14,11 +14,11 @@ public class Right extends AutoOpMode {
 			telemetry.addLine("MOVE OUT FROM BEHIND SUBMERSIBLE");
 			dt.drive(0, -.4, 0);
 			odo.updateOdoPosition();
-			updateOdoTelemetry();
+			updateTelemetry();
 		}if(odo.centerE > 7200) { //ERROR CORRECTION
 			dt.drive(0, .2, 0);
 			odo.updateOdoPosition();
-			updateOdoTelemetry();
+			updateTelemetry();
 		}
 		dt.drive(0, 0, 0);
 
@@ -27,11 +27,11 @@ public class Right extends AutoOpMode {
 			telemetry.addLine("MOVING FORWARD IN FRONT OF BRICK LINE");
 			dt.drive(.4, 0, 0);
 			odo.updateOdoPosition();
-			updateOdoTelemetry();
+			updateTelemetry();
 		}if(((Math.abs(odo.leftE) + Math.abs(odo.rightE)) / 2.0) > 16300) { //ERROR CORRECTION
 			dt.drive(-.2, 0, 0);
 			odo.updateOdoPosition();
-			updateOdoTelemetry();
+			updateTelemetry();
 		}
 		dt.drive(0, 0, 0);
 
@@ -40,11 +40,11 @@ public class Right extends AutoOpMode {
 			telemetry.addLine("MOVING IN FRONT OF SPECIMEN");
 			dt.drive(0, -.4, 0);
 			odo.updateOdoPosition();
-			updateOdoTelemetry();
+			updateTelemetry();
 		}if(odo.centerE > 10500) { //ERROR CORRECTION
 			dt.drive(0, .2, 0);
 			odo.updateOdoPosition();
-			updateOdoTelemetry();
+			updateTelemetry();
 		}
 		dt.drive(0, 0, 0);
 
@@ -54,13 +54,8 @@ public class Right extends AutoOpMode {
 			telemetry.addLine("MOVE BACKWARDS INTO PARK ZONE");
 			dt.drive(-.3, 0, 0);
 			odo.updateOdoPosition();
-			updateOdoTelemetry();
+			updateTelemetry();
 		}
 		terminateOpModeNow();
-	}
-
-	@Override
-	public void stop() {
-		super.stop();
 	}
 }

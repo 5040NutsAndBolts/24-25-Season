@@ -1,19 +1,21 @@
 package org.firstinspires.ftc.teamcode.HelperClasses;
 import androidx.annotation.NonNull;
 
+import java.util.function.Supplier;
+
 public class PID {
 	private final double kp, ki, kd;
-	private double lastIntegral, lastError;
-	private long lastTime, deltaTime;
-	private double currentTarget;
+	private double lastTime, deltaTime, currentTarget, errorSum, lastOutput;
+	private Supplier<Double> getCurrent;
 
 	/**
 	 * Creates a PID controller
 	 * @param kp Proportional gain (Gets near position faster, more prone to overshoot)
 	 * @param ki Integral gain (Decreases steady-state error, more oscillative)
 	 * @param kd Derivative gain (Reduces overshoot and smooths response)
+	 * @param getCurrent Function that returns the current value of the variable being controlled
 	 */
-	public PID(double kp, double ki, double kd) {
+	public PID(double kp, double ki, double kd, Supplier<Double> getCurrent) {
 		this.kp = kp;
 		this.ki = ki;
 		this.kd = kd;
@@ -21,38 +23,36 @@ public class PID {
 	}
 
 	//Calculates power output
-	private double calculate(double current, double target) {
-		currentTarget = target;
-		double currentError = current - target;
+	private double calculate(double target) {
+		double current = getCurrent.get();
+
+		if(Math.abs(deltaTime) < .01)
+			return lastOutput;
+
+		double currentError = target - current;
+		errorSum += currentError;
 
 		double Proportional = kp * currentError;
-		double Integral = lastIntegral + (currentError + lastError)/2 * deltaTime * ki;
-		double Derivative = kd * (currentError + lastError)/deltaTime;
+		double Integral = ki * errorSum;
+		double Derivative = kd * (currentError - (target - lastOutput)) / deltaTime;
 
 		double output = Proportional + Integral + Derivative;
 
-		lastIntegral = Integral;
-		lastError += currentError;
+		lastOutput = output;
 		lastTime = System.currentTimeMillis();
 
 		return output;
 	}
 
 	//TeleOp control
-	public double teleOpControl(double current, double stickPower) {
+	public double teleOpControl(double stickPower) {
 		updateDeltaTime();
-		return calculate(
-				current,
-				(current + stickPower * deltaTime)
-			);
+		return calculate(getCurrent.get() + stickPower * deltaTime);
 	}
 
 	public double autoControl (double current) {
 		updateDeltaTime();
-		return calculate(
-				current,
-				currentTarget
-			);
+		return calculate(currentTarget);
 	}
 
 	public void setTarget(double target) {
@@ -60,7 +60,9 @@ public class PID {
 	}
 
 	private void updateDeltaTime() {
-		deltaTime = (System.currentTimeMillis() - lastTime);
+		long cur = System.currentTimeMillis();
+		deltaTime = cur - lastTime;
+		lastTime = cur;
 	}
 
 	public double getCurrentTarget() {

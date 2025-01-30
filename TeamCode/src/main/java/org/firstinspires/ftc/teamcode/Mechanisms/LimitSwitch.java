@@ -15,9 +15,9 @@ public class LimitSwitch {
 		return !limitSwitch.getState();
 	}
 
-	@NonNull
 	@Override
+	@NonNull
 	public String toString() {
-		return "" + !limitSwitch.getState();
+		return "" + isPressed();
 	}
 }

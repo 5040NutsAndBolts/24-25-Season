@@ -5,11 +5,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.HelperClasses.PID;
+
 public class ScissorMech {
 		private final DcMotor scissorMotor;
 		private final LimitSwitch maximumSwitch,minimumSwitch;
 		private final CRServo intakeServo;
 		private final Servo tiltServo;
+		private final PID scissorController = new PID(0,0,0, this::getPosition);
 
 		public ScissorMech(HardwareMap hardwareMap) {
 			scissorMotor = hardwareMap.get(DcMotor.class, "Scissor Motor");
@@ -23,6 +26,10 @@ public class ScissorMech {
 		public void extend(double in ) {
 			if (Math.abs(in) < .06)
 				in = 0;
+			else if(in > .7)
+				scissorMotor.setPower(.7);
+			else if (in < -.7)
+				scissorMotor.setPower(-.7);
 
 			if((maximumSwitch.isPressed() && (in > 0)) || (minimumSwitch.isPressed() && (in < 0)))
 				return;
@@ -45,6 +52,9 @@ public class ScissorMech {
 					tiltServo.setPosition(1);
 				else if(!up && down)
 					tiltServo.setPosition(0);
+		}
+		public double getPosition() {
+			return scissorMotor.getCurrentPosition();
 		}
 
 
