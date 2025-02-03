@@ -66,7 +66,7 @@ public class PID {
 		lastTime = cur;
 	}
 
-	public double getCurrentTarget() {
+	public double getTarget() {
 		return currentTarget;
 	}
 
