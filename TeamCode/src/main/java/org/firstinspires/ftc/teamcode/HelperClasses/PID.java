@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 
 public class PID {
 	private final double kp, ki, kd;
-	private double lastTime, deltaTime, currentTarget, errorSum, lastOutput;
+	private double lastTime, deltaTime, currentTarget, errorSum, lastOutput, lastError;
 	private Supplier<Double> getCurrent;
 
 	/**
@@ -34,10 +34,11 @@ public class PID {
 
 		double Proportional = kp * currentError;
 		double Integral = ki * errorSum;
-		double Derivative = kd * (currentError - (target - lastOutput)) / deltaTime;
+		double Derivative = kd * (currentError - lastError) / deltaTime;
 
 		double output = Proportional + Integral + Derivative;
 
+		lastError = currentError;
 		lastOutput = output;
 		lastTime = System.currentTimeMillis();
 
