@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Mechanisms;
+/* package org.firstinspires.ftc.teamcode.Mechanisms;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -68,3 +68,4 @@ public class WheelIntake {
         slideResetPosition = 0;
     }
 }
+*/

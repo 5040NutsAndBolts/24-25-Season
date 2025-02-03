@@ -14,9 +14,8 @@ import java.util.List;
 
 //most of this class is just setup that doesn't need to be changed
 //the core.inRange line is what controls the important stuff
-public class CameraTest extends OpenCvPipeline
+public class BlueFinder extends OpenCvPipeline
 {
-    //helpful numbers to have most games
     public static double score = 0;
     public static double height = 0;
     public static double width = 0;
@@ -33,7 +32,7 @@ public class CameraTest extends OpenCvPipeline
     /**
      * Sets up all the variables to keep code clean
      */
-    public CameraTest() {
+    public BlueFinder() {
         rawImage = new Mat();
         workingMat = new Mat();
         selectionMask = new Mat();
@@ -61,9 +60,7 @@ public class CameraTest extends OpenCvPipeline
 
         //controls the color range the camera is looking for in the hsv color space
         //the hue value is scaled by .5, the saturation and value are scaled by 2.55
-        Core.inRange(workingMat,new Scalar(140,60,60),new Scalar(190,255,255),workingMat);
-        //blue = hue 90 - 120
-        //red = hue 0 - 15, 150 - 190
+        Core.inRange(workingMat,new Scalar(112,180,150),new Scalar(125,255,255),workingMat);
 
         // Creates a list for all contoured objects the camera will find
         List<MatOfPoint> contoursList = new ArrayList<>();
@@ -100,7 +97,6 @@ public class CameraTest extends OpenCvPipeline
         // Sets the position of the selected rectangle (relative to the screen resolution)
         screenPosition = new Point(bestRect.x, bestRect.y);
 
-        //relevant variables for auto selection
         score = bestRect.height * bestRect.width;
         height = bestRect.height;
         width = bestRect.width;
