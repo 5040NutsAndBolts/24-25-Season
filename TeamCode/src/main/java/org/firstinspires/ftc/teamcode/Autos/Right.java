@@ -7,52 +7,52 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class Right extends AutoOpMode {
 	@Override
 	public void loop() {
-		dt.drive(0, 0, 0);
+		drivetrain.drive(0, 0, 0);
 		odo.updateOdoPosition();
 		//MOVING OUT FROM BEHIND SUBMERSIBLE
 		while(odo.centerE < 6200) {
 			telemetry.addLine("MOVE OUT FROM BEHIND SUBMERSIBLE");
-			dt.drive(0, -.4, 0);
+			drivetrain.drive(0, -.4, 0);
 			odo.updateOdoPosition();
 			updateTelemetry();
 		}if(odo.centerE > 7200) { //ERROR CORRECTION
-			dt.drive(0, .2, 0);
+			drivetrain.drive(0, .2, 0);
 			odo.updateOdoPosition();
 			updateTelemetry();
 		}
-		dt.drive(0, 0, 0);
+		drivetrain.drive(0, 0, 0);
 
 		//MOVING FORWARD IN FRONT OF BRICK LINE
 		while(((Math.abs(odo.leftE) + Math.abs(odo.rightE)) / 2.0) < 16300) {
 			telemetry.addLine("MOVING FORWARD IN FRONT OF BRICK LINE");
-			dt.drive(.4, 0, 0);
+			drivetrain.drive(.4, 0, 0);
 			odo.updateOdoPosition();
 			updateTelemetry();
 		}if(((Math.abs(odo.leftE) + Math.abs(odo.rightE)) / 2.0) > 16300) { //ERROR CORRECTION
-			dt.drive(-.2, 0, 0);
+			drivetrain.drive(-.2, 0, 0);
 			odo.updateOdoPosition();
 			updateTelemetry();
 		}
-		dt.drive(0, 0, 0);
+		drivetrain.drive(0, 0, 0);
 
 		//MOVING IN FRONT OF SPECIMEN
 		while(odo.centerE < 9600) {
 			telemetry.addLine("MOVING IN FRONT OF SPECIMEN");
-			dt.drive(0, -.4, 0);
+			drivetrain.drive(0, -.4, 0);
 			odo.updateOdoPosition();
 			updateTelemetry();
 		}if(odo.centerE > 10500) { //ERROR CORRECTION
-			dt.drive(0, .2, 0);
+			drivetrain.drive(0, .2, 0);
 			odo.updateOdoPosition();
 			updateTelemetry();
 		}
-		dt.drive(0, 0, 0);
+		drivetrain.drive(0, 0, 0);
 
 		//MOVE BACKWARDS INTO PARK ZONE
 		ElapsedTime parkTimer = new ElapsedTime();
 		while(parkTimer.seconds() < 4) {
 			telemetry.addLine("MOVE BACKWARDS INTO PARK ZONE");
-			dt.drive(-.3, 0, 0);
+			drivetrain.drive(-.3, 0, 0);
 			odo.updateOdoPosition();
 			updateTelemetry();
 		}

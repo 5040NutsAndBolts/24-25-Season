@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.Autos;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous (name = "Left Time", group = "Autonomous")
@@ -12,12 +11,13 @@ public class LeftTime extends AutoOpMode {
 			telemetry.addLine("strafing");
 			telemetry.addLine("time: " + timer.seconds());
 			telemetry.update();
-			dt.drive(0,.5,0);
+			drivetrain.drive(0,.5,0);
 			if(timer.seconds() >= 6) {
 				timer.reset();
-				while(timer.seconds() < .5) dt.drive(.5, 0, 0);
+				while(timer.seconds() < .5) drivetrain.drive(.5, 0, 0);
 				terminateOpModeNow();
 			}
 		}
 	}
 }
+//jack is a bit stupid and doesnt know how to work pid and broke the axon servo progromer christian is the goat

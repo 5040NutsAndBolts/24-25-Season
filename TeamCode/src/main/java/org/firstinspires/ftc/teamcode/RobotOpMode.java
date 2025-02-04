@@ -8,16 +8,34 @@ import org.firstinspires.ftc.teamcode.Mechanisms.WheelIntake;
 
 @Disabled
 public class RobotOpMode extends OpMode {
-    protected Drivetrain dt;
+    protected Drivetrain drivetrain;
     protected WheelIntake wheel;
     protected ScissorMech scissor;
 
+    public enum Color {
+        red, blue, yellow, other
+    }
+
+    protected Color teamColor;
+
     @Override
     public void init() {
-        dt = new Drivetrain (hardwareMap);
+        drivetrain = new Drivetrain (hardwareMap);
         wheel = new WheelIntake(hardwareMap);
-        scissor = new ScissorMech(hardwareMap);
     }
+
+    @Override
+    public void init_loop() {
+        super.init_loop();
+        if(gamepad1.dpad_left)
+            teamColor = Color.red;
+        else if (gamepad1.dpad_right)
+            teamColor = Color.blue;
+        telemetry.addLine("Color: " + teamColor);
+        telemetry.update();
+        scissor = new ScissorMech(hardwareMap, teamColor);
+    }
+
     //Leave empty
     @Override public void loop() {}
 

@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 public class PID {
 	private final double kp, ki, kd;
 	private double lastTime, deltaTime, currentTarget, errorSum, lastOutput, lastError;
-	private Supplier<Double> getCurrent;
+	private final Supplier<Double> getCurrent;
 
 	/**
 	 * Creates a PID controller
@@ -19,9 +19,11 @@ public class PID {
 		this.kp = kp;
 		this.ki = ki;
 		this.kd = kd;
+		this.getCurrent = getCurrent;
 		lastTime = System.currentTimeMillis();
 	}
 
+	//jack is a bit stupid and doesnt know how to work pid and broke the axon servo progromer christian is the goat jack wrote this when he was ill
 	//Calculates power output
 	private double calculate(double target) {
 		double current = getCurrent.get();

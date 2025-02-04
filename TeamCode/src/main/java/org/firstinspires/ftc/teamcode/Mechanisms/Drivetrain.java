@@ -76,6 +76,10 @@ public class Drivetrain {
 
     boolean lastButton = false;
     //Silly button logic stuff
+
+
+
+    //jack is a bit stupid and doesnt know how to work pid and broke the axon servo progromer christian is the goat
     public void toggleSlowMode(boolean input) {
         if(lastButton != input) {
             if(input) {

@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode.Mechanisms;
+
 import androidx.annotation.NonNull;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
+
+import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.HelperClasses.PID;
+import org.firstinspires.ftc.teamcode.RobotOpMode.Color;
 
 public class ScissorMech {
 		private final DcMotor scissorMotor;
@@ -13,24 +14,32 @@ public class ScissorMech {
 		private final CRServo leftIntakeServo, rightIntakeServo;
 		private final Servo tiltServo;
 		private int scissorMotorOffset;
-		private final PID scissorController = new PID(0,0,0, this::getPosition);
+		private final PID scissorController;
+		private final ColorSensor colorSensor;
+		private final Color color;
+		private boolean autoSpitOverride;
+		public boolean spitOut = false;
 
-		public ScissorMech(HardwareMap hardwareMap) {
+		public ScissorMech(HardwareMap hardwareMap, Color color) {
 			scissorMotor = hardwareMap.get(DcMotor.class, "Scissor Motor");
 			maximumSwitch = new LimitSwitch(hardwareMap, "Max Scissor Switch");
 			minimumSwitch = new LimitSwitch(hardwareMap, "Min Scissor Switch");
 			leftIntakeServo = hardwareMap.get(CRServo.class, "Left Scissor Intake Servo");
 			rightIntakeServo = hardwareMap.get(CRServo.class, "Right Scissor Intake Servo");
+			rightIntakeServo.setDirection(DcMotorSimple.Direction.REVERSE);
 			tiltServo = hardwareMap.get(Servo.class, "Scissor Tilt Servo");
 			scissorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 			scissorMotorOffset = scissorMotor.getCurrentPosition();
+			scissorController = new PID(.5, 0, 0, this::getPosition);
+			colorSensor = new ColorSensor(hardwareMap, "Scissor Color Sensor");
+			this.color = color;
 		}
 
-		public void update () {
-			update(scissorController.autoControl(getPosition()));
+		public void updateLift() {
+			updateLift(scissorController.autoControl(getPosition()));
 		}
 
-		public void update(double in) {
+		public void updateLift(double in) {
 			if(minimumSwitch.isPressed()) {
 				resetPosition();
 				if(in < 0)
@@ -55,18 +64,24 @@ public class ScissorMech {
 		public void spin (boolean in, boolean out) {
 			if(minimumSwitch.isPressed())
 				resetPosition();
+			if(colorSensor.getBest() != color && colorSensor.getBest() != Color.yellow && !autoSpitOverride)
+				spitOut = true;
+
 			if(in && !out){
-				leftIntakeServo.setPower(-1);
-				rightIntakeServo.setPower(-1);
-			}
-			else if(out){
 				leftIntakeServo.setPower(1);
 				rightIntakeServo.setPower(1);
 			}
+			else if(out){
+				leftIntakeServo.setPower(-1);
+				rightIntakeServo.setPower(-1);
+			}else {
+				leftIntakeServo.setPower(0);
+				rightIntakeServo.setPower(0);
+			}
 		}
 
-		public void spin (double in, double out) {
-			spin(in > .06, out > .06);
+		public void spin (double in, double out)  {
+			spin(in > .1, out > .1);
 		}
 		public void tiltCarriage (boolean up, boolean down) {
 			if(minimumSwitch.isPressed())
@@ -81,6 +96,11 @@ public class ScissorMech {
 			return scissorMotor.getCurrentPosition() - scissorMotorOffset;
 		}
 
+		private boolean lastPressed = false;
+		public void toggleAutoSpit(boolean input) {
+			if (lastPressed != input && input) autoSpitOverride = !autoSpitOverride;
+			lastPressed = input;
+		}
 
 
 		@NonNull

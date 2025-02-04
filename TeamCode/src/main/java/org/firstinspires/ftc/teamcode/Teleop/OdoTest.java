@@ -12,7 +12,7 @@ public class OdoTest extends RobotOpMode {
 	public void init() {
 		super.init();
 		odo = new Odometry(hardwareMap);
-		dt.neutral();
+		drivetrain.neutral();
 	}
 
 	@Override
@@ -24,3 +24,4 @@ public class OdoTest extends RobotOpMode {
 		telemetry.update();
 	}
 }
+//jack is a bit stupid and doesnt know how to work pid and broke the axon servo progromer christian is the goat
