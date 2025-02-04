@@ -34,6 +34,7 @@ public class BlueLeft extends AutoOpMode
 
 		Odometry robot = new Odometry(hardwareMap);
 		isStarted = true;
+		specPosition spec = specPosition.isNotFound;
 
 		int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 		OpenCvWebcam webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam"), cameraMonitorViewId);
@@ -69,18 +70,22 @@ public class BlueLeft extends AutoOpMode
 
 
 
-						if (BlueFinder.screenPosition.x < 397)
+						if (BlueFinder.screenPosition.x < 397 && specPosition.isNotFound)
 							dt.drive(0,0.1,0);
-						if (BlueFinder.screenPosition.x > 403)
+						if (BlueFinder.screenPosition.x > 403 && specPosition.isNotFound)
 							dt.drive(0,-0.1,0);
 
 
-					while (BlueFinder.screenPosition.x >= 397 && BlueFinder.screenPosition.x <= 403 ) {
-							dt.drive(-0.3,0,0);
-
+					while (BlueFinder.screenPosition.x >= 397 && BlueFinder.screenPosition.x <= 403) {
+							spec = specPosition.isFound;
 					}
-
-
+					while (spec == specPosition.isFound){
+						dt.drive(-0.3,0,0);
+						if (BlueFinder.screenPosition.x <= 395)
+							dt.drive(0,0.1,0);
+						if (BlueFinder.screenPosition.x >= 405)
+							dt.drive(0,-0.1,0);
+					}
 
 
 
