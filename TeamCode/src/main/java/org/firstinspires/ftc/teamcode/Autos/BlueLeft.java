@@ -70,21 +70,21 @@ public class BlueLeft extends AutoOpMode
 
 
 
-						if (BlueFinder.screenPosition.x < 397 && specPosition.isNotFound)
-							dt.drive(0,0.1,0);
-						if (BlueFinder.screenPosition.x > 403 && specPosition.isNotFound)
-							dt.drive(0,-0.1,0);
+						if (BlueFinder.screenPosition.x < 397 && spec == specPosition.isNotFound)
+							drivetrain.drive(0,0.1,0);
+						if (BlueFinder.screenPosition.x > 403 && spec == specPosition.isNotFound)
+							drivetrain.drive(0,-0.1,0);
 
 
 					while (BlueFinder.screenPosition.x >= 397 && BlueFinder.screenPosition.x <= 403) {
 							spec = specPosition.isFound;
 					}
 					while (spec == specPosition.isFound){
-						dt.drive(-0.3,0,0);
+						drivetrain.drive(-0.3,0,0);
 						if (BlueFinder.screenPosition.x <= 395)
-							dt.drive(0,0.1,0);
+							drivetrain.drive(0,0.1,0);
 						if (BlueFinder.screenPosition.x >= 405)
-							dt.drive(0,-0.1,0);
+							drivetrain.drive(0,-0.1,0);
 					}
 
 
