@@ -14,4 +14,8 @@ dependencies {
     implementation 'org.firstinspires.ftc:Vision:10.0.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.acmerobotics.dashboard:dashboard:0.4.16'
+    // oi oi oi to access ftc dashboard type: "http://192.168.43.1:8080/dash" as long as your on the robots wifi, you can connect to robot on dashboard
+    //        FtcDashboard dashboard = FtcDashboard.getInstance();
+    //        Telemetry dashboardTelemetry = dashboard.getTelemetry();
+    //        Also use these lines
 }
