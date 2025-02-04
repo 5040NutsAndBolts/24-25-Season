@@ -66,17 +66,20 @@ public class BlueLeft extends AutoOpMode
 
 
 			while(isStarted = true) {
-					if (BlueFinder.screenPosition.x < 395)
-						dt.drive(0,0.3,0);
-					if (BlueFinder.screenPosition.x > 405)
-						dt.drive(0,-0.3,0);
 
-					while (BlueFinder.screenPosition.x >= 395 && BlueFinder.screenPosition.x <= 405) {
-						auto = specPosition.isFound;
 
-						dt.drive(-0.3,0,0);
+
+						if (BlueFinder.screenPosition.x < 397)
+							dt.drive(0,0.1,0);
+						if (BlueFinder.screenPosition.x > 403)
+							dt.drive(0,-0.1,0);
+
+
+					while (BlueFinder.screenPosition.x >= 397 && BlueFinder.screenPosition.x <= 403 ) {
+							dt.drive(-0.3,0,0);
 
 					}
+
 
 
 
