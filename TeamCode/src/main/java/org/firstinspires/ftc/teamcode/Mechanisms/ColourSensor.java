@@ -1,15 +1,16 @@
 
 package org.firstinspires.ftc.teamcode.Mechanisms;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import org.firstinspires.ftc.teamcode.RobotOpMode.Color;
 
 
-public class ColorSensor {
+public class ColourSensor {
+    private final ColorSensor colorSensor;
 
-    private final com.qualcomm.robotcore.hardware.ColorSensor colorSensor;
-
-    public ColorSensor(HardwareMap hardwareMap, String name) {
-        colorSensor = hardwareMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class,  name);
+    public ColourSensor(HardwareMap hardwareMap, String name) {
+        colorSensor = hardwareMap.get(ColorSensor.class,  name);
     }
     public double getRed(){
        return colorSensor.red();
@@ -18,6 +19,8 @@ public class ColorSensor {
        return colorSensor.blue();
     }
     public double getYellow() {
+        if (colorSensor.green() < 50 || colorSensor.red() < 50) //If either is very low, it's likely not yellow
+            return 0;
         return (colorSensor.green() + colorSensor.red()) / 2.0;
     }
     public Color getBest () {
@@ -27,6 +30,6 @@ public class ColorSensor {
             return Color.blue;
         else if (getYellow() > getRed() && getYellow() > getBlue())
             return Color.yellow;
-        else return Color.other;
+        else return Color.noColor;
     }
 }

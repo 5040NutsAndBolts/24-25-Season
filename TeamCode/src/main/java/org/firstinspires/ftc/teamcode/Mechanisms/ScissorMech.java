@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.Mechanisms;
 import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.hardware.*;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.HelperClasses.PID;
 import org.firstinspires.ftc.teamcode.RobotOpMode.Color;
@@ -15,12 +14,12 @@ public class ScissorMech {
 		private final Servo tiltServo;
 		private int scissorMotorOffset;
 		private final PID scissorController;
-		private final ColorSensor colorSensor;
-		private final Color color;
+		private final ColourSensor colourSensor;
+		public Color color;
 		private boolean autoSpitOverride;
 		public boolean spitOut = false;
 
-		public ScissorMech(HardwareMap hardwareMap, Color color) {
+		public ScissorMech(HardwareMap hardwareMap) {
 			scissorMotor = hardwareMap.get(DcMotor.class, "Scissor Motor");
 			maximumSwitch = new LimitSwitch(hardwareMap, "Max Scissor Switch");
 			minimumSwitch = new LimitSwitch(hardwareMap, "Min Scissor Switch");
@@ -31,15 +30,14 @@ public class ScissorMech {
 			scissorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 			scissorMotorOffset = scissorMotor.getCurrentPosition();
 			scissorController = new PID(.5, 0, 0, this::getPosition);
-			colorSensor = new ColorSensor(hardwareMap, "Scissor Color Sensor");
-			this.color = color;
+			colourSensor = new ColourSensor(hardwareMap, "Scissor Color Sensor");
 		}
 
-		public void updateLift() {
-			updateLift(scissorController.autoControl(getPosition()));
+		public void updateScissor() {
+			updateScissor(scissorController.autoControl(getPosition()));
 		}
 
-		public void updateLift(double in) {
+		public void updateScissor(double in) {
 			if(minimumSwitch.isPressed()) {
 				resetPosition();
 				if(in < 0)
@@ -64,7 +62,7 @@ public class ScissorMech {
 		public void spin (boolean in, boolean out) {
 			if(minimumSwitch.isPressed())
 				resetPosition();
-			if(colorSensor.getBest() != color && colorSensor.getBest() != Color.yellow && !autoSpitOverride)
+			if(colourSensor.getBest() != color && colourSensor.getBest() != Color.yellow && colourSensor.getBest() != Color.noColor && !autoSpitOverride)
 				spitOut = true;
 
 			if(in && !out){
@@ -97,7 +95,7 @@ public class ScissorMech {
 		}
 
 		private boolean lastPressed = false;
-		public void toggleAutoSpit(boolean input) {
+		public void toggleAutoSpitOverride(boolean input) {
 			if (lastPressed != input && input) autoSpitOverride = !autoSpitOverride;
 			lastPressed = input;
 		}
@@ -113,6 +111,7 @@ public class ScissorMech {
 				"Minimum Switch: " + minimumSwitch.isPressed() + "\n" +
 				"Left Intake Servo Power: " + leftIntakeServo.getPower() + "\n" +
 				"Right Intake Servo Power: " + rightIntakeServo.getPower() + "\n" +
-				"Tilt Servo Position: " + tiltServo.getPosition();
+				"Tilt Servo Position: " + tiltServo.getPosition() + "\n" +
+				"Auto Spit Override: " + autoSpitOverride;
 		}
 }

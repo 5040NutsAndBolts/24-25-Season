@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.HelperClasses;
 
+import androidx.annotation.NonNull;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -55,6 +57,8 @@ public class Odometry {
         centerOdom.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
+    @NonNull
+    @Override
     public String toString() {
         return "le: " + leftE + "\nce: " + centerE + "\nre: " + rightE;
     }

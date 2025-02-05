@@ -15,8 +15,7 @@ public class WheelTest extends OpMode {
 
 	@Override
 	public void loop() {
-		wheel.update(gamepad2.left_stick_y);
-		wheel.spin(gamepad2.right_trigger,gamepad2.left_trigger);
+		wheel.update(gamepad1.left_stick_y);
 		telemetry.addLine(wheel.toString());
 		telemetry.update();
 	}

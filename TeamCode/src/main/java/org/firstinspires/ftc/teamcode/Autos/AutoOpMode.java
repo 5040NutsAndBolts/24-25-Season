@@ -10,7 +10,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @Disabled
 public class AutoOpMode extends RobotOpMode {
-    protected Odometry odo;
     boolean lastParkButton = false;
     boolean parkToggle = true;
     public void togglePark(boolean input) {
@@ -20,11 +19,11 @@ public class AutoOpMode extends RobotOpMode {
     }
 
     @Override
-    public void init() {
-        super.init();
-        odo = new Odometry(hardwareMap);
+    public void init_loop() {
+        super.init_loop();
         togglePark(gamepad1.dpad_up);
-        updateTelemetry();
+        telemetry.addLine("PARK: " + parkToggle);
+        telemetry.update();
     }
 
     protected void updateTelemetry() {

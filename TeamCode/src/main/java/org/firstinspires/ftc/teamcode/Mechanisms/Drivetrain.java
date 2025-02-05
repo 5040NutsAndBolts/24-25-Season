@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 public class Drivetrain {
     public final DcMotorEx frontLeft,frontRight,backLeft,backRight;
-    private boolean slow;
     private double speed = 1;
 
     public Drivetrain(HardwareMap hardwareMap) {
@@ -47,25 +46,6 @@ public class Drivetrain {
         backRight.setPower(forward + rotation - sideways);
     }
 
-    public void forward(double power) {
-        frontLeft.setPower(power);
-        frontRight.setPower(power);
-        backLeft.setPower(power);
-        backRight.setPower(power);
-    }
-    public void strafe(double power) {
-        frontLeft.setPower(-power);
-        frontRight.setPower(-power);
-        backLeft.setPower(power);
-        backRight.setPower(power);
-    }
-    public void rotate(double power) {
-        frontLeft.setPower(-power);
-        frontRight.setPower(power);
-        backLeft.setPower(-power);
-        backRight.setPower(power);
-    }
-
     //Battery/motor saver
     public void neutral() {
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -74,20 +54,12 @@ public class Drivetrain {
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
 
-    boolean lastButton = false;
     //Silly button logic stuff
-
-
-
-    //jack is a bit stupid and doesnt know how to work pid and broke the axon servo progromer christian is the goat
+    boolean lastButton = false;
     public void toggleSlowMode(boolean input) {
-        if(lastButton != input) {
-            if(input) {
-                slow = !slow;
-            }
-        }
-        speed = slow ? .5 : 1;
+        if(lastButton != input && input)  //If button state has changed and it is pressed
+            speed = speed ==.5 ? 1 : .5;
         lastButton = input;
     }
-    public boolean isSlow() {return slow;}
+    public boolean isSlow() {return speed == .5;}
 }
