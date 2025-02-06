@@ -23,7 +23,6 @@ public class PID {
 		lastTime = System.currentTimeMillis();
 	}
 
-	//jack is a bit stupid and doesnt know how to work pid and broke the axon servo progromer christian is the goat jack wrote this when he was ill
 	//Calculates power output
 	private double calculate(double target) {
 		double current = getCurrent.get();

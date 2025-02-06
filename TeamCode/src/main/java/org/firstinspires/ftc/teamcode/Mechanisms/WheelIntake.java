@@ -33,19 +33,13 @@ public class WheelIntake {
 
 		limitSwitch = new LimitSwitch(hardwareMap, "Wheel Limit Switch");
 
-		topController = new PID(.005,0,.00, this::getTopPosition);
-		bottomController = new PID(.005,0,.00, this::getBottomPosition);
+		topController = new PID(.015,0,.00, this::getTopPosition);
+		bottomController = new PID(.015,0,.00, this::getBottomPosition);
 	}
 
 	//Spin controls for triggers
 	public void spin(double in, double out) {
-		//ignore stick/trigger drift
-		if(in < .05)
-			in = 0;
-		if(out < .05)
-			out = 0;
-
-		int power = in-out > 0 ? 1 : in-out < 0 ? -1 : 0;
+		int power = in-out > 0.05 ? 1 : in-out < -.05 ? -1 : 0;
 		leftServo.setPower(power);
 		rightServo.setPower(power);
 	}
