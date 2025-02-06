@@ -1,5 +1,5 @@
 
-package org.firstinspires.ftc.teamcode.Mechanisms;
+package org.firstinspires.ftc.teamcode.HelperClasses;
 import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;

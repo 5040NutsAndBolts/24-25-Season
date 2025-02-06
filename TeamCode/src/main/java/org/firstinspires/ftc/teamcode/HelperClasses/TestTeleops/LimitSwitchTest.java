@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode.Teleop;
+package org.firstinspires.ftc.teamcode.HelperClasses.TestTeleops;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Mechanisms.LimitSwitch;
+import org.firstinspires.ftc.teamcode.HelperClasses.LimitSwitch;
 
 @TeleOp(name = "limittest", group = "Teleop")
 public class LimitSwitchTest extends OpMode {

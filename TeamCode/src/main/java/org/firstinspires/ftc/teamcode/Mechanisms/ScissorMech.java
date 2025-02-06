@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.hardware.*;
 
+import org.firstinspires.ftc.teamcode.HelperClasses.ColourSensor;
+import org.firstinspires.ftc.teamcode.HelperClasses.LimitSwitch;
 import org.firstinspires.ftc.teamcode.HelperClasses.PID;
 import org.firstinspires.ftc.teamcode.RobotOpMode.Color;
 

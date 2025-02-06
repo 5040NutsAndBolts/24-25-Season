@@ -1,11 +1,10 @@
-package org.firstinspires.ftc.teamcode.Teleop;
+package org.firstinspires.ftc.teamcode.HelperClasses.TestTeleops;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.HelperClasses.Odometry;
 import org.firstinspires.ftc.teamcode.Mechanisms.Drivetrain;
-import org.firstinspires.ftc.teamcode.RobotOpMode;
 
 @TeleOp(name = "odotest", group = "Teleop")
 public class OdoTest extends OpMode {

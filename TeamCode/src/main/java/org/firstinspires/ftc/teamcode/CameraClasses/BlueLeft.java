@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode.CameraClasses;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.Autos.AutoOpMode;
+import org.firstinspires.ftc.teamcode.HelperClasses.Camera;
 import org.firstinspires.ftc.teamcode.HelperClasses.Odometry;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -12,7 +14,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
-@Autonomous(name = "Blue Left Auto", group = "Autonomous")
+@Disabled
 public class BlueLeft extends AutoOpMode
 {
 
@@ -32,33 +34,13 @@ public class BlueLeft extends AutoOpMode
 		Odometry robot = new Odometry(hardwareMap);
 		isStarted = true;
 		specPosition spec = specPosition.isNotFound;
-
-		int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-		OpenCvWebcam webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam"), cameraMonitorViewId);
-
-		webcam.setMillisecondsPermissionTimeout(2500); // Timeout for obtaining permission is configurable. Set before opening.
-		webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-		{
-			@Override
-			public void onOpened()
-			{
-				//set this to dimensions of camera
-				webcam.startStreaming(800, 600, OpenCvCameraRotation.UPRIGHT);
-			}
-
-			@Override
-			public void onError(int errorCode)
-			{
-
-			}
-		});
-		webcam.setPipeline(new BlueFinder());
+		Camera webcam = new Camera(hardwareMap);
 
 		Telemetry dashboardTelemetry = FtcDashboard.getInstance().getTelemetry();
 
 
-			telemetry.addData("BlueFinder X", BlueFinder.screenPosition.x);
-			telemetry.addData("BlueFinder Y", BlueFinder.screenPosition.y);
+			telemetry.addData("BlueFinder X", Camera.screenPosition.x);
+			telemetry.addData("BlueFinder Y", Camera.screenPosition.y);
 			dashboardTelemetry.update();
 
 
@@ -67,20 +49,20 @@ public class BlueLeft extends AutoOpMode
 
 
 
-				if (BlueFinder.screenPosition.x < 397 && spec == specPosition.isNotFound)
+				if (Camera.screenPosition.x < 397 && spec == specPosition.isNotFound)
 							drivetrain.drive(0,0.1,0);
-						if (BlueFinder.screenPosition.x > 403 && spec == specPosition.isNotFound)
-							drivetrain.drive(0,-0.1,0);
+				if (Camera.screenPosition.x > 403 && spec == specPosition.isNotFound)
+					drivetrain.drive(0,-0.1,0);
 
 
-					while (BlueFinder.screenPosition.x >= 397 && BlueFinder.screenPosition.x <= 403) {
+					while (Camera.screenPosition.x >= 397 && Camera.screenPosition.x <= 403) {
 							spec = specPosition.isFound;
 					}
 					while (spec == specPosition.isFound){
 						drivetrain.drive(-0.3,0,0);
-						if (BlueFinder.screenPosition.x <= 395)
+						if (Camera.screenPosition.x <= 395)
 							drivetrain.drive(0,0.1,0);
-						if (BlueFinder.screenPosition.x >= 405)
+						if (Camera.screenPosition.x >= 405)
 							drivetrain.drive(0,-0.1,0);
 					}
 
