@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.HelperClasses;
+package org.firstinspires.ftc.teamcode.CameraClasses;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;

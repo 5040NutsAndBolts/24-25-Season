@@ -28,7 +28,7 @@ public class ColourSensor {
     public Color getBest () {
          if (getBlue() > getRed() && getBlue() > 200)
             return Color.blue;
-        else if (getRed() > getBlue() && getRed() > 200)
+        else if (getRed() > getBlue() && getRed() > 200 && colorSensor.green() < 120)
             return Color.red;
         else return Color.noColor;
     }

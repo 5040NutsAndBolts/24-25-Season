@@ -1,15 +1,12 @@
-package org.firstinspires.ftc.teamcode.Autos;
+package org.firstinspires.ftc.teamcode.CameraClasses;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.HelperClasses.BlueFinder;
+import org.firstinspires.ftc.teamcode.Autos.AutoOpMode;
 import org.firstinspires.ftc.teamcode.HelperClasses.Odometry;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.Mechanisms.Drivetrain;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -70,7 +67,7 @@ public class BlueLeft extends AutoOpMode
 
 
 
-						if (BlueFinder.screenPosition.x < 397 && spec == specPosition.isNotFound)
+				if (BlueFinder.screenPosition.x < 397 && spec == specPosition.isNotFound)
 							drivetrain.drive(0,0.1,0);
 						if (BlueFinder.screenPosition.x > 403 && spec == specPosition.isNotFound)
 							drivetrain.drive(0,-0.1,0);
