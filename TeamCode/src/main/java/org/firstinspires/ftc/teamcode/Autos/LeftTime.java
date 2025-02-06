@@ -20,4 +20,3 @@ public class LeftTime extends AutoOpMode {
 		}
 	}
 }
-//jack is a bit stupid and doesnt know how to work pid and broke the axon servo progromer christian is the goat

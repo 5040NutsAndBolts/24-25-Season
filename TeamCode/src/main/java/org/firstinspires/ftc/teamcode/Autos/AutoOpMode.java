@@ -41,4 +41,9 @@ public class AutoOpMode extends RobotOpMode {
         telemetry.addLine("PARK: " + parkToggle);
         telemetry.update();
     }
+
+    @Override
+    public void auto180(boolean input) {
+        throw new UnsupportedOperationException("Not available for autonomous, may cause major issues");
+    }
 }

@@ -60,14 +60,14 @@ public class WheelIntake {
 		}
 	}
 
-	public void update () {
+	public void updateSlides() {
 		if(limitSwitch.isPressed())
 			resetPosition();
 		slideMotorTop.setPower(topController.autoControl(getTopPosition()));
 		bottomController.setTarget(getBottomPosition());
 	}
 
-	public void update (double in) {
+	public void updateSlides(double in) {
 		if(limitSwitch.isPressed())
 			resetPosition();
 		slideMotorTop.setPower(topController.teleOpControl(in));

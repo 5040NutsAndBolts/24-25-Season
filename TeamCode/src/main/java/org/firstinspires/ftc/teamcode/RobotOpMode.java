@@ -41,6 +41,16 @@ public class RobotOpMode extends OpMode {
         telemetry.update();
     }
 
+    public void auto180 (boolean input) {
+        if(odo != null) {
+            if(input){
+                odo.resetOdometry();
+                while (odo.centerE < 15767.16)
+                    drivetrain.drive(0, 0, 1);
+            } else return;
+        }else throw new NullPointerException("Odometry object is null");
+    }
+
     //Leave empty
     @Override public void loop() {}
 

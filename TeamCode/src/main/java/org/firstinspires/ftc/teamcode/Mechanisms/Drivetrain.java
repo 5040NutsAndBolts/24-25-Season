@@ -1,4 +1,6 @@
 package org.firstinspires.ftc.teamcode.Mechanisms;
+import androidx.annotation.NonNull;
+
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -62,4 +64,14 @@ public class Drivetrain {
         lastButton = input;
     }
     public boolean isSlow() {return speed == .5;}
+
+    @NonNull
+    @Override
+    public String toString() {
+        return
+                "Front Left: " + frontLeft.getPower() + "\n" +
+                "Front Right: " + frontRight.getPower() + "\n" +
+                "Back Left: " + backLeft.getPower() + "\n" +
+                "Back Right: " + backRight.getPower();
+    }
 }

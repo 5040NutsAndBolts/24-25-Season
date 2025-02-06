@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.HelperClasses.TestTeleops;
+package org.firstinspires.ftc.teamcode.HelperClasses.TestOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -18,13 +18,13 @@ public class WheelTest extends OpMode {
 		//wheel.update(gamepad1.left_stick_y);
 		while(wheel.getTopPosition() != 900) {
 			wheel.setSlideTarget(900);
-			wheel.update();
+			wheel.updateSlides();
 			telemetry.addLine(wheel.toString());
 			telemetry.update();
 		}
 		while(wheel.getTopPosition() != 100) {
 			wheel.setSlideTarget(100);
-			wheel.update();
+			wheel.updateSlides();
 			telemetry.addLine(wheel.toString());
 			telemetry.update();
 		}
