@@ -15,7 +15,7 @@ public class ScissorMech {
 		private int scissorMotorOffset;
 		private final PID scissorController;
 		private final ColourSensor colourSensor;
-		public Color color;
+		public Color teamColour;
 		private boolean autoSpitOverride;
 		public boolean spitOut = false;
 
@@ -30,7 +30,7 @@ public class ScissorMech {
 			scissorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 			scissorMotorOffset = scissorMotor.getCurrentPosition();
 			scissorController = new PID(.5, 0, 0, this::getPosition);
-			colourSensor = new ColourSensor(hardwareMap, "Scissor Color Sensor");
+			colourSensor = new ColourSensor(hardwareMap, "Scissor Colour Sensor");
 		}
 
 		public void updateScissor() {
@@ -62,7 +62,7 @@ public class ScissorMech {
 		public void spin (boolean in, boolean out) {
 			if(minimumSwitch.isPressed())
 				resetPosition();
-			if(colourSensor.getBest() != color && colourSensor.getBest() != Color.yellow && colourSensor.getBest() != Color.noColor && !autoSpitOverride)
+			if(colourSensor.getBest() != teamColour && !autoSpitOverride)
 				spitOut = true;
 
 			if(in && !out){
@@ -112,6 +112,7 @@ public class ScissorMech {
 				"Left Intake Servo Power: " + leftIntakeServo.getPower() + "\n" +
 				"Right Intake Servo Power: " + rightIntakeServo.getPower() + "\n" +
 				"Tilt Servo Position: " + tiltServo.getPosition() + "\n" +
-				"Auto Spit Override: " + autoSpitOverride;
+				"Auto Spit Override: " + autoSpitOverride + "\n" +
+				"Colour Sensor: " + colourSensor.toString();
 		}
 }

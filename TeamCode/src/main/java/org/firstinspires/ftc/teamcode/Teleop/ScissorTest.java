@@ -12,12 +12,14 @@ public class ScissorTest extends OpMode {
 	@Override
 	public void init() {
 		scissor = new ScissorMech(hardwareMap);
-		scissor.color = Color.red;
+		scissor.teamColour = Color.red;
 	}
 
 	@Override
 	public void loop() {
-		scissor.updateScissor(gamepad1.right_stick_y);
+		//scissor.updateScissor(gamepad1.right_stick_y);
+		scissor.spin(gamepad1.left_bumper, gamepad1.right_bumper);
+		scissor.tiltCarriage(gamepad1.dpad_up, gamepad1.dpad_down);
 
 		telemetry.addLine(scissor.toString());
 		telemetry.update();

@@ -22,8 +22,8 @@ public class WheelIntake {
 		leftServo.setDirection(DcMotorSimple.Direction.REVERSE);
 		rightServo = hardwareMap.get(CRServo.class, "Right Wheel Servo");
 
-		slideMotorTop = hardwareMap.get(DcMotorEx.class, "Slide Motor Top");
-		slideMotorBottom = hardwareMap.get(DcMotorEx.class, "Slide Motor Bottom");
+		slideMotorTop = hardwareMap.get(DcMotorEx.class, "Top Wheel Slide Motor");
+		slideMotorBottom = hardwareMap.get(DcMotorEx.class, "Bottom Wheel Slide Motor");
 		slideMotorTop.setDirection(DcMotorSimple.Direction.REVERSE);
 		slideMotorTop.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		slideMotorBottom.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -33,8 +33,8 @@ public class WheelIntake {
 
 		limitSwitch = new LimitSwitch(hardwareMap, "Wheel Limit Switch");
 
-		topController = new PID(.3,0,.00, this::getTopPosition);
-		bottomController = new PID(.3,0,.00, this::getBottomPosition);
+		topController = new PID(.005,0,.00, this::getTopPosition);
+		bottomController = new PID(.005,0,.00, this::getBottomPosition);
 	}
 
 	//Spin controls for triggers
@@ -74,27 +74,26 @@ public class WheelIntake {
 	public void update (double in) {
 		if(limitSwitch.isPressed())
 			resetPosition();
-		if(Math.abs(in) > 0.05) {
-			slideMotorTop.setPower(topController.teleOpControl(in));
-			if(in < 0)
-				slideMotorBottom.setPower(bottomController.teleOpControl(in));
-		}
+		slideMotorTop.setPower(topController.teleOpControl(in));
+		if(in < 0)
+			slideMotorBottom.setPower(bottomController.teleOpControl(in) );
+
 	}
 
 	public void setSlideTarget(int target) {
 		if(limitSwitch.isPressed())
 			resetPosition();
 
-		bottomController.setTarget(target < topController.getTarget() ? target : bottomController.getTarget());
+		bottomController.setTarget(target);
 		topController.setTarget(target);
 	}
 
 
 
-	private double getTopPosition () {
+	public double getTopPosition () {
 		return slideMotorTop.getCurrentPosition() - slideMotorTopOffset;
 	}
-	private double getBottomPosition () {
+	public double getBottomPosition () {
 		return slideMotorBottom.getCurrentPosition() - slideMotorBottomOffset;
 	}
 	private void resetPosition() {

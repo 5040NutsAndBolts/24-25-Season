@@ -15,8 +15,18 @@ public class WheelTest extends OpMode {
 
 	@Override
 	public void loop() {
-		wheel.update(gamepad1.left_stick_y);
-		telemetry.addLine(wheel.toString());
-		telemetry.update();
+		//wheel.update(gamepad1.left_stick_y);
+		while(wheel.getTopPosition() != 900) {
+			wheel.setSlideTarget(900);
+			wheel.update();
+			telemetry.addLine(wheel.toString());
+			telemetry.update();
+		}
+		while(wheel.getTopPosition() != 100) {
+			wheel.setSlideTarget(100);
+			wheel.update();
+			telemetry.addLine(wheel.toString());
+			telemetry.update();
+		}
 	}
 }

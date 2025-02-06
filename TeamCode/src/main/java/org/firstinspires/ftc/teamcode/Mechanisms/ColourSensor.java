@@ -1,5 +1,7 @@
 
 package org.firstinspires.ftc.teamcode.Mechanisms;
+import androidx.annotation.NonNull;
+
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -24,12 +26,21 @@ public class ColourSensor {
         return (colorSensor.green() + colorSensor.red()) / 2.0;
     }
     public Color getBest () {
-        if(getRed () > getYellow() && getRed() > getBlue())
-            return Color.red;
-        else if (getBlue() > getYellow() && getBlue() > getRed())
+         if (getBlue() > getRed() && getBlue() > 200)
             return Color.blue;
-        else if (getYellow() > getRed() && getYellow() > getBlue())
-            return Color.yellow;
+        else if (getRed() > getBlue() && getRed() > 200)
+            return Color.red;
         else return Color.noColor;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return
+                "R: "+getRed() + "\n" +
+                "G: "+colorSensor.green() + "\n" +
+                "B: "+getBlue()+ "\n" +
+                "Y: "+getYellow()+ "\n" +
+                "Best Fit: " + getBest();
     }
 }

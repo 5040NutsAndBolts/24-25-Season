@@ -31,13 +31,13 @@ public class RobotOpMode extends OpMode {
     public void init_loop() {
         if(gamepad1.dpad_up) {
             teamColor = Color.red;
-            scissor.color = Color.red;
+            scissor.teamColour = Color.red;
         }
         else if(gamepad1.dpad_down) {
             teamColor = Color.blue;
-            scissor.color = Color.blue;
+            scissor.teamColour = Color.blue;
         }
-        telemetry.addLine("TEAM COLOR: " + scissor.color);
+        telemetry.addLine("TEAM COLOR: " + scissor.teamColour);
         telemetry.update();
     }
 
