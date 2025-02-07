@@ -45,8 +45,9 @@ public class RobotOpMode extends OpMode {
         if(odo != null) {
             if(input){
                 odo.resetOdometry();
-                while (odo.centerE < 15767.16)
+                while (odo.centerE < 8000)
                     drivetrain.drive(0, 0, 1);
+                drivetrain.drive(0, 0, -.5);
             } else return;
         }else throw new NullPointerException("Odometry object is null");
     }

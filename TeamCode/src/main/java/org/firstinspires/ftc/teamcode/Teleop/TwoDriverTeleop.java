@@ -15,9 +15,7 @@ public class TwoDriverTeleop extends RobotOpMode {
 		wheel.spin(gamepad2.right_trigger,gamepad2.left_trigger);
 
 		scissor.updateScissor( gamepad2.right_stick_y);
-		if(!scissor.spitOut)
-			scissor.spin(gamepad1.right_trigger, gamepad1.left_trigger);
-		else scissor.spin(false, true);
+		scissor.spin(gamepad1.right_trigger, gamepad1.left_trigger);
 		scissor.tiltCarriage(gamepad2.left_bumper, gamepad2.right_bumper);
 
 		telemetry.addLine("SLOWMODE: " + drivetrain.isSlow());

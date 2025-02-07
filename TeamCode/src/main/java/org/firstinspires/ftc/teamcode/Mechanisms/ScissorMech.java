@@ -19,7 +19,7 @@ public class ScissorMech {
 		private final ColourSensor colourSensor;
 		public Color teamColour;
 		private boolean autoSpitOverride;
-		public boolean spitOut = false;
+		private boolean spitOut = false;
 
 		public ScissorMech(HardwareMap hardwareMap) {
 			scissorMotor = hardwareMap.get(DcMotor.class, "Scissor Motor");
@@ -47,7 +47,7 @@ public class ScissorMech {
 			}
 			else if (maximumSwitch.isPressed() && in > 0)
 				return;
-			if (Math.abs(in) < .06)
+			else if (Math.abs(in) < .06)
 				in = 0;
 			scissorMotor.setPower(scissorController.teleOpControl(in));
 		}
@@ -64,14 +64,14 @@ public class ScissorMech {
 		public void spin (boolean in, boolean out) {
 			if(minimumSwitch.isPressed())
 				resetPosition();
-			if(colourSensor.getBest() != teamColour && !autoSpitOverride)
+			if(colourSensor.getBest() == (teamColour == Color.red ? Color.blue : Color.red) && !autoSpitOverride) // If colour sensor sees the opposite teams' colour, spit out
 				spitOut = true;
 
-			if(in && !out){
+			if(in && !out && !spitOut){
 				leftIntakeServo.setPower(1);
 				rightIntakeServo.setPower(1);
 			}
-			else if(out){
+			else if(out && !in || spitOut){
 				leftIntakeServo.setPower(-1);
 				rightIntakeServo.setPower(-1);
 			}else {
