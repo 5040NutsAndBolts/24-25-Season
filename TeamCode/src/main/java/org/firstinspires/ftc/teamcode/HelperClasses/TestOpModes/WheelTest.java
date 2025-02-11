@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.HelperClasses.TestOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Mechanisms.WheelIntake;
 
@@ -16,14 +17,15 @@ public class WheelTest extends OpMode {
 	@Override
 	public void loop() {
 		//wheel.update(gamepad1.left_stick_y);
-		while(wheel.getTopPosition() != 900) {
-			wheel.setSlideTarget(900);
+		while(Math.abs(wheel.getTopPosition() - 1600) > 15) {
+			wheel.setTopTarget(1900);
 			wheel.updateSlides();
 			telemetry.addLine(wheel.toString());
 			telemetry.update();
 		}
-		while(wheel.getTopPosition() != 100) {
-			wheel.setSlideTarget(100);
+		ElapsedTime e = new ElapsedTime();
+		while(wheel.getTopPosition() > 15) {
+			wheel.setTopTarget(0);
 			wheel.updateSlides();
 			telemetry.addLine(wheel.toString());
 			telemetry.update();

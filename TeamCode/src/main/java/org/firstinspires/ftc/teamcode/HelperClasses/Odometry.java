@@ -8,9 +8,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.Mechanisms.Drivetrain;
 
 public class Odometry {
-    public DcMotorEx leftOdom, rightOdom, centerOdom;
+    private final DcMotorEx leftOdom, rightOdom, centerOdom;
     public int leftE, rightE, centerE;
-    private int leftO, rightO, centerO;
+    public int leftO, rightO, centerO;
 
     public Odometry(HardwareMap hardwareMap){
         leftOdom = hardwareMap.get(DcMotorEx.class, "Front Left");
@@ -23,44 +23,20 @@ public class Odometry {
 
     public void updateOdoPosition() {
         leftE = leftOdom.getCurrentPosition() - leftO;
-        rightE = rightOdom.getCurrentPosition() - rightO;
+        rightE = (rightOdom.getCurrentPosition() * -1) - rightO;
         centerE = centerOdom.getCurrentPosition() - centerO;
-    }
-
-    public void resetOdometry(int l, int r, int c) {
-        leftO = leftE + l;
-        rightO = rightE + r;
-        centerO = centerE + c;
-
-        updateOdoPosition();
-
-        // Resets encoder values then sets them back to run without encoders because wheels and odometry are same pointer
-        leftOdom.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftOdom.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightOdom.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightOdom.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        centerOdom.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        centerOdom.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void resetOdometry() {
         leftO = leftOdom.getCurrentPosition();
         rightO = rightOdom.getCurrentPosition();
         centerO = centerOdom.getCurrentPosition();
-
-        // Resets encoder values then sets them back to run without encoders because wheels and odometry are same pointer
-        leftOdom.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftOdom.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightOdom.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightOdom.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        centerOdom.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        centerOdom.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     @NonNull
     @Override
     public String toString() {
-        return "le: " + leftE + "\nce: " + centerE + "\nre: " + rightE;
+        return "le: " + leftE + "\nce: " + centerE + "\nre: " + rightE + "\nlo: " + leftO + "\nco: " + centerO + "\nro: " + rightO + "\ncl: " + leftOdom.getCurrentPosition() + "\nco: " + centerOdom.getCurrentPosition() + "\ncr: " +rightOdom.getCurrentPosition();
     }
 
 }

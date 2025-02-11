@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 public class PID {
 	private final double kp, ki, kd;
 	private double lastTime, deltaTime, currentTarget, errorSum, lastOutput, lastError;
+	private double currentOutput;
 	private final Supplier<Double> getCurrent;
 
 	/**
@@ -24,13 +25,13 @@ public class PID {
 	}
 
 	//Calculates power output
-	private double calculate(double target) {
-		double current = getCurrent.get();
+	private double calculate() {
+		double currentPosition = getCurrent.get();
 
 		if(Math.abs(deltaTime) < .01)
 			return lastOutput;
 
-		double currentError = target - current;
+		double currentError = currentTarget - currentPosition;
 		errorSum += currentError;
 
 		double Proportional = kp * currentError;
@@ -43,18 +44,20 @@ public class PID {
 		lastOutput = output;
 		lastTime = System.currentTimeMillis();
 
+		currentOutput = output;
 		return output;
 	}
 
 	//TeleOp control
 	public double teleOpControl(double stickPower) {
 		updateDeltaTime();
-		return calculate(getCurrent.get() + stickPower * deltaTime);
+		setTarget(getCurrent.get() + stickPower * deltaTime);
+		return calculate();
 	}
 
-	public double autoControl (double current) {
+	public double autoControl () {
 		updateDeltaTime();
-		return calculate(currentTarget);
+		return calculate();
 	}
 
 	public void setTarget(double target) {
@@ -79,6 +82,7 @@ public class PID {
 			"\tKp: " + kp + "\n" +
 			"\tKi: " + ki + "\n" +
 			"\tKd: " + kd+ "\n" +
+			"\tcurrentOutput: " + currentOutput+ "\n" +
 			"\tcurrentTarget: " +currentTarget;
 	}
 }

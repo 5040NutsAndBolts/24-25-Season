@@ -21,7 +21,7 @@ public class ScissorMech {
 		private boolean autoSpitOverride;
 		private boolean spitOut = false;
 
-		public ScissorMech(HardwareMap hardwareMap) {
+		public ScissorMech(@NonNull HardwareMap hardwareMap) {
 			scissorMotor = hardwareMap.get(DcMotor.class, "Scissor Motor");
 			maximumSwitch = new LimitSwitch(hardwareMap, "Max Scissor Switch");
 			minimumSwitch = new LimitSwitch(hardwareMap, "Min Scissor Switch");
@@ -36,7 +36,7 @@ public class ScissorMech {
 		}
 
 		public void updateScissor() {
-			updateScissor(scissorController.autoControl(getPosition()));
+			updateScissor(scissorController.autoControl());
 		}
 
 		public void updateScissor(double in) {

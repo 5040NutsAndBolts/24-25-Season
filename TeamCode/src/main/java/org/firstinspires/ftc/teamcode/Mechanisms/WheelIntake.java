@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode.Mechanisms;
-import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 
 import androidx.annotation.NonNull;
 
@@ -14,7 +13,7 @@ import org.firstinspires.ftc.teamcode.HelperClasses.PID;
 
 public class WheelIntake {
 	public final CRServo leftServo, rightServo;
-	private final DcMotorEx slideMotorTop, slideMotorBottom;
+	private final DcMotor slideMotorTop, slideMotorBottom;
 	private int slideMotorTopOffset, slideMotorBottomOffset;
 	private final PID topController, bottomController;
 	private final LimitSwitch limitSwitch;
@@ -35,8 +34,8 @@ public class WheelIntake {
 
 		limitSwitch = new LimitSwitch(hardwareMap, "Wheel Limit Switch");
 
-		topController = new PID(.015,0,.00, this::getTopPosition);
-		bottomController = new PID(.015,0,.00, this::getBottomPosition);
+		topController = new PID(.028,0.000006,.00, this::getTopPosition);
+		bottomController = new PID(.028,0.000006,.00, this::getBottomPosition);
 	}
 
 	//Spin controls for triggers
@@ -63,25 +62,39 @@ public class WheelIntake {
 	public void updateSlides() {
 		if(limitSwitch.isPressed())
 			resetPosition();
-		slideMotorTop.setPower(topController.autoControl(getTopPosition()));
-		bottomController.setTarget(getBottomPosition());
+		slideMotorTop.setPower(topController.autoControl());
+		bottomController.setTarget(bottomController.autoControl());
 	}
 
-	public void updateSlides(double in) {
+	public void teleopControl (double in) {
 		if(limitSwitch.isPressed())
 			resetPosition();
 		slideMotorTop.setPower(topController.teleOpControl(in));
-		if(in < 0)
-			slideMotorBottom.setPower(bottomController.teleOpControl(in) );
 
 	}
+	public void updateTopMotor() {
+		if(limitSwitch.isPressed())
+			resetPosition();
+		slideMotorTop.setPower(topController.autoControl());
+	}
 
-	public void setSlideTarget(int target) {
+	public void updateBottomMotor() {
+		if(limitSwitch.isPressed())
+			resetPosition();
+		slideMotorTop.setPower(topController.autoControl());
+	}
+
+	public void setTopTarget(int target) {
+		if(limitSwitch.isPressed())
+			resetPosition();
+
+		topController.setTarget(target);
+	}
+	public void setBottomTarget (int target) {
 		if(limitSwitch.isPressed())
 			resetPosition();
 
 		bottomController.setTarget(target);
-		topController.setTarget(target);
 	}
 
 
@@ -93,8 +106,6 @@ public class WheelIntake {
 		return slideMotorBottom.getCurrentPosition() - slideMotorBottomOffset;
 	}
 	private void resetPosition() {
-		slideMotorTop.setMode(STOP_AND_RESET_ENCODER);
-		slideMotorBottom.setMode(STOP_AND_RESET_ENCODER);
 		slideMotorTopOffset = slideMotorTop.getCurrentPosition();
 		slideMotorBottomOffset = slideMotorBottom.getCurrentPosition();
 	}
