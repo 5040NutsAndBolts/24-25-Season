@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.RobotOpMode.Color;
+import org.firstinspires.ftc.teamcode.RobotOpMode.teamColor;
 
 
 public class ColourSensor {
@@ -25,12 +25,12 @@ public class ColourSensor {
             return 0;
         return (colorSensor.green() + colorSensor.red()) / 2.0;
     }
-    public Color getBest () {
+    public teamColor getBest () {
          if (getBlue() > getRed() && getBlue() > 200)
-            return Color.blue;
+            return teamColor.blue;
         else if (getRed() > getBlue() && getRed() > 200 && colorSensor.green() < 120)
-            return Color.red;
-        else return Color.noColor;
+            return teamColor.red;
+        else return teamColor.noColor;
     }
 
     @NonNull

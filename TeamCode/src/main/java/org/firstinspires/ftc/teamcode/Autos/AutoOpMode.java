@@ -1,13 +1,8 @@
 package org.firstinspires.ftc.teamcode.Autos;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.HelperClasses.Camera;
-import org.firstinspires.ftc.teamcode.HelperClasses.Odometry;
 import org.firstinspires.ftc.teamcode.RobotOpMode;
-
-import java.util.ArrayList;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 @Disabled
 public class AutoOpMode extends RobotOpMode {
@@ -24,20 +19,20 @@ public class AutoOpMode extends RobotOpMode {
 
     @Override
     public void init() {
-        camera = new Camera(hardwareMap);
+        super.init();
+        //camera = new Camera(hardwareMap);
     }
 
     @Override
     public void init_loop() {
         super.init_loop();
-        togglePark(gamepad1.dpad_up);
-        camera.color = teamColor;
-        telemetry.addLine("PARK: " + parkToggle);
-        telemetry.update();
+        togglePark(gamepad1.dpad_left);
+        //camera.color = pTeamColor;
     }
 
     protected void updateTelemetry() {
         telemetry.addLine(odo.toString());
+        telemetry.addLine(wheel.toString());
         telemetry.addLine("PARK: " + parkToggle);
         telemetry.update();
     }

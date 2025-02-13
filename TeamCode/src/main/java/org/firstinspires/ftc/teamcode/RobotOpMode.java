@@ -3,41 +3,43 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.HelperClasses.Odometry;
 import org.firstinspires.ftc.teamcode.Mechanisms.Drivetrain;
-import org.firstinspires.ftc.teamcode.Mechanisms.ScissorMech;
+import org.firstinspires.ftc.teamcode.Mechanisms.Scissor;
 import org.firstinspires.ftc.teamcode.Mechanisms.WheelIntake;
+import org.firstinspires.ftc.teamcode.Mechanisms.FlywheelIntake;
 
 @Disabled
 public class RobotOpMode extends OpMode {
     protected Drivetrain drivetrain;
-    protected WheelIntake wheel;
-    protected ScissorMech scissor;
+    protected FlywheelIntake wheel;
+    protected WheelIntake subWheel;
+    protected Scissor scissor;
     protected Odometry odo;
 
-    public enum Color {
-        red, blue, yellow, noColor
+    public enum teamColor {
+        red, blue, noColor
     }
 
-    protected Color teamColor;
+    protected teamColor pTeamColor = teamColor.noColor;
 
     @Override
     public void init() {
+        subWheel = new WheelIntake(hardwareMap);
         drivetrain = new Drivetrain (hardwareMap);
-        wheel = new WheelIntake(hardwareMap);
+        wheel = new FlywheelIntake(hardwareMap);
         odo = new Odometry(hardwareMap);
-        scissor = new ScissorMech(hardwareMap);
+        scissor = new Scissor(hardwareMap);
     }
 
     @Override
     public void init_loop() {
-        if(gamepad1.dpad_up) {
-            teamColor = Color.red;
-            scissor.teamColour = Color.red;
-        }
-        else if(gamepad1.dpad_down) {
-            teamColor = Color.blue;
-            scissor.teamColour = Color.blue;
-        }
-        telemetry.addLine("TEAM COLOR: " + scissor.teamColour);
+        if (gamepad1.dpad_up)
+            pTeamColor = teamColor.red;
+        else if (gamepad1.dpad_down)
+            pTeamColor = teamColor.blue;
+
+        subWheel.setTeamColour(pTeamColor);
+
+        telemetry.addLine("TEAM COLOR: " + subWheel.getTeamColour());
         telemetry.update();
     }
 

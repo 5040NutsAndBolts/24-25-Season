@@ -16,7 +16,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
-import org.firstinspires.ftc.teamcode.RobotOpMode.Color;
+import org.firstinspires.ftc.teamcode.RobotOpMode.teamColor;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class Camera extends OpenCvPipeline
     public static double score = 0;
     public static double height = 0;
     public static double width = 0;
-    public Color color;
+    public teamColor color;
     OpenCvWebcam webcam;
 
     // Coordinate position of the top left corner of the selected rectangle
@@ -101,9 +101,9 @@ public class Camera extends OpenCvPipeline
 
         //controls the color range the camera is looking for in the hsv color space
         //the hue value is scaled by .5, the saturation and value are scaled by 2.55
-        if(color == Color.blue)
+        if(color == teamColor.blue)
             Core.inRange(workingMat,new Scalar(112,180,150),new Scalar(125,255,255),workingMat);
-        else if(color == Color.red)
+        else if(color == teamColor.red)
             Core.inRange(workingMat,new Scalar(0,150,100),new Scalar(255,255,255),workingMat);
         else throw new RuntimeException("Invalid / No Color");
 

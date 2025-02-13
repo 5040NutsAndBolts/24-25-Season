@@ -36,7 +36,7 @@ public class Odometry {
     @NonNull
     @Override
     public String toString() {
-        return "le: " + leftE + "\nce: " + centerE + "\nre: " + rightE + "\nlo: " + leftO + "\nco: " + centerO + "\nro: " + rightO + "\ncl: " + leftOdom.getCurrentPosition() + "\nco: " + centerOdom.getCurrentPosition() + "\ncr: " +rightOdom.getCurrentPosition();
+        return "le: " + leftE + "\nce: " + centerE + "\nre: " + rightE;
     }
 
 }

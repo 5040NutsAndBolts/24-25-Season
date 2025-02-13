@@ -1,44 +1,34 @@
 package org.firstinspires.ftc.teamcode.Mechanisms;
 
-import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.HelperClasses.PID;
+
 public class WyattClaw {
-    private CRServo turnServo;
-    private Servo leftHand, rightHand;
+    private final Servo tiltServo, pinchServo;
 
     public WyattClaw(HardwareMap hardwareMap) {
-        turnServo = hardwareMap.get(CRServo.class, "turnServo");
-        leftHand = hardwareMap.get(Servo.class, "leftHand");
-        rightHand = hardwareMap.get(Servo.class, "rightHand");
+        tiltServo = hardwareMap.get(Servo.class, "Claw Tilt Servo");
+        pinchServo = hardwareMap.get(Servo.class, "Claw Pinch Servo");
     }
 
-    public void pinch(double in, double out){
-        if(in < .05)
-            in = 0;
-        if(out < .05)
-            out = 0;
-
-        if(in > .05){
-          turnServo.setPower(in);
-
-        } else turnServo.setPower(0);
-        if(out > .05){
-            turnServo.setPower(out);
-        } else turnServo.setPower(0);
-
+    public void pinch(boolean up, boolean down){
+        if(up && !down){
+            pinchServo.setPosition(0);
+        }else if(!up && down){
+            pinchServo.setPosition(1);
+        }
+    }
+    public void pinch (double in, double out){
+        pinch(in > out, in < out);
     }
 
     public void clawMoveUp(){
-        leftHand.setPosition(144);
-        rightHand.setPosition(144);
-
+        tiltServo.setPosition(0);
     }
     public void clawMoveDown(){
-        leftHand.setPosition(22);
-        rightHand.setPosition(22);
-
+        tiltServo.setPosition(1);
     }
-
 }

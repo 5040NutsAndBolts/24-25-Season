@@ -2,122 +2,81 @@ package org.firstinspires.ftc.teamcode.Mechanisms;
 
 import androidx.annotation.NonNull;
 
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.HelperClasses.ColourSensor;
 import org.firstinspires.ftc.teamcode.HelperClasses.LimitSwitch;
 import org.firstinspires.ftc.teamcode.HelperClasses.PID;
+import org.firstinspires.ftc.teamcode.RobotOpMode.teamColor;
 
 public class WheelIntake {
-	public final CRServo leftServo, rightServo;
-	private final DcMotor slideMotorTop, slideMotorBottom;
-	private int slideMotorTopOffset, slideMotorBottomOffset;
-	private final PID topController, bottomController;
-	private final LimitSwitch limitSwitch;
+		private final CRServo leftIntakeServo, rightIntakeServo;
+		private final Servo tiltServo;
+		private final ColourSensor colourSensor;
+		private teamColor teamColour;
+		private boolean autoSpitOverride;
+		private boolean spitOut = false;
 
-	public WheelIntake(HardwareMap hardwareMap) {
-		leftServo = hardwareMap.get(CRServo.class, "Left Wheel Servo");
-		leftServo.setDirection(DcMotorSimple.Direction.REVERSE);
-		rightServo = hardwareMap.get(CRServo.class, "Right Wheel Servo");
-
-		slideMotorTop = hardwareMap.get(DcMotorEx.class, "Top Wheel Slide Motor");
-		slideMotorBottom = hardwareMap.get(DcMotorEx.class, "Bottom Wheel Slide Motor");
-		slideMotorTop.setDirection(DcMotorSimple.Direction.REVERSE);
-		slideMotorTop.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-		slideMotorBottom.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-
-		slideMotorTopOffset = slideMotorTop.getCurrentPosition();
-		slideMotorBottomOffset = slideMotorBottom.getCurrentPosition();
-
-		limitSwitch = new LimitSwitch(hardwareMap, "Wheel Limit Switch");
-
-		topController = new PID(.028,0.000006,.00, this::getTopPosition);
-		bottomController = new PID(.028,0.000006,.00, this::getBottomPosition);
-	}
-
-	//Spin controls for triggers
-	public void spin(double in, double out) {
-		int power = in-out > 0.05 ? 1 : in-out < -.05 ? -1 : 0;
-		leftServo.setPower(power);
-		rightServo.setPower(power);
-	}
-
-	//Spin controls for buttons
-	public void spin(boolean in, boolean out) {
-		if(in && ! out) {
-			leftServo.setPower(1);
-			rightServo.setPower(1);
-		}else if (out && !in) {
-			leftServo.setPower(-1);
-			rightServo.setPower(-1);
-		}else {
-			leftServo.setPower(0);
-			rightServo.setPower(0);
+		public WheelIntake(@NonNull HardwareMap hardwareMap) {
+			leftIntakeServo = hardwareMap.get(CRServo.class, "Left Scissor Intake Servo");
+			rightIntakeServo = hardwareMap.get(CRServo.class, "Right Scissor Intake Servo");
+			rightIntakeServo.setDirection(DcMotorSimple.Direction.REVERSE);
+			tiltServo = hardwareMap.get(Servo.class, "Scissor Tilt Servo");
+			colourSensor = new ColourSensor(hardwareMap, "Scissor Colour Sensor");
 		}
-	}
 
-	public void updateSlides() {
-		if(limitSwitch.isPressed())
-			resetPosition();
-		slideMotorTop.setPower(topController.autoControl());
-		bottomController.setTarget(bottomController.autoControl());
-	}
+		public void setTeamColour (@NonNull teamColor in) {
+			teamColour = in;
+		}
 
-	public void teleopControl (double in) {
-		if(limitSwitch.isPressed())
-			resetPosition();
-		slideMotorTop.setPower(topController.teleOpControl(in));
+		public teamColor getTeamColour () {
+			return teamColour;
+		}
 
-	}
-	public void updateTopMotor() {
-		if(limitSwitch.isPressed())
-			resetPosition();
-		slideMotorTop.setPower(topController.autoControl());
-	}
-
-	public void updateBottomMotor() {
-		if(limitSwitch.isPressed())
-			resetPosition();
-		slideMotorTop.setPower(topController.autoControl());
-	}
-
-	public void setTopTarget(int target) {
-		if(limitSwitch.isPressed())
-			resetPosition();
-
-		topController.setTarget(target);
-	}
-	public void setBottomTarget (int target) {
-		if(limitSwitch.isPressed())
-			resetPosition();
-
-		bottomController.setTarget(target);
-	}
+		public void spin (boolean in, boolean out) {
+			if(colourSensor.getBest() == (teamColour == teamColor.red ? teamColor.blue : teamColor.red) && !autoSpitOverride) // If colour sensor sees the opposite teams' colour, spit out
+				spitOut = true;
 
 
+			if(in && !out && !(spitOut && autoSpitOverride)){
+				leftIntakeServo.setPower(1);
+				rightIntakeServo.setPower(1);
+			}
+			else if(out && !in || (spitOut && autoSpitOverride)){
+				leftIntakeServo.setPower(-1);
+				rightIntakeServo.setPower(-1);
+			}else {
+				leftIntakeServo.setPower(0);
+				rightIntakeServo.setPower(0);
+			}
+		}
 
-	public double getTopPosition () {
-		return slideMotorTop.getCurrentPosition() - slideMotorTopOffset;
-	}
-	public double getBottomPosition () {
-		return slideMotorBottom.getCurrentPosition() - slideMotorBottomOffset;
-	}
-	private void resetPosition() {
-		slideMotorTopOffset = slideMotorTop.getCurrentPosition();
-		slideMotorBottomOffset = slideMotorBottom.getCurrentPosition();
-	}
+		public void spin (double in, double out)  {
+			spin(in > .1, out > .1);
+		}
+		public void tiltCarriage (boolean up, boolean down) {
+			if(up && !down)
+				tiltServo.setPosition(1);
+			else if(!up && down)
+				tiltServo.setPosition(0);
+		}
 
-	@NonNull
-	@Override public String toString() {
-		return "Top Controller: " + topController.toString() + "\n" +
-				"Bottom Controller: " + bottomController.toString() + "\n" +
-				"Slide Motor Top Power: " + slideMotorTop.getPower() + "\n" +
-				"Slide Motor Bottom Power: " + slideMotorBottom.getPower() + "\n" +
-				"Slide Motor Top Position: " + getTopPosition() + "\n" +
-				"Slide Motor Bottom Position: " + getBottomPosition() + "\n" +
-				"Limit Switch: " + limitSwitch.isPressed();
-	}
+		private boolean lastPressed = false;
+		public void toggleAutoSpitOverride(boolean input) {
+			if (lastPressed != input && input) autoSpitOverride = !autoSpitOverride;
+			lastPressed = input;
+		}
+
+
+		@NonNull
+		@Override
+		public String toString() {
+			return
+				"Left Intake Servo Power: " + leftIntakeServo.getPower() + "\n" +
+				"Right Intake Servo Power: " + rightIntakeServo.getPower() + "\n" +
+				"Tilt Servo Position: " + tiltServo.getPosition() + "\n" +
+				"Auto Spit Override: " + autoSpitOverride + "\n" +
+				"Colour Sensor: " + colourSensor.toString();
+		}
 }

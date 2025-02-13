@@ -12,11 +12,12 @@ public class Debug extends RobotOpMode {
 		wheel.spin(gamepad1.right_bumper, gamepad1.left_bumper);
 
 		scissor.updateScissor(gamepad1.dpad_right ? 1 : gamepad1.dpad_left ? -1 : 0);
-		scissor.spin(gamepad1.right_trigger, gamepad1.left_trigger);
-		scissor.tiltCarriage(gamepad1.a, gamepad1.b);
+		subWheel.spin(gamepad1.right_trigger, gamepad1.left_trigger);
+		subWheel.tiltCarriage(gamepad1.a, gamepad1.b);
 
 		telemetry.addLine(drivetrain.toString());
 		telemetry.addLine(wheel.toString());
+		telemetry.addLine(subWheel.toString());
 		telemetry.addLine(scissor.toString());
 		telemetry.addLine("SLOWMODE: " + drivetrain.isSlow());
 		telemetry.update();
