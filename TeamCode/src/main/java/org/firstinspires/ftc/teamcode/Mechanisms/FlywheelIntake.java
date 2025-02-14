@@ -16,7 +16,7 @@ public class FlywheelIntake {
 	private final DcMotor slideMotorTop, slideMotorBottom;
 	private int slideMotorTopOffset, slideMotorBottomOffset;
 	private final PID topController, bottomController;
-	private final LimitSwitch limitSwitch;
+	public final LimitSwitch limitSwitch;
 
 	public FlywheelIntake(HardwareMap hardwareMap) {
 		leftServo = hardwareMap.get(CRServo.class, "Left Wheel Servo");
@@ -60,17 +60,25 @@ public class FlywheelIntake {
 	}
 
 	public void updateSlides() {
-		if(limitSwitch.isPressed())
+		double topPower = topController.autoControl();
+		double bottomPower = bottomController.autoControl();
+		if(limitSwitch.isPressed()) {
 			resetPosition();
-		slideMotorTop.setPower(topController.autoControl());
-		bottomController.setTarget(bottomController.autoControl());
+			if(topPower < 0)
+				slideMotorTop.setPower(0);
+		}
+		slideMotorTop.setPower(topPower);
+		bottomController.setTarget(bottomPower);
 	}
 
 	public void teleopControl (double in) {
 		if(limitSwitch.isPressed())
 			resetPosition();
+		slideMotorBottom.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+		slideMotorBottom.setPower(0);
 		slideMotorTop.setPower(topController.teleOpControl(in));
 	}
+
 	public void updateTopMotor() {
 		if(limitSwitch.isPressed())
 			resetPosition();

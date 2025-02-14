@@ -27,12 +27,14 @@ public class AutoOpMode extends RobotOpMode {
     public void init_loop() {
         super.init_loop();
         togglePark(gamepad1.dpad_left);
+        odo.resetOdometry();
         //camera.color = pTeamColor;
     }
 
     protected void updateTelemetry() {
-        telemetry.addLine(odo.toString());
-        telemetry.addLine(wheel.toString());
+        telemetry.addLine("ODO:\n"+odo.toString());
+        telemetry.addLine("WHEEL:\n"+wheel.toString());
+        telemetry.addLine("DRIVETRAIN:\n"+drivetrain.toString());
         telemetry.addLine("PARK: " + parkToggle);
         telemetry.update();
     }

@@ -20,6 +20,7 @@ public class OdoTest extends OpMode {
 	@Override
 	public void loop() {
 		odo.updateOdoPosition();
+		drivetrain.drive (gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
 		telemetry.addLine(odo.toString());
 		telemetry.update();
 	}

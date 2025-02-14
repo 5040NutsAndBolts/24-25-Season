@@ -11,7 +11,7 @@ public class TwoDriverTeleop extends RobotOpMode {
 		drivetrain.toggleSlowMode(gamepad1.x);
 		auto180(gamepad1.y);
 
-		//wheel.updateTopMotor(gamepad2.left_stick_y);
+		wheel.teleopControl(gamepad2.left_stick_y);
 		wheel.spin(gamepad2.right_trigger,gamepad2.left_trigger);
 
 		scissor.updateScissor( gamepad2.right_stick_y);

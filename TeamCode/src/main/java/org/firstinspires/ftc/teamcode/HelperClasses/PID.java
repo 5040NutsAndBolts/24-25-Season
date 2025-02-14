@@ -51,7 +51,7 @@ public class PID {
 	//TeleOp control
 	public double teleOpControl(double stickPower) {
 		updateDeltaTime();
-		setTarget(getCurrent.get() + stickPower * deltaTime);
+		setTarget(getCurrent.get() + stickPower * deltaTime * 3);
 		return calculate();
 	}
 
