@@ -14,7 +14,7 @@ public class WyattClaw {
         pinchServo = hardwareMap.get(Servo.class, "Claw Pinch Servo");
     }
 
-    public void pinch(boolean up, boolean down){
+   public void pinch(boolean up, boolean down){
         if(up && !down){
             pinchServo.setPosition(0);
         }else if(!up && down){
@@ -25,6 +25,15 @@ public class WyattClaw {
         pinch(in > out, in < out);
     }
 
+
+    public void pinchIn(double open, double close){
+        if(open > 0.05 && close < 0.05)
+            pinchServo.setPosition(0);
+        if(open < 0.05 && close > 0.05)
+            pinchServo.setPosition(1);
+    }
+
+
     public void clawMoveUp(){
         tiltServo.setPosition(0);
     }
@@ -32,3 +41,4 @@ public class WyattClaw {
         tiltServo.setPosition(1);
     }
 }
+
