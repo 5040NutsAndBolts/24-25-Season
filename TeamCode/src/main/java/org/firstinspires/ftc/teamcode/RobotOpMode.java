@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
+import org.firstinspires.ftc.teamcode.HelperClasses.Blinkin;
 import org.firstinspires.ftc.teamcode.HelperClasses.Odometry;
 import org.firstinspires.ftc.teamcode.Mechanisms.Drivetrain;
 import org.firstinspires.ftc.teamcode.Mechanisms.Scissor;
@@ -9,6 +11,7 @@ import org.firstinspires.ftc.teamcode.Mechanisms.FlywheelIntake;
 
 @Disabled
 public class RobotOpMode extends OpMode {
+    protected Blinkin blinkin;
     protected Drivetrain drivetrain;
     protected FlywheelIntake wheel;
     protected WheelIntake subWheel;

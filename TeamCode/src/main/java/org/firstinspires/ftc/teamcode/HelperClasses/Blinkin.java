@@ -3,7 +3,8 @@ import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 
-public class Blinkin {
+public class
+Blinkin {
     private final RevBlinkinLedDriver lights;
 
     public Blinkin(HardwareMap hardwareMap){
