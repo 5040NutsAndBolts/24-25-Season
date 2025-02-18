@@ -7,55 +7,78 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class Right extends AutoOpMode {
 	@Override
 	public void loop() {
-		drivetrain.drive(0, 0, 0);
-		odo.updateOdoPosition();
-		//MOVING OUT FROM BEHIND SUBMERSIBLE
-		while(odo.centerE < 6200) {
-			telemetry.addLine("MOVE OUT FROM BEHIND SUBMERSIBLE");
-			drivetrain.drive(0, -.4, 0);
-			odo.updateOdoPosition();
-			updateTelemetry();
-		}if(odo.centerE > 7200) { //ERROR CORRECTION
-			drivetrain.drive(0, .2, 0);
-			odo.updateOdoPosition();
-			updateTelemetry();
-		}
-		drivetrain.drive(0, 0, 0);
+		super.loop();
 
-		//MOVING FORWARD IN FRONT OF BRICK LINE
-		while(((Math.abs(odo.leftE) + Math.abs(odo.rightE)) / 2.0) < 16300) {
-			telemetry.addLine("MOVING FORWARD IN FRONT OF BRICK LINE");
-			drivetrain.drive(.4, 0, 0);
+		while(odo.centerE < 5000) {
+			drivetrain.drive(0, .6, 0);
 			odo.updateOdoPosition();
-			updateTelemetry();
-		}if(((Math.abs(odo.leftE) + Math.abs(odo.rightE)) / 2.0) > 16300) { //ERROR CORRECTION
-			drivetrain.drive(-.2, 0, 0);
-			odo.updateOdoPosition();
+			telemetry.addLine("LOOP 1");
 			updateTelemetry();
 		}
-		drivetrain.drive(0, 0, 0);
+		ElapsedTime e = new ElapsedTime();
+		wheel.setTopTarget(1700);
+		while((odo.rightE + odo.leftE) / 2 < 9300 && e.seconds() < 4) {
+			drivetrain.drive(.5,0 , 0);
+			wheel.updateTopMotor();
+			odo.updateOdoPosition();
+			telemetry.addLine("LOOP 2");
+			updateTelemetry();
+		}
+		e.reset();
+		while(wheel.getTopPosition() < 1550 && e.seconds() < 1) {
+			drivetrain.drive(0,0 , 0);
+			wheel.updateTopMotor();
+			wheel.updateBottomMotor();
+			odo.updateOdoPosition();
+			telemetry.addLine("LOOP 3");
+			updateTelemetry();
+		}
+		wheel.setTopTarget(0);
+		wheel.setBottomTarget(300);
+		e.reset();
+		while(wheel.getBottomPosition() < 300 & e.seconds() < 2) {
+			wheel.spin(.5,0);
+			drivetrain.drive(-.05,0,0);
+			wheel.updateBottomMotor();
+			wheel.updateTopMotor();
+			odo.updateOdoPosition();
+			telemetry.addLine("LOOP 4");
+			updateTelemetry();
+		}
+		wheel.setBottomTarget(0);
+		e.reset();
+		while(wheel.getBottomPosition() > 120 && e.seconds() < 2) {
+			wheel.spin(1,0);
+			drivetrain.drive(-.3,0,0);
+			wheel.updateBottomMotor();
+			wheel.updateTopMotor();
+			odo.updateOdoPosition();
+			telemetry.addLine("LOOP 5");
+			updateTelemetry();
+		}
+		wheel.setBottomTarget(0);
 
-		//MOVING IN FRONT OF SPECIMEN
-		while(odo.centerE < 9600) {
-			telemetry.addLine("MOVING IN FRONT OF SPECIMEN");
-			drivetrain.drive(0, -.4, 0);
-			odo.updateOdoPosition();
-			updateTelemetry();
-		}if(odo.centerE > 10500) { //ERROR CORRECTION
-			drivetrain.drive(0, .2, 0);
-			odo.updateOdoPosition();
-			updateTelemetry();
-		}
-		drivetrain.drive(0, 0, 0);
 
-		//MOVE BACKWARDS INTO PARK ZONE
-		ElapsedTime parkTimer = new ElapsedTime();
-		while(parkTimer.seconds() < 4) {
-			telemetry.addLine("MOVE BACKWARDS INTO PARK ZONE");
-			drivetrain.drive(-.3, 0, 0);
-			odo.updateOdoPosition();
-			updateTelemetry();
+
+
+		if(parkToggle) {
+			while ((odo.rightE + odo.leftE) / 2 > 100) {
+				drivetrain.drive(-.5, 0, 0);
+				wheel.updateTopMotor();
+				wheel.updateBottomMotor();
+				odo.updateOdoPosition();
+				telemetry.addLine("PARK LOOP 1");
+				updateTelemetry();
+			}
+			while(odo.centerE > -14000) {
+				drivetrain.drive(-.20, -.6, 0);
+				wheel.updateTopMotor();
+				wheel.updateBottomMotor();
+				odo.updateOdoPosition();
+				telemetry.addLine("PARK LOOP 2");
+				updateTelemetry();
+			}
 		}
-		terminateOpModeNow();
+		requestOpModeStop();
 	}
 }

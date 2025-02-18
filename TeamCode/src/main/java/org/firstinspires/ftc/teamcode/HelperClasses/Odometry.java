@@ -23,7 +23,7 @@ public class Odometry {
 
     public void updateOdoPosition() {
         leftE = leftOdom.getCurrentPosition() - leftO;
-        rightE = (rightOdom.getCurrentPosition() * -1) - rightO;
+        rightE = rightOdom.getCurrentPosition() - rightO;
         centerE = centerOdom.getCurrentPosition() - centerO;
     }
 

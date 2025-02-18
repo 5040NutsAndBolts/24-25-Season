@@ -15,6 +15,7 @@ public class OdoTest extends OpMode {
 		odo = new Odometry(hardwareMap);
 		drivetrain = new Drivetrain(hardwareMap);
 		drivetrain.neutral();
+		odo.resetOdometry();
 	}
 
 	@Override

@@ -1,15 +1,15 @@
 package org.firstinspires.ftc.teamcode.Autos;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.HelperClasses.Camera;
 import org.firstinspires.ftc.teamcode.RobotOpMode;
 
 @Disabled
 public class AutoOpMode extends RobotOpMode {
-    boolean lastParkButton = false;
-    boolean parkToggle = true;
-
-    protected Camera camera;
+    private boolean lastParkButton = false;
+    protected boolean parkToggle = true;
+    private int autoDelaySeconds;
 
     public void togglePark(boolean input) {
         if(lastParkButton != input && input)
@@ -17,18 +17,23 @@ public class AutoOpMode extends RobotOpMode {
         lastParkButton = input;
     }
 
-    @Override
-    public void init() {
-        super.init();
-        //camera = new Camera(hardwareMap);
+    private boolean lastDecr, lastIncr;
+    public void adjustDelay (boolean decrease, boolean increase) {
+        if (decrease != lastDecr && decrease)
+            autoDelaySeconds--;
+        if (increase != lastIncr && increase)
+            autoDelaySeconds++;
+        lastDecr = decrease;
+        lastIncr = increase;
     }
 
     @Override
     public void init_loop() {
-        super.init_loop();
         togglePark(gamepad1.dpad_left);
         odo.resetOdometry();
-        //camera.color = pTeamColor;
+        adjustDelay(gamepad1.dpad_down, gamepad1.dpad_up);
+        telemetry.addLine("CURRENT DELAY: " + autoDelaySeconds);
+        telemetry.update();
     }
 
     protected void updateTelemetry() {
@@ -42,5 +47,14 @@ public class AutoOpMode extends RobotOpMode {
     @Override
     public void auto180(boolean input) {
         throw new UnsupportedOperationException("Not available for autonomous, may cause major issues");
+    }
+
+    @Override
+    public void loop () {
+        ElapsedTime delay = new ElapsedTime();
+        while (delay.seconds() < autoDelaySeconds){
+            telemetry.addLine("WAITING: " + delay.seconds() + "/" + autoDelaySeconds);
+            telemetry.update();
+        }
     }
 }

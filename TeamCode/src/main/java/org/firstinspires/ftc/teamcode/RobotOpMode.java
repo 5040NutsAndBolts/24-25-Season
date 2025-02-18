@@ -15,11 +15,11 @@ public class RobotOpMode extends OpMode {
     protected Scissor scissor;
     protected Odometry odo;
 
-    public enum teamColor {
+    public enum TeamColor {
         red, blue, noColor
     }
 
-    protected teamColor pTeamColor = teamColor.noColor;
+    protected TeamColor pTeamColor = TeamColor.noColor;
 
     @Override
     public void init() {
@@ -33,9 +33,9 @@ public class RobotOpMode extends OpMode {
     @Override
     public void init_loop() {
         if (gamepad1.dpad_up)
-            pTeamColor = teamColor.red;
+            pTeamColor = TeamColor.red;
         else if (gamepad1.dpad_down)
-            pTeamColor = teamColor.blue;
+            pTeamColor = TeamColor.blue;
 
         subWheel.setTeamColour(pTeamColor);
 
@@ -56,9 +56,4 @@ public class RobotOpMode extends OpMode {
 
     //Leave empty
     @Override public void loop() {}
-
-    @Override
-    public void stop() {
-        terminateOpModeNow();
-    }
 }

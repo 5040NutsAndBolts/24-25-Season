@@ -3,18 +3,15 @@ package org.firstinspires.ftc.teamcode.Mechanisms;
 import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.hardware.*;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.HelperClasses.ColourSensor;
-import org.firstinspires.ftc.teamcode.HelperClasses.LimitSwitch;
-import org.firstinspires.ftc.teamcode.HelperClasses.PID;
-import org.firstinspires.ftc.teamcode.RobotOpMode.teamColor;
+import org.firstinspires.ftc.teamcode.RobotOpMode.TeamColor;
 
 public class WheelIntake {
 		private final CRServo leftIntakeServo, rightIntakeServo;
 		private final Servo tiltServo;
 		private final ColourSensor colourSensor;
-		private teamColor teamColour;
+		private TeamColor teamColour;
 		private boolean autoSpitOverride;
 		private boolean spitOut = false;
 
@@ -26,16 +23,16 @@ public class WheelIntake {
 			colourSensor = new ColourSensor(hardwareMap, "Scissor Colour Sensor");
 		}
 
-		public void setTeamColour (@NonNull teamColor in) {
+		public void setTeamColour (@NonNull TeamColor in) {
 			teamColour = in;
 		}
 
-		public teamColor getTeamColour () {
+		public TeamColor getTeamColour () {
 			return teamColour;
 		}
 
 		public void spin (boolean in, boolean out) {
-			if(colourSensor.getBest() == (teamColour == teamColor.red ? teamColor.blue : teamColor.red) && !autoSpitOverride) // If colour sensor sees the opposite teams' colour, spit out
+			if(colourSensor.getBest() == (teamColour == TeamColor.red ? TeamColor.blue : TeamColor.red) && !autoSpitOverride) // If colour sensor sees the opposite teams' colour, spit out
 				spitOut = true;
 
 
