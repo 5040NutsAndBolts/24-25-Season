@@ -1,13 +1,10 @@
 package org.firstinspires.ftc.teamcode.Mechanisms;
-
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.HelperClasses.PID;
 
 public class WyattClaw {
-    private final Servo tiltServo, pinchServo;
+    public final Servo tiltServo, pinchServo;
 
     public WyattClaw(HardwareMap hardwareMap) {
         tiltServo = hardwareMap.get(Servo.class, "Claw Tilt Servo");

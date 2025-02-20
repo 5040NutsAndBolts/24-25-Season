@@ -19,13 +19,14 @@ public class WyattTest extends OpMode {
         claw.pinch(gamepad1.left_trigger, gamepad1.right_trigger);
 
         if (gamepad1.a)
-        claw.clawMoveUp();
+            claw.clawMoveUp();
 
         if (gamepad1.b)
-        claw.clawMoveDown();
+            claw.clawMoveDown();
 
         telemetry.addLine("tilt1" + gamepad1.a);
         telemetry.addLine("tilt2" + gamepad1.b);
+        telemetry.addLine("serv" + claw.tiltServo.getPosition() );
         telemetry.addLine("triggervalue left" + gamepad1.left_trigger);
         telemetry.addLine("triggervalue right" + gamepad1.right_trigger);
     }

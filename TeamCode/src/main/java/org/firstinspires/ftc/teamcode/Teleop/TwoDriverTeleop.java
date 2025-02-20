@@ -11,15 +11,18 @@ public class TwoDriverTeleop extends RobotOpMode {
 		drivetrain.toggleSlowMode(gamepad1.x);
 		auto180(gamepad1.y);
 
-		wheel.teleopControl(gamepad2.left_stick_y);
-		wheel.spin(gamepad2.right_trigger,gamepad2.left_trigger);
+		chamberWheel.teleopControl(gamepad2.left_stick_y);
+		chamberWheel.spin(gamepad2.right_trigger,gamepad2.left_trigger);
+		hangYourself(gamepad1.dpad_left);
 
 		scissor.updateScissor( gamepad2.right_stick_y);
 
 		subWheel.spin(gamepad1.right_trigger, gamepad1.left_trigger);
 		subWheel.tiltCarriage(gamepad2.left_bumper, gamepad2.right_bumper);
+		subWheel.toggleAutoSpitOverride(gamepad1.a);
 
 		telemetry.addLine("SLOWMODE: " + drivetrain.isSlow());
+		telemetry.addLine("AUTO SPIT: " + subWheel.willAutoSpit());
 		telemetry.update();
 	}
 }

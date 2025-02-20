@@ -4,14 +4,14 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Mechanisms.FlywheelIntake;
+import org.firstinspires.ftc.teamcode.Mechanisms.ChamberFlywheelDeposit;
 
 @TeleOp(group = "Teleop", name = "WheelTest")
 public class WheelTest extends OpMode {
-	FlywheelIntake wheel;
+	ChamberFlywheelDeposit wheel;
 	@Override
 	public void init() {
-		wheel = new FlywheelIntake(hardwareMap);
+		wheel = new ChamberFlywheelDeposit(hardwareMap);
 	}
 
 	@Override

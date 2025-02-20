@@ -11,14 +11,14 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.HelperClasses.LimitSwitch;
 import org.firstinspires.ftc.teamcode.HelperClasses.PID;
 
-public class FlywheelIntake {
+public class ChamberFlywheelDeposit {
 	public final CRServo leftServo, rightServo;
 	private final DcMotor slideMotorTop, slideMotorBottom;
 	private int slideMotorTopOffset, slideMotorBottomOffset;
 	private final PID topController, bottomController;
 	public final LimitSwitch limitSwitch;
 
-	public FlywheelIntake(HardwareMap hardwareMap) {
+	public ChamberFlywheelDeposit(HardwareMap hardwareMap) {
 		leftServo = hardwareMap.get(CRServo.class, "Left Wheel Servo");
 		leftServo.setDirection(DcMotorSimple.Direction.REVERSE);
 		rightServo = hardwareMap.get(CRServo.class, "Right Wheel Servo");
@@ -115,6 +115,10 @@ public class FlywheelIntake {
 	private void resetPosition() {
 		slideMotorTopOffset = slideMotorTop.getCurrentPosition();
 		slideMotorBottomOffset = slideMotorBottom.getCurrentPosition();
+	}
+
+	public void rawBottomPower(double in) {
+		slideMotorBottom.setPower(in);
 	}
 
 	@NonNull

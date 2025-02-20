@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.Autos;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.HelperClasses.Camera;
 import org.firstinspires.ftc.teamcode.RobotOpMode;
 
 @Disabled
@@ -38,7 +37,7 @@ public class AutoOpMode extends RobotOpMode {
 
     protected void updateTelemetry() {
         telemetry.addLine("ODO:\n"+odo.toString());
-        telemetry.addLine("WHEEL:\n"+wheel.toString());
+        telemetry.addLine("WHEEL:\n"+ chamberWheel.toString());
         telemetry.addLine("DRIVETRAIN:\n"+drivetrain.toString());
         telemetry.addLine("PARK: " + parkToggle);
         telemetry.update();

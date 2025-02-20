@@ -16,47 +16,47 @@ public class Right extends AutoOpMode {
 			updateTelemetry();
 		}
 		ElapsedTime e = new ElapsedTime();
-		wheel.setTopTarget(1700);
+		chamberWheel.setTopTarget(1700);
 		while((odo.rightE + odo.leftE) / 2 < 9300 && e.seconds() < 4) {
 			drivetrain.drive(.5,0 , 0);
-			wheel.updateTopMotor();
+			chamberWheel.updateTopMotor();
 			odo.updateOdoPosition();
 			telemetry.addLine("LOOP 2");
 			updateTelemetry();
 		}
 		e.reset();
-		while(wheel.getTopPosition() < 1550 && e.seconds() < 1) {
+		while(chamberWheel.getTopPosition() < 1550 && e.seconds() < 1) {
 			drivetrain.drive(0,0 , 0);
-			wheel.updateTopMotor();
-			wheel.updateBottomMotor();
+			chamberWheel.updateTopMotor();
+			chamberWheel.updateBottomMotor();
 			odo.updateOdoPosition();
 			telemetry.addLine("LOOP 3");
 			updateTelemetry();
 		}
-		wheel.setTopTarget(0);
-		wheel.setBottomTarget(300);
+		chamberWheel.setTopTarget(0);
+		chamberWheel.setBottomTarget(300);
 		e.reset();
-		while(wheel.getBottomPosition() < 300 & e.seconds() < 2) {
-			wheel.spin(.5,0);
+		while(chamberWheel.getBottomPosition() < 300 & e.seconds() < 2) {
+			chamberWheel.spin(.5,0);
 			drivetrain.drive(-.05,0,0);
-			wheel.updateBottomMotor();
-			wheel.updateTopMotor();
+			chamberWheel.updateBottomMotor();
+			chamberWheel.updateTopMotor();
 			odo.updateOdoPosition();
 			telemetry.addLine("LOOP 4");
 			updateTelemetry();
 		}
-		wheel.setBottomTarget(0);
+		chamberWheel.setBottomTarget(0);
 		e.reset();
-		while(wheel.getBottomPosition() > 120 && e.seconds() < 2) {
-			wheel.spin(1,0);
+		while(chamberWheel.getBottomPosition() > 120 && e.seconds() < 2) {
+			chamberWheel.spin(1,0);
 			drivetrain.drive(-.3,0,0);
-			wheel.updateBottomMotor();
-			wheel.updateTopMotor();
+			chamberWheel.updateBottomMotor();
+			chamberWheel.updateTopMotor();
 			odo.updateOdoPosition();
 			telemetry.addLine("LOOP 5");
 			updateTelemetry();
 		}
-		wheel.setBottomTarget(0);
+		chamberWheel.setBottomTarget(0);
 
 
 
@@ -64,16 +64,16 @@ public class Right extends AutoOpMode {
 		if(parkToggle) {
 			while ((odo.rightE + odo.leftE) / 2 > 100) {
 				drivetrain.drive(-.5, 0, 0);
-				wheel.updateTopMotor();
-				wheel.updateBottomMotor();
+				chamberWheel.updateTopMotor();
+				chamberWheel.updateBottomMotor();
 				odo.updateOdoPosition();
 				telemetry.addLine("PARK LOOP 1");
 				updateTelemetry();
 			}
 			while(odo.centerE > -14000) {
 				drivetrain.drive(-.20, -.6, 0);
-				wheel.updateTopMotor();
-				wheel.updateBottomMotor();
+				chamberWheel.updateTopMotor();
+				chamberWheel.updateBottomMotor();
 				odo.updateOdoPosition();
 				telemetry.addLine("PARK LOOP 2");
 				updateTelemetry();
