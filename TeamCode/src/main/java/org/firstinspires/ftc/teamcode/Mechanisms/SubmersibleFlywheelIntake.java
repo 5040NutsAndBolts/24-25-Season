@@ -5,13 +5,13 @@ import androidx.annotation.NonNull;
 import com.qualcomm.robotcore.hardware.*;
 
 import org.firstinspires.ftc.teamcode.HelperClasses.ColourSensor;
+import org.firstinspires.ftc.teamcode.RobotOpMode;
 import org.firstinspires.ftc.teamcode.RobotOpMode.TeamColor;
 
 public class SubmersibleFlywheelIntake {
 	private final CRServo leftIntakeServo, rightIntakeServo;
 	private final Servo tiltServo;
 	private final ColourSensor colourSensor;
-	private TeamColor teamColour;
 	private boolean autoSpitOverride;
 	private boolean spitOut = false;
 
@@ -24,15 +24,15 @@ public class SubmersibleFlywheelIntake {
 	}
 
 	public void setTeamColour (@NonNull TeamColor in) {
-		teamColour = in;
+		RobotOpMode.pTeamColor = in;
 	}
 
 	public TeamColor getTeamColour () {
-		return teamColour;
+		return RobotOpMode.pTeamColor;
 	}
 
 	public void spin (boolean in, boolean out) {
-		if(colourSensor.getBest() == (teamColour == TeamColor.red ? TeamColor.blue : TeamColor.red) && !autoSpitOverride) // If colour sensor sees the opposite teams' colour, spit out
+		if(colourSensor.getBest() == (RobotOpMode.pTeamColor == TeamColor.red ? TeamColor.blue : TeamColor.red) && !autoSpitOverride) // If colour sensor sees the opposite teams' colour, spit out
 			spitOut = true;
 
 		if(in && !out && !(spitOut && autoSpitOverride)){

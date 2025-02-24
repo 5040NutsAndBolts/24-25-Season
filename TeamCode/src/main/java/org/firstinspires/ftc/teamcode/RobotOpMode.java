@@ -24,7 +24,7 @@ public class RobotOpMode extends OpMode {
         red, blue, noColor
     }
 
-    protected TeamColor pTeamColor = TeamColor.noColor;
+    public static TeamColor pTeamColor = TeamColor.noColor;
 
     @Override
     public void init() {
