@@ -22,6 +22,9 @@ Blinkin {
         lights.resetDeviceConfigurationForOpMode();
         lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.YELLOW);
     }
-
+    public void turnOrange(){
+        lights.resetDeviceConfigurationForOpMode();
+        lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.ORANGE);
+    }
 }
 

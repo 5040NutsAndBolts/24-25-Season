@@ -21,6 +21,17 @@ public class TwoDriverTeleop extends RobotOpMode {
 		subWheel.tiltCarriage(gamepad2.left_bumper, gamepad2.right_bumper);
 		subWheel.toggleAutoSpitOverride(gamepad1.a);
 
+		/*if (pTeamColor == TeamColor.red)
+			blinkin.turnRed();
+		else if (pTeamColor == TeamColor.blue)
+			blinkin.turnBlue();
+		else if (pTeamColor == TeamColor.noColor) {
+			blinkin.turnYellow();
+		} else {
+			blinkin.turnOrange();
+		}*/
+
+		telemetry.addLine(gamepad2.left_bumper + "  " + gamepad2.right_bumper);
 		telemetry.addLine("SLOWMODE: " + drivetrain.isSlow());
 		telemetry.addLine("AUTO SPIT: " + subWheel.willAutoSpit());
 		telemetry.update();

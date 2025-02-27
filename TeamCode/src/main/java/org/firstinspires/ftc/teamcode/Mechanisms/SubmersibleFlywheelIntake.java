@@ -35,11 +35,15 @@ public class SubmersibleFlywheelIntake {
 		if(colourSensor.getBest() == (RobotOpMode.pTeamColor == TeamColor.red ? TeamColor.blue : TeamColor.red) && !autoSpitOverride) // If colour sensor sees the opposite teams' colour, spit out
 			spitOut = true;
 
-		if(in && !out && !(spitOut && autoSpitOverride)){
+		if(!autoSpitOverride && spitOut){
+			leftIntakeServo.setPower(-1);
+			rightIntakeServo.setPower(-1);
+		}
+		else if(in && !out) {
 			leftIntakeServo.setPower(1);
 			rightIntakeServo.setPower(1);
 		}
-		else if(out && !in || (spitOut && autoSpitOverride)){
+		else if(out && !in){
 			leftIntakeServo.setPower(-1);
 			rightIntakeServo.setPower(-1);
 		}else {

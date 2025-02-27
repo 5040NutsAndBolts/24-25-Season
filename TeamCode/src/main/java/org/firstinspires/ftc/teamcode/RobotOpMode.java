@@ -10,10 +10,11 @@ import org.firstinspires.ftc.teamcode.Mechanisms.Drivetrain;
 import org.firstinspires.ftc.teamcode.Mechanisms.Scissor;
 import org.firstinspires.ftc.teamcode.Mechanisms.SubmersibleFlywheelIntake;
 import org.firstinspires.ftc.teamcode.Mechanisms.ChamberFlywheelDeposit;
+import org.firstinspires.ftc.teamcode.HelperClasses.ColourSensor;
 
 @Disabled
 public class RobotOpMode extends OpMode {
-    protected Blinkin blinkin;
+    //protected Blinkin blinkin;
     protected Drivetrain drivetrain;
     protected ChamberFlywheelDeposit chamberWheel;
     protected SubmersibleFlywheelIntake subWheel;
@@ -33,6 +34,7 @@ public class RobotOpMode extends OpMode {
         chamberWheel = new ChamberFlywheelDeposit(hardwareMap);
         odo = new Odometry(hardwareMap);
         scissor = new Scissor(hardwareMap);
+        //blinkin = new Blinkin(hardwareMap);
     }
 
     @Override
@@ -92,5 +94,7 @@ public class RobotOpMode extends OpMode {
     }
 
     //Leave empty
-    @Override public void loop() {}
+    @Override public void loop() {
+
+    }
 }
