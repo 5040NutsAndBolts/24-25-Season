@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import java.util.function.Supplier;
 
 public class PID {
-	private final double kp, ki, kd;
+	private final double kp, ki, kd,  teleopGain;
 	private double lastTime, deltaTime, currentTarget, errorSum, lastOutput, lastError;
 	private double currentOutput;
 	private final Supplier<Double> getCurrent;
@@ -16,11 +16,12 @@ public class PID {
 	 * @param kd Derivative gain (Reduces overshoot and smooths response)
 	 * @param getCurrent Function that returns the current value of the variable being controlled
 	 */
-	public PID(double kp, double ki, double kd, Supplier<Double> getCurrent) {
+	public PID(double kp, double ki, double kd, Supplier<Double> getCurrent, double teleopGain) {
 		this.kp = kp;
 		this.ki = ki;
 		this.kd = kd;
 		this.getCurrent = getCurrent;
+		this.teleopGain = teleopGain;
 		lastTime = System.currentTimeMillis();
 	}
 
@@ -51,7 +52,7 @@ public class PID {
 	//TeleOp control
 	public double teleOpControl(double stickPower) {
 		updateDeltaTime();
-		setTarget(getCurrent.get() + stickPower * deltaTime * 3);
+		setTarget(Math.abs(stickPower) > .05 ? (currentTarget + stickPower * deltaTime * teleopGain) : currentTarget);
 		return calculate();
 	}
 
@@ -82,6 +83,7 @@ public class PID {
 			"\tKp: " + kp + "\n" +
 			"\tKi: " + ki + "\n" +
 			"\tKd: " + kd+ "\n" +
+			"\tTeleop Gain: " + teleopGain + "\n" +
 			"\tcurrentOutput: " + currentOutput+ "\n" +
 			"\tcurrentTarget: " +currentTarget;
 	}

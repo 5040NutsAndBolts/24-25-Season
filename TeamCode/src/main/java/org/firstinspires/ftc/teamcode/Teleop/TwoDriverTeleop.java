@@ -8,7 +8,7 @@ public class TwoDriverTeleop extends RobotOpMode {
 	@Override
 	public void loop() {
 		drivetrain.drive (gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
-		drivetrain.toggleSlowMode(gamepad1.x);
+		drivetrain.toggleSlowMode(gamepad1.x || chamberWheel.getTopPosition() > 1000);
 		auto180(gamepad1.y);
 
 		chamberWheel.teleopControl(gamepad2.left_stick_y);

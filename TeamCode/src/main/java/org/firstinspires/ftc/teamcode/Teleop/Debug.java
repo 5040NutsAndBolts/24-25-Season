@@ -6,7 +6,7 @@ public class Debug extends RobotOpMode {
 	@Override
 	public void loop() {
 		drivetrain.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
-		drivetrain.toggleSlowMode(gamepad1.x);
+		drivetrain.toggleSlowMode(gamepad1.x || chamberWheel.getTopPosition() > 1000);
 
 		chamberWheel.teleopControl(gamepad1.dpad_up ? 1 : gamepad1.dpad_down ? -1 : 0);
 		chamberWheel.spin(gamepad1.right_bumper, gamepad1.left_bumper);
