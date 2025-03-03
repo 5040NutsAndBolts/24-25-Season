@@ -57,8 +57,7 @@ public class Right extends AutoOpMode {
 			updateTelemetry();
 		}
 		chamberWheel.setBottomTarget(0);
-
-
+		chamberWheel.spin(0,0);
 
 
 		if(parkToggle) {

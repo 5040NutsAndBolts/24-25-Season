@@ -136,6 +136,15 @@ public class ChamberFlywheelDeposit {
 				"Slide Motor Bottom Position: " + getBottomPosition() + "\n" +
 				"Limit Switch: " + limitSwitch.isPressed();
 	}
+
+	public void rawControl(double in) {
+		slideMotorBottom.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+		slideMotorTop.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+		slideMotorBottom.setPower(0);
+		if(in > 0 && limitSwitch.isPressed()) return;
+		else
+			slideMotorTop.setPower(in);
+	}
 }
 
 

@@ -8,30 +8,19 @@ public class TwoDriverTeleop extends RobotOpMode {
 	@Override
 	public void loop() {
 		drivetrain.drive (gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
-		drivetrain.toggleSlowMode(gamepad1.x || chamberWheel.getTopPosition() > 1000);
-		auto180(gamepad1.y);
+		drivetrain.toggleSlowMode(gamepad1.x);
+		if(chamberWheel.getTopPosition() > 1000)
+			drivetrain.speed = .5;
 
-		chamberWheel.teleopControl(gamepad2.left_stick_y);
-		chamberWheel.spin(gamepad2.right_trigger,gamepad2.left_trigger);
-		hangYourself(gamepad1.dpad_left);
+		chamberWheel.rawControl(gamepad2.left_stick_y);
+		chamberWheel.spin(gamepad2.left_trigger,gamepad2.right_trigger);
 
-		scissor.updateScissor( gamepad2.right_stick_y);
+		scissor.updateScissor(gamepad2.right_stick_y);
 
 		subWheel.spin(gamepad1.right_trigger, gamepad1.left_trigger);
-		subWheel.tiltCarriage(gamepad2.left_bumper, gamepad2.right_bumper);
-		subWheel.toggleAutoSpitOverride(gamepad1.a);
+		subWheel.tiltCarriage(gamepad2.right_bumper, gamepad2.left_bumper);
+		subWheel.toggleAutoSpitOverride(gamepad2.a);
 
-		/*if (pTeamColor == TeamColor.red)
-			blinkin.turnRed();
-		else if (pTeamColor == TeamColor.blue)
-			blinkin.turnBlue();
-		else if (pTeamColor == TeamColor.noColor) {
-			blinkin.turnYellow();
-		} else {
-			blinkin.turnOrange();
-		}*/
-
-		telemetry.addLine(gamepad2.left_bumper + "  " + gamepad2.right_bumper);
 		telemetry.addLine("SLOWMODE: " + drivetrain.isSlow());
 		telemetry.addLine("AUTO SPIT: " + subWheel.willAutoSpit());
 		telemetry.update();

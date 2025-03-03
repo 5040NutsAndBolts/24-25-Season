@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 public class Drivetrain {
     public final DcMotorEx frontLeft,frontRight,backLeft,backRight;
-    private double speed = 1;
+    public double speed = 1;
 
     public Drivetrain(HardwareMap hardwareMap) {
         //Drive Motor Initialization

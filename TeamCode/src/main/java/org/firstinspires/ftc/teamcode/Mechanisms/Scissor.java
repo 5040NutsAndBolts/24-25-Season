@@ -16,7 +16,7 @@ public class Scissor {
 		minimumSwitch = new LimitSwitch(hardwareMap, "Min Scissor Switch");
 		scissorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		scissorMotorOffset = scissorMotor.getCurrentPosition();
-		scissorController = new PID(.008, 0.0001, 0, this::getPosition, 1.3);
+		scissorController = new PID(.009, 0.0001, 0, this::getPosition, 1.3);
 	}
 
 	public void updateScissor (double in) {

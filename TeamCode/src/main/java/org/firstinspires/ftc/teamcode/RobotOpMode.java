@@ -50,38 +50,6 @@ public class RobotOpMode extends OpMode {
         telemetry.update();
     }
 
-    public void hangYourself (boolean perm) {
-        if (perm) {
-            ElapsedTime e = new ElapsedTime();
-            chamberWheel.setTopTarget(1200);
-            while(e.seconds() < 3) {
-                chamberWheel.updateTopMotor();
-                chamberWheel.updateBottomMotor();
-                telemetry.addLine("Raising");
-                telemetry.update();
-            }while(e.seconds() < 5) {
-                chamberWheel.updateTopMotor();
-                chamberWheel.updateBottomMotor();
-                drivetrain.drive (.4,0,0);
-                telemetry.addLine("Forwarding");
-                telemetry.update();
-            }
-
-            chamberWheel.setBottomTarget(500);
-            chamberWheel.setTopTarget(0);
-
-            e.reset();;
-            while(e.seconds() < 10){
-                drivetrain.drive (gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
-                chamberWheel.updateTopMotor();
-                chamberWheel.rawBottomPower(-1);
-                telemetry.addLine("HANGING");
-                telemetry.addLine(chamberWheel.toString());
-                telemetry.update();
-            }
-        }
-    }
-
     public void auto180 (boolean input) {
         if(odo != null) {
             if(input){
